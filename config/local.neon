@@ -2,18 +2,17 @@ parameters:
     mailFrom:
         email: 'xname@vse.cz'
         name: 'xname eshop'
-
     database:
         driver: mysqli
         host: localhost
-        username: xname
-        password: heslokdatabazi
-        database: xname
+        username: vitl03
+        password: aimai3ohkahThatooc
+        database: vitl03
         charset: utf8mb4
 
     facebook:
-        appId: 'TODO'
-        secret: 'TODO'
+        appId: '721868889572734'
+        secret: '876cdceecd4b9534cb501054cde966bc'
 
 php:
 	date.timezone: Europe/Prague
