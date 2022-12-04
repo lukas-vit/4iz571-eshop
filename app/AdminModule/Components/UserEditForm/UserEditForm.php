@@ -54,7 +54,16 @@ class UserEditForm extends Form {
             ->addRule(Form::MAX_LENGTH,'Jméno je příliš dlouhé, může mít maximálně 40 znaků.',40);;
         $this->addText('email', 'E-mail uživatele')
             ->setRequired('Uživatel musí mít zadaný E-mail.');
-        //TODO řazení rolí a hesla/FB login
+        #region role
+        $roles=$this->usersFacade->findRoles();
+        $rolesArr=[];
+        foreach ($roles as $role){
+            $rolesArr[$role->roleId]=$role->roleId;
+        }
+        $this->addSelect('roleId','Role',$rolesArr)
+            ->setPrompt('--Vyberte roli--')
+            ->setRequired(false);
+        #endregion role
         $this->addSubmit('ok','uložit')
             ->onClick[]=function (SubmitButton $button){
             $values=$this->getValues('array');
@@ -68,6 +77,7 @@ class UserEditForm extends Form {
             }else{
                 $user = new User();
             }
+            //$user->role->roleId=$values['roleId']; <----------------Nejde přidávat
             $user->assign($values, ['name', 'email']);
             $this->usersFacade->saveUser($user);
             $this->setValues(['userId'=>$user->userId]);
@@ -91,7 +101,8 @@ class UserEditForm extends Form {
             $values=[
                 'userId'=>$values->userId,
                 'name'=>$values->name,
-                'email'=>$values->email
+                'email'=>$values->email,
+                'roleId'=>$values->role->roleId
             ];
         }
         parent::setDefaults($values, $erase);
