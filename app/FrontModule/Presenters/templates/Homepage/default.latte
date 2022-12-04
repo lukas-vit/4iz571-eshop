@@ -1,2 +1,30 @@
+{varType App\Model\Entities\Product[] $products}
+{varType App\Model\Entities\Category[] $categories}
 {block content}
-TODO tady bude nějaký obsah e-shopu :)
+<div>
+    <h2>Kategorie</h2>
+    <div class="container">
+        <div class="row">
+            {foreach $categories as $category}
+            <a href="{link Category:edit id=>$category->categoryId}"><button type="button" class="btn btn-warning mr-2">{$category->title}</button></a>
+            {/foreach}
+        </div>
+    </div>
+</div>
+
+<div>
+<h2>Seznam produktů</h2>
+    {if !empty($products)}
+        {foreach $products as $product}
+            <div class="col-6 col-xl-4 bg-light py-4 mt-2">
+                <h3>{$product->title}</h3>
+                <p>Kategorie {$product->category->title}</p>
+                <div>{$product->description}</div>
+            </div>
+        {/foreach}
+    {else}
+        <p class="text-muted">Nebyly nalezeny žádné produkty</p>
+    {/if}
+</div>
+
+{/block}
