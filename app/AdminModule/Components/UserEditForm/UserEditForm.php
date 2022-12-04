@@ -49,7 +49,9 @@ class UserEditForm extends Form {
     private function createSubcomponents(){
         $userId = $this->addHidden('userId');
         $this->addText('name', 'Jméno uživatele')
-            ->setRequired('Uživatel nesmí být bez jména.');
+            ->setRequired('Uživatel nesmí být bez jména.')
+            ->setHtmlAttribute('maxlength',40)
+            ->addRule(Form::MAX_LENGTH,'Jméno je příliš dlouhé, může mít maximálně 40 znaků.',40);;
         $this->addText('email', 'E-mail uživatele')
             ->setRequired('Uživatel musí mít zadaný E-mail.');
         //TODO řazení rolí a hesla/FB login

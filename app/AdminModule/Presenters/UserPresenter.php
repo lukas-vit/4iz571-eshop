@@ -3,6 +3,8 @@
 namespace App\AdminModule\Presenters;
 use App\AdminModule\Components\UserEditForm\UserEditForm;
 use App\AdminModule\Components\UserEditForm\UserEditFormFactory;
+use App\FrontModule\Components\UserRegistrationForm\UserRegistrationForm;
+use App\FrontModule\Components\UserRegistrationForm\UserRegistrationFormFactory;
 use App\Model\Facades\UsersFacade;
 
 /**
@@ -15,6 +17,8 @@ class UserPresenter extends BasePresenter {
     private $usersFacade;
     /** @var UserEditFormFactory $userEditFormFactory */
     private $userEditFormFactory;
+    /** @var UserRegistrationFormFactory */
+    private $userRegistrationFormFactory;
 
     /**
      * Akce pro vykreslení seznamu uživatelů
@@ -61,12 +65,29 @@ class UserPresenter extends BasePresenter {
         return $form;
     }
 
+    public function createComponentUserRegistrationForm():UserRegistrationForm{
+        $form = $this->userRegistrationFormFactory->create();
+        $form->onCancel[]=function (){
+            $this->redirect('default');
+        };
+        $form->onFinished[]=function ($message=null){
+            if(!empty($message)){
+                $this->flashMessage($message);
+            }
+            $this->redirect('default');
+        };
+        return $form;
+    }
+
     #region injections
     public function injectUsersFacade(UsersFacade $usersFacade){
         $this->usersFacade=$usersFacade;
     }
     public function injectUserEditFormFactory(UserEditFormFactory $userEditFormFactory){
         $this->userEditFormFactory=$userEditFormFactory;
+    }
+    public function injectUserRegistrationFormFactory(UserRegistrationFormFactory $userRegistrationFormFactory){
+        $this->userRegistrationFormFactory = $userRegistrationFormFactory;
     }
     #endregion injections
 }
