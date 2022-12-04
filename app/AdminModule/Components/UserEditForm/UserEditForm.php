@@ -52,6 +52,7 @@ class UserEditForm extends Form {
             ->setRequired('Uživatel nesmí být bez jména.');
         $this->addText('email', 'E-mail uživatele')
             ->setRequired('Uživatel musí mít zadaný E-mail.');
+        //TODO řazení rolí a hesla/FB login
         $this->addSubmit('ok','uložit')
             ->onClick[]=function (SubmitButton $button){
             $values=$this->getValues('array');

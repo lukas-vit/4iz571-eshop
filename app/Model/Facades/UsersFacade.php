@@ -73,6 +73,19 @@ class UsersFacade{
     return (bool)$this->userRepository->persist($user);
   }
 
+  //TODO metoda pro smazání uživatele
+
+    /**
+     * Metoda pro vyhledání uživatelů
+     * @param array|null $params
+     * @param int|null $offset
+     * @param int|null $limit
+     * @return User[]
+     */
+  public function findUsers(array $params=null,int $offset=null,int $limit=null):array{
+      return $this->userRepository->findAllBy($params,$offset,$limit);
+  }
+
   /**
    * Metoda pro nalezení či zaregistrování uživatele podle facebookId, která vrací SimpleIdentity použitelnou pro přihlášení uživatele
    * @param FacebookUser $facebookUser
