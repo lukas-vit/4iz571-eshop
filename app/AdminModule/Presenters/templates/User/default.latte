@@ -7,6 +7,8 @@
         <thead>
         <tr>
             <th scope="col">Jméno uživatele</th>
+            <th scope="col">E-mail uživatele</th>
+            <th scope="col">Role uživatele</th>
             <th scope="col" class="col-xl-1 col-md-2">Akce</th>
         </tr>
         </thead>
@@ -14,6 +16,8 @@
         {foreach $allUsers as $users}
             <tr>
                 <td>{$users->name}</td>
+                <td>{$users->email}</td>
+                <td>{$users->role->roleId}</td>
                 <td class="text-nowrap">
                     <a href="{link edit id=>$users->userId}" class="btn btn-sm btn-outline-primary">Upravit</a>
                 </td>
