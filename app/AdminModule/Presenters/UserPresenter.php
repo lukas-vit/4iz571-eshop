@@ -20,7 +20,7 @@ class UserPresenter extends BasePresenter {
      * Akce pro vykreslení seznamu uživatelů
      */
     public function renderDefault():void{
-        $this->template->users=$this->usersFacade->findUsers(['order'=>'role_id']);
+        $this->template->allUsers=$this->usersFacade->findUsers(['order'=>'role_id']);
     }
 
     /**
@@ -38,7 +38,7 @@ class UserPresenter extends BasePresenter {
         }
         $form=$this->getComponent('userEditForm');
         $form->setDefaults($user);
-        $this->template->user=$user;
+        $this->template->users=$user;
     }
 
     public function createComponentUserEditForm():UserEditForm{
