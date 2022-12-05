@@ -54,6 +54,16 @@ class UsersFacade{
     return $this->userRepository->find($id);
   }
 
+    /**
+     * Metoda pro načtení role uživatele
+     * @param string $roleId
+     * @return Role
+     * @throws \Exception
+     */
+  public function getRole(string $roleId):Role{
+      return $this->roleRepository->findBy(['role_id'=>$roleId]);
+  }
+
   /**
    * Metoda pro načtení jednoho uživatele podle e-mailu
    * @param string $email
@@ -71,6 +81,19 @@ class UsersFacade{
    */
   public function saveUser(User &$user) {
     return (bool)$this->userRepository->persist($user);
+  }
+
+  //TODO metoda pro smazání uživatele
+
+    /**
+     * Metoda pro vyhledání uživatelů
+     * @param array|null $params
+     * @param int|null $offset
+     * @param int|null $limit
+     * @return User[]
+     */
+  public function findUsers(array $params=null,int $offset=null,int $limit=null):array{
+      return $this->userRepository->findAllBy($params,$offset,$limit);
   }
 
   /**
