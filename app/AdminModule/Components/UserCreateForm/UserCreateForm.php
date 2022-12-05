@@ -89,7 +89,11 @@ class UserCreateForm extends Form {
             $user = new User();
             $user->name=$values['name'];
             $user->email=$values['email'];
-            //$user->role->roleId=$values['roleId']; <-------------------Nejde uložit
+            if($values['roleId'] != null){
+                $user->role=$this->usersFacade->getRole($values['roleId']);
+            }else{
+                $user->role=null;
+            }
             $user->password=$this->passwords->hash($values['password']); //heslo samozřejmě rovnou hashujeme :)
             $this->usersFacade->saveUser($user);
 

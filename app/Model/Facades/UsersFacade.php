@@ -54,6 +54,10 @@ class UsersFacade{
     return $this->userRepository->find($id);
   }
 
+  public function getRole(string $roleId):Role{
+      return $this->roleRepository->findBy(['role_id'=>$roleId]);
+  }
+
   /**
    * Metoda pro načtení jednoho uživatele podle e-mailu
    * @param string $email

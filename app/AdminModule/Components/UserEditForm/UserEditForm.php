@@ -77,7 +77,11 @@ class UserEditForm extends Form {
             }else{
                 $user = new User();
             }
-            //$user->role->roleId=$values['roleId']; <----------------Nejde přidávat
+            if($values['roleId'] != null){
+                $user->role=$this->usersFacade->getRole($values['roleId']);
+            }else{
+                $user->role=null;
+            }
             $user->assign($values, ['name', 'email']);
             $this->usersFacade->saveUser($user);
             $this->setValues(['userId'=>$user->userId]);
