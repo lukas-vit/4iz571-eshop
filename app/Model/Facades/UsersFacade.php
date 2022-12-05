@@ -54,6 +54,12 @@ class UsersFacade{
     return $this->userRepository->find($id);
   }
 
+    /**
+     * Metoda pro načtení role uživatele
+     * @param string $roleId
+     * @return Role
+     * @throws \Exception
+     */
   public function getRole(string $roleId):Role{
       return $this->roleRepository->findBy(['role_id'=>$roleId]);
   }
