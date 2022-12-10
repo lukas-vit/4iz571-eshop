@@ -41,8 +41,9 @@ class ProductCartForm extends Form{
 
   private function createSubcomponents(){
     $this->addHidden('productId');
-    $this->addInteger('count','Počet kusů')
-      ->addRule(Form::RANGE,'Chybný počet kusů.',[1,100]);
+    $this->addHidden('count','Počet kusů')
+      ->addRule(Form::RANGE,'Chybný počet kusů.',[1,100])
+      ->setDefaultValue(1);
 
     $this->addSubmit('ok','přidat do košíku');
   }
