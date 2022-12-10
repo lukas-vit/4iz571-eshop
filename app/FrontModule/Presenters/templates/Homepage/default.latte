@@ -13,18 +13,28 @@
 </div>
 
 <div>
-<h2>Seznam produktů</h2>
-    {if !empty($products)}
-        {foreach $products as $product}
-            <div class="col-6 col-xl-4 bg-light py-4 mt-2">
-                <h3>{$product->title}</h3>
-                <p>Kategorie {$product->category->title}</p>
-                <div>{$product->description}</div>
-            </div>
-        {/foreach}
-    {else}
-        <p class="text-muted">Nebyly nalezeny žádné produkty</p>
-    {/if}
+    <h2>Seznam produktů</h2>
+    <div class="container">
+        <div class="row">
+            {if !empty($products)}
+                {foreach $products as $product}
+                    <div class="col-6 col-xl-4 bg-light py-4 mt-2 mx-1">
+                        <h3>{$product->title}</h3>
+                        <p>Kategorie {$product->category->title}</p>
+                        <div class="mb-2">{$product->description}</div>
+                        <div class="row">
+                            <div class="col-6"><a href="{link Product:show url=>$product->url}"><button type="button" class="btn btn-block btn-outline-primary">Detaily</button></a></div>
+                            <div class="col-6">
+                            {control productCartForm-$product->productId}
+                            </div>
+                        </div>
+                    </div>
+                {/foreach}
+            {else}
+                <p class="text-muted">Nebyly nalezeny žádné produkty</p>
+            {/if}
+        </div>
+    </div>
 </div>
 
 {/block}

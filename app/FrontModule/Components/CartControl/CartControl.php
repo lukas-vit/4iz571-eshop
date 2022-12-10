@@ -41,10 +41,13 @@ class CartControl extends Control
     $template->render();
   }
 
-  public function handleRemove($cartItemId): void
-  {
-    //TODO remove item from cart
-
+  public function handleRemove($cartItemId){
+    $this->cart->updateCartItems();
+    try{
+      $this->cartFacade->deleteCartItem($this->cartFacade->getCartItem($cartItemId));
+    }catch (\Exception $e){
+      //chybu odstranění ignorujeme (položka už tam pravděpodobně není)
+    }
     $this->redirect('this');
   }
 
