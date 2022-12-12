@@ -9,7 +9,7 @@
 	<title>{ifset title}{include title|striptags} - {/ifset}E-shop</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous" />
-
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 	<link rel="icon" href="{$basePath}/img/favicon/favicon.ico" sizes="any" />
 	<link rel="apple-touch-icon" sizes="180x180" href="{$basePath}/img/favicon/favicon-180x180.png" />
 	<link rel="icon" href="{$basePath}/img/favicon/favicon.svg" type="image/svg+xml" />
@@ -20,11 +20,15 @@
 <body>
 
 	<header class="navbar navbar-light bg-light mb-4">
-		<div class="container">
+		<div class="container align-middle">
 			<h1 class="h2 mt-1 "><a href="{plink Homepage:default}" class="text-dark">E-shop</a></h1>
-			<div class="ml-auto">
-				{control cart}
-				{control userLogin}
+			<div class="ml-auto row">
+				<div class="col-4">
+					{control userLogin}
+				</div>
+				<div class="col-8">
+					{control cart}
+				</div>
 			</div>
 		</div>
 	</header>
