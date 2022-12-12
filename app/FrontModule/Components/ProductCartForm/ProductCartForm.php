@@ -45,7 +45,10 @@ class ProductCartForm extends Form{
       ->addRule(Form::RANGE,'Chybný počet kusů.',[1,100])
       ->setDefaultValue(1);
 
-    $this->addSubmit('ok','přidat do košíku');
+    $this->addSubmit('button' )
+    ->getControlPrototype()
+    ->setName('button')
+    ->setHtml('<i class="fa fa-shopping-cart"></i>');
   }
 
 }

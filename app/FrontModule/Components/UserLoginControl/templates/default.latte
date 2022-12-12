@@ -3,9 +3,9 @@
     {if $user->isLoggedIn()}
       <strong>{$user->identity->name}</strong>
       -
-      <a href="{link logout!}">odhlásit se</a>
+      <a href="{link logout!}"><i class="fa fa-right-from-bracket text-dark h2"></i></a>
     {else}
-      <a href="{link login!}">přihlásit se</a>
+      <a href="{link login!}"><i class="fa fa-user text-dark h2"></i></a>
     {/if}
   </div>
 {/snippet}
