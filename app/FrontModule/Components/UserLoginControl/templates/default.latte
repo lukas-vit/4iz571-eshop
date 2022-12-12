@@ -1,11 +1,14 @@
 {snippet}
-  <div {if !empty($class)}class="{$class}"{/if}>
+  <div class="pl-2 pt-2" {if !empty($class)}class="{$class}"{/if}>
     {if $user->isLoggedIn()}
-      <strong>{$user->identity->name}</strong>
-      -
-      <a href="{link logout!}"><i class="fa fa-right-from-bracket text-dark h2"></i></a>
+    <div>
+      <a class="btn text-dark" href="{plink Profile:default}"><i class="fa fa-user text-dark h5 mr-2"></i>Profil - <strong>{$user->identity->name}</strong></a>
+    </div>
+    <div>
+      <a class="btn text-dark" href="{link logout!}"><i class="fa fa-right-from-bracket text-dark h5 mr-2"></i>Odhlásit se</a>
+    </div>
     {else}
-      <a href="{link login!}"><i class="fa fa-user text-dark h2"></i></a>
+      <a class="btn text-dark" href="{link login!}"><i class="fa fa-user text-dark h5 mr-2"></i>Přihlásit se</a>
     {/if}
   </div>
 {/snippet}
