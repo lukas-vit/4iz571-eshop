@@ -47,6 +47,14 @@ class HomepagePresenter extends BasePresenter{
   }
 
   /**
+   * Akce pro zobrazení seznamu produktů
+   */
+  public function renderSitemap()
+  {
+      $this->template->products = $this->productsFacade->findProducts(['order' => 'title']);
+  }
+
+  /**
    * Formulář na editaci produktů
    * @return ProductCartForm
    */
