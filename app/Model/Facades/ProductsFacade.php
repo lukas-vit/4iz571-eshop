@@ -102,7 +102,7 @@ class ProductsFacade{
       $fileExtension=strtolower($fileUpload->getImageFileExtension());
       //TODO product image id
       $fileUpload->move(__DIR__.'/../../../www/img/products/'.$product->productId.'.'.$fileExtension);
-      $product->photoExtension=$fileExtension;
+      //$product->photoExtension=$fileExtension;
       $this->saveProduct($product);
     }
   }
