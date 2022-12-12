@@ -21,10 +21,18 @@
 
 	<header class="navbar navbar-light bg-light mb-4">
 		<div class="container align-middle">
-			<h1 class="h2 mt-1 "><a href="{plink Homepage:default}" class="text-dark">E-shop</a></h1>
-			<div class="ml-auto row">
+		<h1 class="h2 mt-1 "><a href="{plink Homepage:default}" class="text-dark">E-shop</a></h1>
+			<div class="ml-auto mt-1 row">
 				<div class="col-4">
-					{control userLogin}
+				<div class="dropdown">
+					<button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<i class="fa fa-user text-dark h3"></i>
+					</button>
+					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+						{control userLogin}
+					</div>
+					</div>
+					
 				</div>
 				<div class="col-8">
 					{control cart}
