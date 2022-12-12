@@ -10,6 +10,7 @@ use LeanMapper\Entity;
  * @property int $photoId
  * @property Product $productId m:hasOne
  * @property string $photoExtension = ''
+ * @property bool $isThumbnail = false
  */
 class ProductPhoto extends Entity {
 

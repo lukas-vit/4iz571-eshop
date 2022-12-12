@@ -52,6 +52,7 @@ services:
 	- App\Model\Repositories\ForgottenPasswordRepository
 	- App\Model\Repositories\PermissionRepository
 	- App\Model\Repositories\ProductRepository
+	- App\Model\Repositories\ProductPhotoRepository
 	- App\Model\Repositories\ResourceRepository
 	- App\Model\Repositories\RoleRepository
 	- App\Model\Repositories\UserRepository
