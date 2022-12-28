@@ -28,11 +28,15 @@ class ProductPresenter extends BasePresenter{
   public function renderShow(string $url):void {
     try{
       $product = $this->productsFacade->getProductByUrl($url);
+      $modelProductsColors = $this->getModelProductsColors($product->title, $product->ram);
+      $modelProductsRams = $this->getModelProductsRams($product->title, $product->color);
     }catch (\Exception $e){
       throw new BadRequestException('Produkt nebyl nalezen.');
     }
 
     $this->template->product = $product;
+    $this->template->modelProductsColors = $modelProductsColors;
+    $this->template->modelProductsRams = $modelProductsRams;
   }
 
   protected function createComponentProductCartForm():Multiplier {
@@ -64,6 +68,24 @@ class ProductPresenter extends BasePresenter{
   public function renderList():void {
     //TODO tady by mělo přibýt filtrování podle kategorie, stránkování atp.
     $this->template->products = $this->productsFacade->findProducts(['order'=>'title']);
+  }
+
+  /**
+   * Akce pro získání produktů se stejným title a ramkou pro výčet barev
+   */
+  public function getModelProductsColors($title, $ram):array {
+    $products =  $this->productsFacade->findProducts(['title'=>$title, 'ram'=>$ram, 'order'=>'color']);
+
+    return $products;
+  }
+
+  /**
+   * Akce pro získání produktů se stejným title a barvou pro výčet ramek
+   */
+  public function getModelProductsRams($title, $color):array {
+    $products =  $this->productsFacade->findProducts(['title'=>$title, 'color'=>$color, 'order'=>'ram']);
+
+    return $products;
   }
 
   #region injections

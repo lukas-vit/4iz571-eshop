@@ -19,8 +19,8 @@
             {if !empty($products)}
                 {foreach $products as $product}
                     <div class="col-12 sm:col-6 col-xl-4 bg-light py-4 mt-2 mx-1">
-                        <h3>{$product->title}</h3>
-                        <p>Kategorie {$product->category->title}</p>
+                        <h5>{$product->title} {if $product->ram}<span>{$product->ram} GB</span>{/if} {if $product->color}<span>{$product->color}</span>{/if}</h5>
+                        <h6>Kategorie {$product->category->title}</h6>
                         <div class="row">
                             <div class="col-9"><a href="{link Product:show url=>$product->url}"><button type="button" class="btn btn-block btn-outline-primary">Detaily</button></a></div>
                             <div class="col-3">

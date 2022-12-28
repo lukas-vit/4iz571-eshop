@@ -1,4 +1,6 @@
 {varType App\Model\Entities\Product $product}
+{varType App\Model\Entities\Product $modelProductsColors}
+{varType App\Model\Entities\Product $modelProductsRams}
 {block content}
 
 <div class="container">
@@ -10,7 +12,7 @@
         </div>
         <div class="col-md-6">
             <div class="product-info mt-4">
-                <h1 n:block="title" class="h2">{$product->title}</h1>
+                <h1 n:block="title" class="h2">{$product->title} {if $product->ram}<span>{$product->ram} GB</span>{/if} {if $product->color}<span>{$product->color}</span>{/if}</h1>
                 <div class="product-rating">
                     <div>
                        {*  <span class="fa fa-star
@@ -36,25 +38,27 @@
                 <div class="mt-4 row">
                     <div class="col-4">
                         <label class="my-1 mr-2 h5" for="ram">Paměť</label>
-                        <!-- TODO foreach ram -->
                         <div class="dropdown">
                             <button class="border rounded btn dropdown-toggle w-100 text-left" type="button" id="dropdownRam" data-toggle="dropdown" aria-expanded="false">
                                 {$product->ram} GB
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownRam">
-                                <li><a class="dropdown-item px-1 py-2" href="#">{$product->ram} GB</a></li>
+                                {foreach $modelProductsRams as $modelProduct}
+                                    <li><a class="dropdown-item p-2" href="{$modelProduct->url}">{$modelProduct->ram} GB</a></li>
+                                {/foreach}
                             </ul>   
                         </div>
                     </div>
                     <div class="col-4">
                         <label class="my-1 mr-2 h5" for="color">Barva</label>
-                         <!-- TODO foreach color -->
                         <div class="dropdown">
                             <button class="border rounded btn dropdown-toggle w-100 text-left" type="button" id="dropdownColor" data-toggle="dropdown" aria-expanded="false">
                                 <span class="align-middle" style="color:{$product->color}">&#9632;</span><span class="align-middle ml-1">{$product->color}<span>
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownColor">
-                                <li><a class="dropdown-item px-1 py-0" href="#"><span class="h2 align-middle" style="color:{$product->color}">&#9632;</span><span class="align-middle ml-1">{$product->color}<span></a></li>
+                                {foreach $modelProductsColors as $modelProduct}
+                                    <li><a class="dropdown-item px-1 py-0" href="{$modelProduct->url}"><span class="h2 align-middle" style="color:{$modelProduct->color}">&#9632;</span><span class="align-middle ml-1">{$modelProduct->color}<span></a></li>
+                                {/foreach }
                             </ul>   
                         </div>
                     </div>
@@ -62,7 +66,7 @@
                 <div class="mt-4 h6">
                     {if $product->stock == 0 || $product->stock == null}
                         <div class="text-danger">
-                            Vyprodáno
+                            Není skladem
                         </div>
                     {elseif $product->stock <= 5}
                         <div class="text-warning">
@@ -76,9 +80,9 @@
                 </div>
                 <div class="mt-4 row">
                     <div class="col-5">
-                        {var $priceDiscount = $product->price * 0.95}
+                        {var $priceDiscount = round($product->price * 0.95)}
                         <div class="price h3 text-danger">{$product->price} Kč <span class="text-secondary h6"><del><small>{$priceDiscount} Kč</small></del></span></div>
-                        {var $priceWithoutDPH = $product->price * 0.85}
+                        {var $priceWithoutDPH = round($product->price * 0.85)}
                         <div class="price text-muted h6">{$priceWithoutDPH} Kč bez DPH</div>
                     </div>
                     <div class="col-3">
