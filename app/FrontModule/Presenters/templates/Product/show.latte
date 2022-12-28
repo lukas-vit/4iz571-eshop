@@ -36,24 +36,43 @@
                 <div class="mt-4 row">
                     <div class="col-4">
                         <label class="my-1 mr-2 h5" for="ram">Paměť</label>
-                        <select id="ram" class="custom-select mr-2">
-                            <option selected>128 GB</option>
-                            <option value="1">256 GB</option>
-                        </select>
+                        <!-- TODO foreach ram -->
+                        <div class="dropdown">
+                            <button class="border rounded btn dropdown-toggle w-100 text-left" type="button" id="dropdownRam" data-toggle="dropdown" aria-expanded="false">
+                                {$product->ram} GB
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownRam">
+                                <li><a class="dropdown-item px-1 py-2" href="#">{$product->ram} GB</a></li>
+                            </ul>   
+                        </div>
                     </div>
                     <div class="col-4">
                         <label class="my-1 mr-2 h5" for="color">Barva</label>
-                        <select id="color" class="custom-select">
-                            <option value="0" class="text-dark">&#9632; Černá</option>
-                            <option value="1" class="text-primary">&#9632; Modrá</option>
-                            <option value="2" class="text-muted">&#9632; Bílá</option>
-                            <option value="3" class="text-success">&#9632; Zelená</option>
-                            <option value="4" class="text-danger">&#9632; Červená</option>
-                        </select>
+                         <!-- TODO foreach color -->
+                        <div class="dropdown">
+                            <button class="border rounded btn dropdown-toggle w-100 text-left" type="button" id="dropdownColor" data-toggle="dropdown" aria-expanded="false">
+                                <span class="align-middle" style="color:{$product->color}">&#9632;</span><span class="align-middle ml-1">{$product->color}<span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownColor">
+                                <li><a class="dropdown-item px-1 py-0" href="#"><span class="h2 align-middle" style="color:{$product->color}">&#9632;</span><span class="align-middle ml-1">{$product->color}<span></a></li>
+                            </ul>   
+                        </div>
                     </div>
                 </div>
-                <div class="mt-4 text-success h6">
-                    Skladem > 12 kusů
+                <div class="mt-4 h6">
+                    {if $product->stock == 0 || $product->stock == null}
+                        <div class="text-danger">
+                            Vyprodáno
+                        </div>
+                    {elseif $product->stock <= 5}
+                        <div class="text-warning">
+                            Poslední kusy
+                        </div>
+                    {elseif $product->stock > 5}
+                        <div class="text-success">
+                            Skladem > 5 kusů
+                        </div>
+                    {/if}
                 </div>
                 <div class="mt-4 row">
                     <div class="col-5">
@@ -73,7 +92,7 @@
         <div class="col-12">
             <div class="mt-4">
                 <h2 class="h3 text-center">Popis</h2>
-                <p class="mt-4 h6">{$product->description}</p>
+                <p class="mt-4 text-muted h6">{$product->description}</p>
             </div>
         </div>
     </div>
