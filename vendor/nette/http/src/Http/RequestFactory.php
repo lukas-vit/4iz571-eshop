@@ -21,7 +21,7 @@ class RequestFactory
 	use Nette\SmartObject;
 
 	/** @internal */
-	private const CHARS = '\x09\x0A\x0D\x20-\x7E\xA0-\x{10FFFF}';
+	private const ValidChars = '\x09\x0A\x0D\x20-\x7E\xA0-\x{10FFFF}';
 
 	/** @var array */
 	public $urlFilters = [
@@ -63,7 +63,6 @@ class RequestFactory
 		$url = new Url;
 		$this->getServer($url);
 		$this->getPathAndQuery($url);
-		$this->getUserAndPassword($url);
 		[$post, $cookies] = $this->getGetPostCookie($url);
 		[$remoteAddr, $remoteHost] = $this->getClient($url);
 
@@ -115,15 +114,12 @@ class RequestFactory
 	}
 
 
-	private function getUserAndPassword(Url $url): void
-	{
-		$url->setUser($_SERVER['PHP_AUTH_USER'] ?? '');
-		$url->setPassword($_SERVER['PHP_AUTH_PW'] ?? '');
-	}
-
-
 	private function getScriptPath(Url $url): string
 	{
+		if (PHP_SAPI === 'cli-server') {
+			return '/';
+		}
+
 		$path = $url->getPath();
 		$lpath = strtolower($path);
 		$script = strtolower($_SERVER['SCRIPT_NAME'] ?? '');
@@ -134,6 +130,7 @@ class RequestFactory
 				? substr($path, 0, strrpos($path, '/', $i - strlen($path) - 1) + 1)
 				: '/';
 		}
+
 		return $path;
 	}
 
@@ -151,7 +148,7 @@ class RequestFactory
 			: (empty($_COOKIE) ? [] : $_COOKIE);
 
 		// remove invalid characters
-		$reChars = '#^[' . self::CHARS . ']*+$#Du';
+		$reChars = '#^[' . self::ValidChars . ']*+$#Du';
 		if (!$this->binary) {
 			$list = [&$query, &$post, &$cookies];
 			foreach ($list as $key => &$val) {
@@ -164,13 +161,14 @@ class RequestFactory
 						$list[] = &$list[$key][$k];
 
 					} elseif (is_string($v)) {
-						$list[$key][$k] = (string) preg_replace('#[^' . self::CHARS . ']+#u', '', $v);
+						$list[$key][$k] = (string) preg_replace('#[^' . self::ValidChars . ']+#u', '', $v);
 
 					} else {
 						throw new Nette\InvalidStateException(sprintf('Invalid value in $_POST/$_COOKIE in key %s, expected string, %s given.', "'$k'", gettype($v)));
 					}
 				}
 			}
+
 			unset($list, $key, $val, $k, $v);
 		}
 
@@ -181,7 +179,7 @@ class RequestFactory
 
 	private function getFiles(): array
 	{
-		$reChars = '#^[' . self::CHARS . ']*+$#Du';
+		$reChars = '#^[' . self::ValidChars . ']*+$#Du';
 		$files = [];
 		$list = [];
 		foreach ($_FILES ?? [] as $k => $v) {
@@ -192,6 +190,7 @@ class RequestFactory
 			) {
 				continue;
 			}
+
 			$v['@'] = &$files[$k];
 			$list[] = $v;
 		}
@@ -205,9 +204,11 @@ class RequestFactory
 				if (!$this->binary && (!preg_match($reChars, $v['name']) || preg_last_error())) {
 					$v['name'] = '';
 				}
+
 				if ($v['error'] !== UPLOAD_ERR_NO_FILE) {
 					$v['@'] = new FileUpload($v);
 				}
+
 				continue;
 			}
 
@@ -215,16 +216,19 @@ class RequestFactory
 				if (!$this->binary && is_string($k) && (!preg_match($reChars, $k) || preg_last_error())) {
 					continue;
 				}
+
 				$list[] = [
 					'name' => $v['name'][$k],
 					'type' => $v['type'][$k],
 					'size' => $v['size'][$k],
+					'full_path' => $v['full_path'][$k] ?? null,
 					'tmp_name' => $v['tmp_name'][$k],
 					'error' => $v['error'][$k],
 					'@' => &$v['@'][$k],
 				];
 			}
 		}
+
 		return $files;
 	}
 
@@ -232,31 +236,42 @@ class RequestFactory
 	private function getHeaders(): array
 	{
 		if (function_exists('apache_request_headers')) {
-			return apache_request_headers();
+			$headers = apache_request_headers();
+		} else {
+			$headers = [];
+			foreach ($_SERVER as $k => $v) {
+				if (strncmp($k, 'HTTP_', 5) === 0) {
+					$k = substr($k, 5);
+				} elseif (strncmp($k, 'CONTENT_', 8)) {
+					continue;
+				}
+
+				$headers[strtr($k, '_', '-')] = $v;
+			}
 		}
 
-		$headers = [];
-		foreach ($_SERVER as $k => $v) {
-			if (strncmp($k, 'HTTP_', 5) === 0) {
-				$k = substr($k, 5);
-			} elseif (strncmp($k, 'CONTENT_', 8)) {
-				continue;
+		if (!isset($headers['Authorization'])) {
+			if (isset($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'])) {
+				$headers['Authorization'] = 'Basic ' . base64_encode($_SERVER['PHP_AUTH_USER'] . ':' . $_SERVER['PHP_AUTH_PW']);
+			} elseif (isset($_SERVER['PHP_AUTH_DIGEST'])) {
+				$headers['Authorization'] = 'Digest ' . $_SERVER['PHP_AUTH_DIGEST'];
 			}
-			$headers[strtr($k, '_', '-')] = $v;
 		}
+
 		return $headers;
 	}
 
 
-	private function getMethod(): ?string
+	private function getMethod(): string
 	{
-		$method = $_SERVER['REQUEST_METHOD'] ?? null;
+		$method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 		if (
 			$method === 'POST'
 			&& preg_match('#^[A-Z]+$#D', $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ?? '')
 		) {
 			$method = $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'];
 		}
+
 		return $method;
 	}
 

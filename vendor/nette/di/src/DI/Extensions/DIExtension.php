@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Nette\DI\Extensions;
 
 use Nette;
+use Tracy;
 
 
 /**
@@ -87,12 +88,10 @@ final class DIExtension extends Nette\DI\CompilerExtension
 
 		if (
 			$this->debugMode &&
-			($this->config->debugger ?? $this->getContainerBuilder()->getByType(\Tracy\Bar::class))
+			($this->config->debugger ?? $this->getContainerBuilder()->getByType(Tracy\Bar::class))
 		) {
 			$this->enableTracyIntegration();
 		}
-
-		$this->initializeTaggedServices();
 	}
 
 
@@ -114,20 +113,12 @@ final class DIExtension extends Nette\DI\CompilerExtension
 		if ($option === true) {
 			return;
 		}
+
 		$prop = $class->getProperty('wiring');
 		$prop->setValue(array_intersect_key(
 			$prop->getValue(),
 			$this->exportedTypes + (is_array($option) ? array_flip($option) : [])
 		));
-	}
-
-
-	private function initializeTaggedServices(): void
-	{
-		foreach (array_filter($this->getContainerBuilder()->findByTag('run')) as $name => $on) {
-			trigger_error("Tag 'run' used in service '$name' definition is deprecated.", E_USER_DEPRECATED);
-			$this->initialization->addBody('$this->getService(?);', [$name]);
-		}
 	}
 
 
