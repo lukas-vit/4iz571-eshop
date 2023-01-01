@@ -41,6 +41,7 @@ services:
 
 	- App\Model\Facades\CategoriesFacade
 	- App\Model\Facades\ProductsFacade
+	- App\Model\Facades\ReviewsFacade
 	- App\Model\Facades\UsersFacade
 	- App\Model\Facades\CartFacade
 
@@ -53,3 +54,4 @@ services:
 	- App\Model\Repositories\UserRepository
 	- App\Model\Repositories\CartRepository
 	- App\Model\Repositories\CartItemRepository
+	- App\Model\Repositories\ReviewRepository

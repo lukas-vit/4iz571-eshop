@@ -120,7 +120,6 @@ class ProductsFacade{
     }
   }
 
-
   public function __construct(ProductRepository $productRepository){
     $this->productRepository=$productRepository;
   }

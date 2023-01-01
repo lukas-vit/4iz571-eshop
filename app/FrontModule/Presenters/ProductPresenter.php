@@ -5,6 +5,7 @@ namespace App\FrontModule\Presenters;
 use App\FrontModule\Components\ProductCartForm\ProductCartForm;
 use App\FrontModule\Components\ProductCartForm\ProductCartFormFactory;
 use App\Model\Facades\ProductsFacade;
+use App\Model\Facades\ReviewsFacade;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Multiplier;
 
@@ -15,6 +16,7 @@ use Nette\Application\UI\Multiplier;
  */
 class ProductPresenter extends BasePresenter{
   private ProductsFacade $productsFacade;
+  private ReviewsFacade $reviewsFacade;
   private ProductCartFormFactory $productCartFormFactory;
 
   /** @persistent */
@@ -30,6 +32,27 @@ class ProductPresenter extends BasePresenter{
       $product = $this->productsFacade->getProductByUrl($url);
       $modelProductsColors = $this->getModelProductsColors($product->title, $product->ram);
       $modelProductsRams = $this->getModelProductsRams($product->title, $product->color);
+      $productRating = 0.0;
+      $numberOfRatings = 0;
+    
+      try {
+        $reviews = $this->reviewsFacade->findReviews(['order'=>'rating', 'product_id'=>$product->productId]);
+        if (count($reviews)!= 0) {
+          $averageRating = 0.0;
+          foreach ($reviews as $review) {
+            $averageRating += (float)$review->rating;
+          }
+          $averageRating /= count($reviews);
+          $numberOfRatings = count($reviews);
+          $productRating =  round($averageRating, 1);
+        } else {
+          $productRating = 4.5;
+          $numberOfRatings = 0;
+        }
+      } catch (\Exception $e) {
+        $productRating = 4.5;
+        $numberOfRatings = 0;
+      }
     }catch (\Exception $e){
       throw new BadRequestException('Produkt nebyl nalezen.');
     }
@@ -37,6 +60,9 @@ class ProductPresenter extends BasePresenter{
     $this->template->product = $product;
     $this->template->modelProductsColors = $modelProductsColors;
     $this->template->modelProductsRams = $modelProductsRams;
+    $this->template->rating = $productRating;
+    $this->template->numberOfRatings = $numberOfRatings;
+    $this->template->reviews = $reviews;
   }
 
   protected function createComponentProductCartForm():Multiplier {
@@ -91,6 +117,10 @@ class ProductPresenter extends BasePresenter{
   #region injections
   public function injectProductsFacade(ProductsFacade $productsFacade):void {
     $this->productsFacade=$productsFacade;
+  }
+
+  public function injectReviewsFacade(ReviewsFacade $reviewsFacade):void {
+    $this->reviewsFacade=$reviewsFacade;
   }
 
   public function injectProductCartFormFactory(ProductCartFormFactory $productCartFormFactory):void {
