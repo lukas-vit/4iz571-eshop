@@ -3,7 +3,9 @@
 namespace App\AdminModule\Components\ProductEditForm;
 
 use App\Model\Entities\Product;
+use App\Model\Entities\ProductPhoto;
 use App\Model\Facades\CategoriesFacade;
+use App\Model\Facades\ProductPhotoFacade;
 use App\Model\Facades\ProductsFacade;
 use Nette;
 use Nette\Application\UI\Form;
@@ -33,6 +35,7 @@ class ProductEditForm extends Form{
 
   private CategoriesFacade $categoriesFacade;
   private ProductsFacade $productsFacade;
+  private ProductPhotoFacade $productPhotoFacade;
 
   /**
    * TagEditForm constructor.
@@ -42,11 +45,13 @@ class ProductEditForm extends Form{
    * @param ProductsFacade $productsFacade
    * @noinspection PhpOptionalBeforeRequiredParametersInspection
    */
-  public function __construct(Nette\ComponentModel\IContainer $parent = null, string $name = null, CategoriesFacade $categoriesFacade, ProductsFacade $productsFacade){
+  public function __construct(Nette\ComponentModel\IContainer $parent = null, string $name = null, CategoriesFacade $categoriesFacade,
+                              ProductsFacade $productsFacade, ProductPhotoFacade $productPhotoFacade){
     parent::__construct($parent, $name);
     $this->setRenderer(new Bs4FormRenderer(FormLayout::VERTICAL));
     $this->categoriesFacade=$categoriesFacade;
     $this->productsFacade=$productsFacade;
+    $this->productPhotoFacade=$productPhotoFacade;
     $this->createSubcomponents();
   }
 
@@ -92,27 +97,14 @@ class ProductEditForm extends Form{
     $this->addCheckbox('available', 'Nabízeno ke koupi')
       ->setDefaultValue(true);
 
-    #region obrázek
-    $photoUpload=$this->addUpload('photo','Fotka produktu');
-    //pokud není zadané ID produktu, je nahrání fotky povinné
-    $photoUpload //vyžadování nahrání souboru, pokud není známé productId
-      ->addConditionOn($productId, Form::EQUAL, '')
-        ->setRequired('Pro uložení nového produktu je nutné nahrát jeho fotku.');
-
-    $photoUpload //limit pro velikost nahrávaného souboru
-      ->addRule(Form::MAX_FILE_SIZE, 'Nahraný soubor je příliš velký', 1000000);
-
-    $photoUpload //kontrola typu nahraného souboru, pokud je nahraný
-      ->addCondition(Form::FILLED)
-        ->addRule(function(Nette\Forms\Controls\UploadControl $photoUpload){
-          $uploadedFile = $photoUpload->value;
-          if ($uploadedFile instanceof Nette\Http\FileUpload){
-            $extension=strtolower($uploadedFile->getImageFileExtension());
-            return in_array($extension,['jpg','jpeg','png']);
-          }
-          return false;
-        },'Je nutné nahrát obrázek ve formátu JPEG či PNG.');
-    #endregion obrázek
+    #region obrazky
+      $photosUpload = $this->addMultiUpload('photos', 'Fotografie produktu');
+      $photosUpload->addConditionOn($productId, Form::EQUAL, '')
+          ->setRequired('Pro uložení nového produktu je nutné nahrát alespoň jednu jeho fotografii');
+      $photosUpload->addRule(Form::MAX_LENGTH, 'Maximální počet fotografií, které lze nahrát je 10', 10);
+      $photosUpload->addRule(Form::MAX_FILE_SIZE, 'Nahraný soubor je příliš velký', 1000000);
+      $photosUpload->addRule(Form::IMAGE, 'Je nutné nahrát obrázky ve formátu JPEG či PNG.');
+    #endregion obrazky
 
     $this->addSubmit('ok','uložit')
       ->onClick[]=function(SubmitButton $button){
@@ -132,13 +124,17 @@ class ProductEditForm extends Form{
         $this->productsFacade->saveProduct($product);
         $this->setValues(['productId'=>$product->productId]);
 
-        //uložení fotky
-        if (($values['photo'] instanceof Nette\Http\FileUpload) && ($values['photo']->isOk())){
-          try{
-            $this->productsFacade->saveProductPhoto($values['photo'], $product);
-          }catch (\Exception $e){
-            $this->onFailed('Produkt byl uložen, ale nepodařilo se uložit jeho fotku.');
-          }
+
+        foreach ($values['photos'] as $photo){
+            if(($photo instanceof Nette\Http\FileUpload) && ($photo->isOk())){
+                //try{
+                      $productPhoto = new ProductPhoto();
+                      $this->productPhotoFacade->savePhoto($productPhoto);
+                //    $this->productPhotoFacade->savePhotoParameters($photo, $productPhoto, $product);
+                //}catch (\Exception $e){
+                //    $this->onFailed('Produkt byl uložen, ale nepodařilo se uložit jeho fotky.');
+                //}
+            }
         }
 
         $this->onFinished('Produkt byl uložen.');
