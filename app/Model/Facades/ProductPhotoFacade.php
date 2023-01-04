@@ -29,12 +29,17 @@ class ProductPhotoFacade{
         if ($fileUpload->isOk() && $fileUpload->isImage()){
             $fileExtension=strtolower($fileUpload->getImageFileExtension());
             $productPhoto->photoExtension=$fileExtension;
-            $productPhoto->productId = $product;
+            $productPhoto->product = $product;
+            $productPhoto->productId = $product->productId;
             $this->savePhoto($productPhoto);
         }
     }
 
     public function deletePhoto(){
 
+    }
+
+    public function findAllPhotos():array{
+        return $this->productPhotoRepository->findAll();
     }
 }

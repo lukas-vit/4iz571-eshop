@@ -1,8 +1,13 @@
 {varType App\Model\Entities\Product $product}
+{varType App\Model\Entities\ProductPhoto[] $photos}
 {block content}
 
 <h1 n:block="title">Úprava produktu {$product->title}</h1>
 
-<!--img src="{*$basePath.'/img/products/'.$product->productId.'.'.$product->photoExtension*}" alt="{*$product->title*}" width="250" height="312"-->
+{foreach $photos as $photo}
+    {if $photo->productId == $product->productId}
+        <img src="{$basePath.'/img/products/'.$photo->productPhotoId.'.'.$photo->photoExtension}" alt="{$product->title}" width="250" height="312">
+    {/if}
+{/foreach}
 
 {control productEditForm}

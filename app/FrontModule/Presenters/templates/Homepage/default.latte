@@ -1,5 +1,6 @@
 {varType App\Model\Entities\Product[] $products}
 {varType App\Model\Entities\Category[] $categories}
+{varType App\Model\Entities\ProductPhoto[] $photos}
 {block content}
 <div>
     <h2>Kategorie</h2>
@@ -21,6 +22,13 @@
                     <div class="col-6 col-xl-4 bg-light py-4 mt-2 mx-1">
                         <h3>{$product->title}</h3>
                         <p>Kategorie {$product->category->title}</p>
+                        {foreach $photos as $photo}
+                            {if $photo->productId == $product->productId}
+                                {if $photo->isThumbnail == true}
+                                    <img src="{$basePath.'/img/products/'.$photo->productPhotoId.'.'.$photo->photoExtension}" alt="{$product->title}" width="250" height="312">
+                                {/if}
+                            {/if}
+                        {/foreach}
                         <!--img src="{*$basePath.'/img/products/'.$product->productId.'.'.$product->photoExtension*}" alt="{*$product->title*}" width="150" height="187"-->
                         <div class="mb-2">{$product->description}</div>
                         <div class="row">

@@ -130,7 +130,7 @@ class ProductEditForm extends Form{
                 try{
                     $productPhoto = new ProductPhoto();
                     $this->productPhotoFacade->savePhotoParameters($photo, $productPhoto, $product);
-                    $photo->move(__DIR__.'/../../../../www/img/products/'.$product->productId.'-'.random_int(1,99999).'-'.random_int(1,99999).'.'.$productPhoto->photoExtension);
+                    $photo->move(__DIR__.'/../../../../www/img/products/'.$productPhoto->productPhotoId.'.'.$productPhoto->photoExtension);
                 }catch (\Exception $e){
                     $this->onFailed('Produkt byl uložen, ale nepodařilo se uložit jeho fotky.');
                 }

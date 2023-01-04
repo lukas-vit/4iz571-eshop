@@ -4,6 +4,7 @@ namespace App\AdminModule\Presenters;
 
 use App\AdminModule\Components\ProductEditForm\ProductEditForm;
 use App\AdminModule\Components\ProductEditForm\ProductEditFormFactory;
+use App\Model\Facades\ProductPhotoFacade;
 use App\Model\Facades\ProductsFacade;
 
 /**
@@ -15,6 +16,8 @@ class ProductPresenter extends BasePresenter{
   private $productsFacade;
   /** @var ProductEditFormFactory $productEditFormFactory */
   private $productEditFormFactory;
+  /** @var ProductPhotoFacade $productPhotoFacade */
+    private $productPhotoFacade;
 
   /**
    * Akce pro vykreslení seznamu produktů
@@ -38,6 +41,7 @@ class ProductPresenter extends BasePresenter{
     $form=$this->getComponent('productEditForm');
     $form->setDefaults($product);
     $this->template->product=$product;
+    $this->template->photos=$this->productPhotoFacade->findAllPhotos();
   }
 
   /**
@@ -98,6 +102,9 @@ class ProductPresenter extends BasePresenter{
   public function injectProductEditFormFactory(ProductEditFormFactory $productEditFormFactory){
     $this->productEditFormFactory=$productEditFormFactory;
   }
+    public function injectProductPhotoFacade(ProductPhotoFacade $productPhotoFacade){
+        $this->productPhotoFacade=$productPhotoFacade;
+    }
   #endregion injections
 
 }
