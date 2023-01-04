@@ -62,7 +62,7 @@ class PhpGenerator
 			$class->addMember($this->generateMethod($def));
 		}
 
-		$class->getMethod(Container::getMethodName(ContainerBuilder::THIS_CONTAINER))
+		$class->getMethod(Container::getMethodName(ContainerBuilder::ThisContainer))
 			->setReturnType($className)
 			->setBody('return $this;');
 
@@ -103,7 +103,7 @@ declare(strict_types=1);
 			$def->generateMethod($method, $this);
 			return $method;
 
-		} catch (\Exception $e) {
+		} catch (\Throwable $e) {
 			throw new ServiceCreationException("Service '$name': " . $e->getMessage(), 0, $e);
 		}
 	}
@@ -122,7 +122,9 @@ declare(strict_types=1);
 				return $this->formatPhp($entity, $arguments);
 
 			case is_string($entity): // create class
-				return $this->formatPhp("new $entity" . ($arguments ? '(...?)' : ''), $arguments ? [$arguments] : []);
+				return $arguments
+					? $this->formatPhp("new $entity(...?:)", [$arguments])
+					: $this->formatPhp("new $entity", []);
 
 			case is_array($entity):
 				switch (true) {
@@ -131,11 +133,12 @@ declare(strict_types=1);
 						if ($append = (substr($name, -2) === '[]')) {
 							$name = substr($name, 0, -2);
 						}
+
 						$prop = $entity[0] instanceof Reference
 							? $this->formatPhp('?->?', [$entity[0], $name])
-							: $this->formatPhp($entity[0] . '::$?', [$name]);
+							: $this->formatPhp('?::$?', [$entity[0], $name]);
 						return $arguments
-							? $this->formatPhp($prop . ($append ? '[]' : '') . ' = ?', [$arguments[0]])
+							? $this->formatPhp(($append ? '?[]' : '?') . ' = ?', [new Php\Literal($prop), $arguments[0]])
 							: $prop;
 
 					case $entity[0] instanceof Statement:
@@ -143,16 +146,17 @@ declare(strict_types=1);
 						if (substr($inner, 0, 4) === 'new ') {
 							$inner = "($inner)";
 						}
-						return $this->formatPhp("$inner->?(...?)", [$entity[1], $arguments]);
+
+						return $this->formatPhp('?->?(...?:)', [new Php\Literal($inner), $entity[1], $arguments]);
 
 					case $entity[0] instanceof Reference:
-						return $this->formatPhp('?->?(...?)', [$entity[0], $entity[1], $arguments]);
+						return $this->formatPhp('?->?(...?:)', [$entity[0], $entity[1], $arguments]);
 
 					case $entity[0] === '': // function call
-						return $this->formatPhp("$entity[1](...?)", [$arguments]);
+						return $this->formatPhp('?(...?:)', [new Php\Literal($entity[1]), $arguments]);
 
 					case is_string($entity[0]): // static method call
-						return $this->formatPhp("$entity[0]::$entity[1](...?)", [$arguments]);
+						return $this->formatPhp('?::?(...?:)', [new Php\Literal($entity[0]), $entity[1], $arguments]);
 				}
 		}
 
@@ -174,7 +178,7 @@ declare(strict_types=1);
 				$name = $val->getValue();
 				if ($val->isSelf()) {
 					$val = new Php\Literal('$service');
-				} elseif ($name === ContainerBuilder::THIS_CONTAINER) {
+				} elseif ($name === ContainerBuilder::ThisContainer) {
 					$val = new Php\Literal('$this');
 				} else {
 					$val = ContainerBuilder::literal('$this->getService(?)', [$name]);
@@ -198,10 +202,12 @@ declare(strict_types=1);
 			if (!is_int($k)) {
 				$param->setDefaultValue($v);
 			}
+
 			if (isset($tmp[1])) {
 				$param->setType($tmp[0]);
 			}
 		}
+
 		return $res;
 	}
 

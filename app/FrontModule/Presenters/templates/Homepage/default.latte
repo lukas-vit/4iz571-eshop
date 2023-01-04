@@ -20,8 +20,8 @@
             {if !empty($products)}
                 {foreach $products as $product}
                     <div class="col-12 sm:col-6 col-xl-4 bg-light py-4 mt-2 mx-1">
-                        <h3>{$product->title}</h3>
-                        <p>Kategorie {$product->category->title}</p>
+                        <h5>{$product->title} {if $product->ram}<span>{$product->ram} GB</span>{/if} {if $product->color}<span>{$product->color}</span>{/if}</h5>
+                        <h6>Kategorie {$product->category->title}</h6>
 
                         {foreach $photos as $photo}
                             {if $photo->productId == $product->productId}

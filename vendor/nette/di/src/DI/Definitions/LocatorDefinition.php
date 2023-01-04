@@ -30,6 +30,7 @@ final class LocatorDefinition extends Definition
 		if (!interface_exists($interface)) {
 			throw new Nette\InvalidArgumentException(sprintf("Service '%s': Interface '%s' not found.", $this->getName(), $interface));
 		}
+
 		$methods = (new \ReflectionClass($interface))->getMethods();
 		if (!$methods) {
 			throw new Nette\InvalidArgumentException(sprintf("Service '%s': Interface %s must have at least one method.", $this->getName(), $interface));
@@ -47,7 +48,16 @@ final class LocatorDefinition extends Definition
 					$method->name
 				));
 			}
+
+			if ($method->getNumberOfParameters() === 0) {
+				try {
+					Nette\DI\Helpers::ensureClassType(Nette\Utils\Type::fromReflection($method), "return type of $interface::$method->name()", true);
+				} catch (Nette\DI\ServiceCreationException $e) {
+					trigger_error($e->getMessage(), E_USER_DEPRECATED);
+				}
+			}
 		}
+
 		return parent::setType($interface);
 	}
 
@@ -67,6 +77,7 @@ final class LocatorDefinition extends Definition
 				? new Reference(substr($ref, 1))
 				: Reference::fromType($ref);
 		}
+
 		return $this;
 	}
 
@@ -110,6 +121,7 @@ final class LocatorDefinition extends Definition
 						$tag
 					), E_USER_NOTICE);
 				}
+
 				$this->references[$tag] = new Reference($name);
 			}
 		}
