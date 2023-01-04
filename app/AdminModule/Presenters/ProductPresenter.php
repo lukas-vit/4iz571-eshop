@@ -4,6 +4,7 @@ namespace App\AdminModule\Presenters;
 
 use App\AdminModule\Components\ProductEditForm\ProductEditForm;
 use App\AdminModule\Components\ProductEditForm\ProductEditFormFactory;
+use App\Model\Facades\ProductPhotoFacade;
 use App\Model\Facades\ProductsFacade;
 
 /**
@@ -15,6 +16,8 @@ class ProductPresenter extends BasePresenter{
   private $productsFacade;
   /** @var ProductEditFormFactory $productEditFormFactory */
   private $productEditFormFactory;
+  /** @var ProductPhotoFacade $productPhotoFacade */
+    private $productPhotoFacade;
 
   /**
    * Akce pro vykreslení seznamu produktů
@@ -38,6 +41,7 @@ class ProductPresenter extends BasePresenter{
     $form=$this->getComponent('productEditForm');
     $form->setDefaults($product);
     $this->template->product=$product;
+    $this->template->photos=$this->productPhotoFacade->findAllPhotos();
   }
 
   /**
@@ -65,6 +69,54 @@ class ProductPresenter extends BasePresenter{
     }
 
     $this->redirect('default');
+  }
+
+    /**
+     * Metoda na nastavení náhledové fotografie
+     * @param int $photoId
+     * @param int $productId
+     * @param bool $isThumbnail
+     * @return void
+     * @throws \Nette\Application\AbortException
+     */
+  public function handleThumbnail(int $photoId, int $productId, bool $isThumbnail = true){
+    try{
+        $productPhoto = $this->productPhotoFacade->getProductPhoto($photoId);
+    } catch (\Exception $e) {
+        $this->flashMessage('Tato fotografie už tu není.');
+        $this->redirect('this');
+    }
+
+      if($isThumbnail != $productPhoto->isThumbnail){
+        $productPhoto->isThumbnail = $isThumbnail;
+        if ($this->productPhotoFacade->savePhoto($productPhoto)){
+            $this->flashMessage('Fotografie byla nastavena jako náhled produktu.');
+        }
+    }
+    $this->redirect('this');
+      //TODO automaticky odebrat předešlý thumbnail a ponechat jen jeden
+  }
+
+    /**
+     * Metoda pro odstranění fotografie
+     * @param int $photoId
+     * @return void
+     * @throws \Nette\Application\AbortException
+     */
+  public function handleDeletePhoto(int $photoId):void{
+    try{
+        $productPhoto = $this->productPhotoFacade->getProductPhoto($photoId);
+    } catch (\Exception $e) {
+        $this->flashMessage('Tato fotografie už tu není.');
+        $this->redirect('this');
+    }
+    if($this->productPhotoFacade->deletePhoto($productPhoto)){
+        $this->flashMessage('Fotografie byla smazána');
+    }else{
+        $this->flashMessage('Fotografii se nepodařilo smazat', 'error');
+    }
+    $this->redirect('this');
+    //TODO odebrat fotografii ze složky na serveru
   }
 
   /**
@@ -98,6 +150,9 @@ class ProductPresenter extends BasePresenter{
   public function injectProductEditFormFactory(ProductEditFormFactory $productEditFormFactory){
     $this->productEditFormFactory=$productEditFormFactory;
   }
+    public function injectProductPhotoFacade(ProductPhotoFacade $productPhotoFacade){
+        $this->productPhotoFacade=$productPhotoFacade;
+    }
   #endregion injections
 
 }

@@ -4,6 +4,7 @@
 {varType App\Model\Entities\Review $reviews}
 {varType float $rating}
 {varType int $numberOfRatings}
+{varType App\Model\Entities\ProductPhoto[] $photos}
 {block content}
 
 <div class="container">
@@ -33,6 +34,16 @@
                     <span class="text-muted h6">Hodnoceno {$numberOfRatings} uživateli</span>
                     {/if}
                 </div>
+
+                {foreach $photos as $photo}
+                    {if $photo->productId == $product->productId}
+                        <img src="{$basePath.'/img/products/'.$photo->productPhotoId.'.'.$photo->photoExtension}" alt="{$product->title}" width="250" height="312">
+                    {/if}
+                {/foreach}
+
+                <p>
+                    {$product->description}
+                </p>
 
                 <div class="mt-4 row">
                     <div class="col-4">
@@ -190,26 +201,3 @@
         </div>
     </div>
 </div>
-
-<script type="text/javascript">
-    $(document).ready(function() {
-    $('#rateMe1').mdbRate();
-    });
-
-    var exampleModal = document.getElementById('exampleModal')
-    exampleModal.addEventListener('show.bs.modal', function (event) {
-    // Button that triggered the modal
-    var button = event.relatedTarget
-    // Extract info from data-bs-* attributes
-    var recipient = button.getAttribute('data-whatever')
-    // If necessary, you could initiate an AJAX request here
-    // and then do the updating in a callback.
-    //
-    // Update the modal's content.
-    var modalTitle = exampleModal.querySelector('.modal-title')
-    var modalBodyInput = exampleModal.querySelector('.modal-body input')
-
-    modalTitle.textContent = 'New message to ' + recipient
-    modalBodyInput.value = recipient
-    })
-</script>
