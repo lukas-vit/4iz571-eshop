@@ -129,8 +129,7 @@ class ProductEditForm extends Form{
             if(($photo instanceof Nette\Http\FileUpload) && ($photo->isOk())){
                 //try{
                       $productPhoto = new ProductPhoto();
-                      $this->productPhotoFacade->savePhoto($productPhoto);
-                //    $this->productPhotoFacade->savePhotoParameters($photo, $productPhoto, $product);
+                    $this->productPhotoFacade->savePhotoParameters($photo, $productPhoto, $product);
                 //}catch (\Exception $e){
                 //    $this->onFailed('Produkt byl uložen, ale nepodařilo se uložit jeho fotky.');
                 //}

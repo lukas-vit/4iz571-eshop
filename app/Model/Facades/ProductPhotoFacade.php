@@ -28,15 +28,11 @@ class ProductPhotoFacade{
     public function savePhotoParameters(FileUpload $fileUpload, ProductPhoto $productPhoto, Product $product):void{
         if ($fileUpload->isOk() && $fileUpload->isImage()){
             $fileExtension=strtolower($fileUpload->getImageFileExtension());
-            $fileUpload->move(__DIR__.'/../../../www/img/products/'.$productPhoto->photoId.'.'.$fileExtension);
+            //$fileUpload->move(__DIR__.'/../../../www/img/products/'.$productPhoto->photoId.'.'.$fileExtension);
             $productPhoto->photoExtension=$fileExtension;
-            $productPhoto->productId = $this->getProduct($product->productId);
+            $productPhoto->productId = $product;
             $this->savePhoto($productPhoto);
         }
-    }
-
-    public function getProduct(int $id):Product{
-        return $this->productRepository->find($id);
     }
 
     public function deletePhoto(){
