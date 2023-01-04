@@ -4,6 +4,7 @@ namespace App\FrontModule\Presenters;
 
 use App\FrontModule\Components\ProductCartForm\ProductCartForm;
 use App\FrontModule\Components\ProductCartForm\ProductCartFormFactory;
+use App\Model\Facades\ProductPhotoFacade;
 use App\Model\Facades\ProductsFacade;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Multiplier;
@@ -16,6 +17,7 @@ use Nette\Application\UI\Multiplier;
 class ProductPresenter extends BasePresenter{
   private ProductsFacade $productsFacade;
   private ProductCartFormFactory $productCartFormFactory;
+  private ProductPhotoFacade $productPhotoFacade;
 
   /** @persistent */
   public string $category;
@@ -33,6 +35,7 @@ class ProductPresenter extends BasePresenter{
     }
 
     $this->template->product = $product;
+    $this->template->photos = $this->productPhotoFacade->findAllPhotos();
   }
 
   protected function createComponentProductCartForm():Multiplier {
@@ -73,6 +76,9 @@ class ProductPresenter extends BasePresenter{
 
   public function injectProductCartFormFactory(ProductCartFormFactory $productCartFormFactory):void {
     $this->productCartFormFactory=$productCartFormFactory;
+  }
+  public function injectProductPhotoFacade(ProductPhotoFacade $productPhotoFacade){
+      $this->productPhotoFacade=$productPhotoFacade;
   }
   #endregion injections
 }

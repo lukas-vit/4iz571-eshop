@@ -12,7 +12,6 @@ use LeanMapper\Entity;
  * @property string $url
  * @property string $description
  * @property float $price
- * @property string $photoExtension = ''
  * @property bool $available = true
  * @property Category|null $category m:hasOne
  */

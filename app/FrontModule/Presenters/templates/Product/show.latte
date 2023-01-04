@@ -1,4 +1,5 @@
 {varType App\Model\Entities\Product $product}
+{varType App\Model\Entities\ProductPhoto[] $photos}
 {block content}
 
 <div class="container">
@@ -32,6 +33,16 @@
                     <span class="text-muted h6">Hodnoceno 73 uživateli</span>
                 </div>
 
+
+                {foreach $photos as $photo}
+                    {if $photo->productId == $product->productId}
+                        <img src="{$basePath.'/img/products/'.$photo->productPhotoId.'.'.$photo->photoExtension}" alt="{$product->title}" width="250" height="312">
+                    {/if}
+                {/foreach}
+
+                <p>
+                    {$product->description}
+                </p>
        
                 <div class="mt-4 row">
                     <div class="col-4">

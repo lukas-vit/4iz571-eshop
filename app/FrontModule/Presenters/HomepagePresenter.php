@@ -5,6 +5,7 @@ namespace App\FrontModule\Presenters;
 use App\FrontModule\Components\ProductCartForm\ProductCartForm;
 use App\FrontModule\Components\ProductCartForm\ProductCartFormFactory;
 use App\Model\Facades\CategoriesFacade;
+use App\Model\Facades\ProductPhotoFacade;
 use App\Model\Facades\ProductsFacade;
 use Nette\Application\UI\Multiplier;
 
@@ -13,11 +14,14 @@ class HomepagePresenter extends BasePresenter{
   private CategoriesFacade $categoriesFacade;
   /** @var ProductCartFormFactory $productCartFormFactory */
   private $productCartFormFactory;
+  /** @var ProductPhotoFacade $productPhotoFacade */
+    private $productPhotoFacade;
 
-  public function __construct(ProductsFacade $productsFacade, CategoriesFacade $categoriesFacade)
+  public function __construct(ProductsFacade $productsFacade, CategoriesFacade $categoriesFacade, ProductPhotoFacade $productPhotoFacade)
   {
       $this->productsFacade = $productsFacade;
       $this->categoriesFacade = $categoriesFacade;
+      $this->productPhotoFacade = $productPhotoFacade;
   }
 
   /**
@@ -27,6 +31,7 @@ class HomepagePresenter extends BasePresenter{
   {
       $this->template->products = $this->productsFacade->findProducts(['order' => 'title']);
       $this->template->categories = $this->categoriesFacade->findCategories(['order' => 'title']);
+      $this->template->photos = $this->productPhotoFacade->findAllPhotos();
   }
 
   /**
