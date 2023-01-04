@@ -40,6 +40,7 @@ services:
 	- App\FrontModule\Components\ProductCartForm\ProductCartFormFactory
 	- App\FrontModule\Components\CartControl\CartControlFactory
 	- App\FrontModule\Components\UserLoginControl\UserLoginControlFactory
+	- App\FrontModule\Components\ReviewForm\ReviewFormFactory
 
 	- App\Model\Facades\CartFacade
 	- App\Model\Facades\CategoriesFacade
@@ -58,7 +59,4 @@ services:
 	- App\Model\Repositories\ResourceRepository
 	- App\Model\Repositories\RoleRepository
 	- App\Model\Repositories\UserRepository
-	- App\Model\Repositories\CartRepository
-	- App\Model\Repositories\CartItemRepository
 	- App\Model\Repositories\ReviewRepository
-	- App\Model\Repositories\UserRepository
