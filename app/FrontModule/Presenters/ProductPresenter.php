@@ -5,6 +5,8 @@ namespace App\FrontModule\Presenters;
 use App\FrontModule\Components\ProductCartForm\ProductCartForm;
 use App\FrontModule\Components\ProductCartForm\ProductCartFormFactory;
 use App\Model\Facades\ProductPhotoFacade;
+use App\FrontModule\Components\ReviewForm\ReviewForm;
+use App\FrontModule\Components\ReviewForm\ReviewFormFactory;
 use App\Model\Facades\ProductsFacade;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Multiplier;
@@ -18,6 +20,7 @@ class ProductPresenter extends BasePresenter{
   private ProductsFacade $productsFacade;
   private ProductCartFormFactory $productCartFormFactory;
   private ProductPhotoFacade $productPhotoFacade;
+  private ReviewFormFactory $reviewFormFactory;
 
   /** @persistent */
   public string $category;
@@ -60,6 +63,32 @@ class ProductPresenter extends BasePresenter{
       return $form;
     });
   }
+  
+  /**
+   * Formulář na přidání review
+   * @return ReviewForm
+   */
+  protected function createComponentReviewForm():ReviewForm {
+    $form = $this->reviewFormFactory->create();
+    
+    $form->onSubmit[]=function(ReviewForm $form){
+      try{
+        $product = $this->productsFacade->getProduct($form->values->productId);
+        //TODO kontrola, zdali uživatel může napsat review - zdali má produkt koupený
+      }catch (\Exception $e){
+        $this->flashMessage('Uživatel nemůže napsat recenzi k produktu, který nezakoupil','error');
+        $this->redirect('this');
+      }
+    };
+
+    $form->onFinished[]=function(ReviewForm $form){
+      $this->flashMessage('Recenze byla úspěšně přidána','success');
+      $this->redirect('this');
+    };
+    //TODO
+
+    return $form;
+  }
 
   /**
    * Akce pro vykreslení přehledu produktů
@@ -73,12 +102,14 @@ class ProductPresenter extends BasePresenter{
   public function injectProductsFacade(ProductsFacade $productsFacade):void {
     $this->productsFacade=$productsFacade;
   }
-
   public function injectProductCartFormFactory(ProductCartFormFactory $productCartFormFactory):void {
     $this->productCartFormFactory=$productCartFormFactory;
   }
   public function injectProductPhotoFacade(ProductPhotoFacade $productPhotoFacade){
       $this->productPhotoFacade=$productPhotoFacade;
+  }
+  public function injectReviewFormFactory(ReviewFormFactory $reviewFormFactory):void {
+    $this->reviewFormFactory=$reviewFormFactory;
   }
   #endregion injections
 }

@@ -104,14 +104,50 @@
                 {for $i = 1; $i <= 5; $i++}
                 <div class="mt-4">
                     <div>
-                        <div class="h5"><strong>John Doe</strong></div>
-                        <p class="text-muted h6 font-italic"><small>Přidáno 14.2.2023</small></p>
-                        <span>
-                            {for $j = 1; $j <= 5; $j++}
-                                <span class="fa fa-star
-                                {if $j <= 4}checked{/if} text-warning"></span>
-                            {/for}
-                        </span>
+                        {var $productRating = $rating}
+                        {for $i = 0; $i < 5; $i++}
+                            {if $productRating - $i >= 1}
+                                <i class="fa-solid fa-star"></i>
+                            {elseif $productRating - $i < 1 && $productRating - $i > 0}
+                                <i class="fa-solid fa-star-half-stroke"></i>
+                            {else}
+                                <i class="fa-regular fa-star"></i>
+                            {/if}
+                        {/for}
+                    </div>
+                </div>
+
+                {if $numberOfRatings != 0}
+                <div class="text-muted mt-1 h6">Hodnoceno {$numberOfRatings} uživateli</div>
+                {/if}
+
+                <div class="mx-auto col-2 mt-3"><button type="button" class="btn btn-block btn-outline-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Ohodnotit</button></div>
+
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Nové hodnocení</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        {control addReviewForm}
+                       {*  <form id="ratingForm" method="post">
+                            <div class="modal-body">
+                                <div class="container">
+                                    <span id="rateMe1"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Hodnocení (1-5)</label>
+                                    <input type="text" class="form-control" id="recipient-name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="message-text" class="col-form-label">Popis</label>
+                                    <textarea class="form-control" id="message-text"></textarea>
+                                </div>
+                            </div>
+                        </form> *}
                     </div>
                     <div class="clearfix"></div>
                     <p class="text-muted h6">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
