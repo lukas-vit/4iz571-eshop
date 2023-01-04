@@ -127,12 +127,13 @@ class ProductEditForm extends Form{
 
         foreach ($values['photos'] as $photo){
             if(($photo instanceof Nette\Http\FileUpload) && ($photo->isOk())){
-                //try{
-                      $productPhoto = new ProductPhoto();
+                try{
+                    $productPhoto = new ProductPhoto();
                     $this->productPhotoFacade->savePhotoParameters($photo, $productPhoto, $product);
-                //}catch (\Exception $e){
-                //    $this->onFailed('Produkt byl uložen, ale nepodařilo se uložit jeho fotky.');
-                //}
+                    $photo->move(__DIR__.'/../../../../www/img/products/'.$product->productId.'-'.random_int(1,99999).'-'.random_int(1,99999).'.'.$productPhoto->photoExtension);
+                }catch (\Exception $e){
+                    $this->onFailed('Produkt byl uložen, ale nepodařilo se uložit jeho fotky.');
+                }
             }
         }
 

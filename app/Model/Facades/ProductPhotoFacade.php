@@ -28,7 +28,6 @@ class ProductPhotoFacade{
     public function savePhotoParameters(FileUpload $fileUpload, ProductPhoto $productPhoto, Product $product):void{
         if ($fileUpload->isOk() && $fileUpload->isImage()){
             $fileExtension=strtolower($fileUpload->getImageFileExtension());
-            //$fileUpload->move(__DIR__.'/../../../www/img/products/'.$productPhoto->photoId.'.'.$fileExtension);
             $productPhoto->photoExtension=$fileExtension;
             $productPhoto->productId = $product;
             $this->savePhoto($productPhoto);
