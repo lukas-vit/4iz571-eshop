@@ -45,6 +45,7 @@ services:
 	- App\Model\Facades\CategoriesFacade
 	- App\Model\Facades\ProductPhotoFacade
 	- App\Model\Facades\ProductsFacade
+	- App\Model\Facades\ReviewsFacade
 	- App\Model\Facades\UsersFacade
 
 	- App\Model\Repositories\CartItemRepository
@@ -56,4 +57,8 @@ services:
 	- App\Model\Repositories\ProductPhotoRepository
 	- App\Model\Repositories\ResourceRepository
 	- App\Model\Repositories\RoleRepository
+	- App\Model\Repositories\UserRepository
+	- App\Model\Repositories\CartRepository
+	- App\Model\Repositories\CartItemRepository
+	- App\Model\Repositories\ReviewRepository
 	- App\Model\Repositories\UserRepository
