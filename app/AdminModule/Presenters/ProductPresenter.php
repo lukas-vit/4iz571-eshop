@@ -71,6 +71,23 @@ class ProductPresenter extends BasePresenter{
     $this->redirect('default');
   }
 
+  public function handleThumbnail(int $photoId, int $productId, bool $isThumbnail = true){
+    try{
+        $productPhoto = $this->productPhotoFacade->getProductPhoto($photoId);
+    } catch (\Exception $e) {
+        $this->flashMessage('Tato fotografie už tu není.');
+        $this->redirect('this');
+    }
+
+      if($isThumbnail != $productPhoto->isThumbnail){
+        $productPhoto->isThumbnail = $isThumbnail;
+        if ($this->productPhotoFacade->savePhoto($productPhoto)){
+            $this->flashMessage('Fotografie byla nastavena jako náhled produktu.');
+        }
+    }
+    $this->redirect('this');
+  }
+
   /**
    * Formulář na editaci produktů
    * @return ProductEditForm

@@ -21,10 +21,22 @@ class ProductPhotoFacade{
         $this->productRepository = $productRepository;
     }
 
-    public function savePhoto(ProductPhoto &$productPhoto):void{
-        $this->productPhotoRepository->persist($productPhoto);
+    /**
+     * Metoda pro uložení fotografie
+     * @param ProductPhoto $productPhoto
+     * @return void
+     */
+    public function savePhoto(ProductPhoto &$productPhoto):bool{
+        return (bool)$this->productPhotoRepository->persist($productPhoto);
     }
 
+    /**
+     * Metoda na vyplnění hodnot fotografie
+     * @param FileUpload $fileUpload
+     * @param ProductPhoto $productPhoto
+     * @param Product $product
+     * @return void
+     */
     public function savePhotoParameters(FileUpload $fileUpload, ProductPhoto $productPhoto, Product $product):void{
         if ($fileUpload->isOk() && $fileUpload->isImage()){
             $fileExtension=strtolower($fileUpload->getImageFileExtension());
@@ -35,10 +47,33 @@ class ProductPhotoFacade{
         }
     }
 
-    public function deletePhoto(){
-
+    /**
+     * Metoda pro odstranění forografie
+     * @param ProductPhoto $productPhoto
+     * @return bool
+     */
+    public function deletePhoto(ProductPhoto $productPhoto):bool{
+        try {
+            return (bool)$this->productPhotoRepository->delete($productPhoto);
+        } catch (\Exception $e){
+            return false;
+        }
     }
 
+    /**
+     * Metoda pro nalezení jedné fotografie
+     * @param int $id
+     * @return ProductPhoto
+     * @throws \Exception
+     */
+    public function getProductPhoto(int $id):ProductPhoto{
+        return $this->productPhotoRepository->find($id);
+    }
+
+    /**
+     * Metoda pro vyhledání všech fotek
+     * @return array
+     */
     public function findAllPhotos():array{
         return $this->productPhotoRepository->findAll();
     }

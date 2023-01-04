@@ -6,7 +6,21 @@
 
 {foreach $photos as $photo}
     {if $photo->productId == $product->productId}
-        <img src="{$basePath.'/img/products/'.$photo->productPhotoId.'.'.$photo->photoExtension}" alt="{$product->title}" width="250" height="312">
+        <div class="col-6 col-xl-4 bg-light py-4 mt-2 mx-1">
+            <img src="{$basePath.'/img/products/'.$photo->productPhotoId.'.'.$photo->photoExtension}" alt="{$product->title}" width="250" height="312">
+            <div class="row">
+                <div class="col-6">
+                    {if $photo->isThumbnail}
+                        <a href="{plink thumbnail! photoId=>$photo->productPhotoId, productId=>$product->productId, isThumbnail=>false}" class="btn btn-block btn-primary">Náhledová fotografie</a>
+                    {else}
+                        <a href="{plink thumbnail! photoId=>$photo->productPhotoId, productId=>$product->productId}" class="btn btn-block btn-outline-primary">Udělat náhledovou fotografii</a>
+                    {/if}
+                </div>
+                <div class="col-6">
+                    <p class="btn btn-block btn-danger">Odstranit fotografii</p>
+                </div>
+            </div>
+        </div>
     {/if}
 {/foreach}
 

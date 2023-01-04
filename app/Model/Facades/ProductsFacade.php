@@ -91,22 +91,6 @@ class ProductsFacade{
     $this->productRepository->persist($product);
   }
 
-  /**
-   * Metoda pro uložení fotky produktu
-   * @param FileUpload $fileUpload
-   * @param Product $product
-   * @throws \Exception
-   */
-  public function saveProductPhoto(FileUpload $fileUpload, Product &$product):void {
-    if ($fileUpload->isOk() && $fileUpload->isImage()){
-      $fileExtension=strtolower($fileUpload->getImageFileExtension());
-      //TODO product image id
-      $fileUpload->move(__DIR__.'/../../../www/img/products/'.$product->productId.'.'.$fileExtension);
-      //$product->photoExtension=$fileExtension;
-      $this->saveProduct($product);
-    }
-  }
-
     /**
    * Metoda pro smazání produktu
    * @param Product $product
