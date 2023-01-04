@@ -2,14 +2,123 @@
 {varType App\Model\Entities\ProductPhoto[] $photos}
 {block content}
 
-<h1 n:block="title">{$product->title}</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="product-image">
+                {* <img src="{$product->image}" alt="{$product->title}" class="img-responsive"> *}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="product-info mt-4">
+                <h1 n:block="title" class="h2">{$product->title}</h1>
+                <div class="product-rating">
+                    <div>
+                       {*  <span class="fa fa-star
+                        {if $product->rating >= 1}checked{/if}"></span>
+                        <span class="fa fa-star
+                        {if $product->rating >= 2}checked{/if}"></span>
+                        <span class="fa fa-star
+                        {if $product->rating >= 3}checked{/if}"></span>
+                        <span class="fa fa-star
+                        {if $product->rating >= 4}checked{/if}"></span>
+                        <span class="fa fa-star
+                        {if $product->rating >= 5}checked{/if}"></span> *}
+                        <!-- foreach 5 stars -->
+                        {for $i = 1; $i <= 4; $i++}
+                            <span class="fa fa-star checked h5 text-warning"></span>
+                        {/for}
+                        <span class="fa fa-star h5 text-warning"></span>
+                    </div>
+                    <span class="text-muted h6">Hodnoceno 73 uživateli</span>
+                </div>
 
-{foreach $photos as $photo}
-    {if $photo->productId == $product->productId}
-        <img src="{$basePath.'/img/products/'.$photo->productPhotoId.'.'.$photo->photoExtension}" alt="{$product->title}" width="250" height="312">
-    {/if}
-{/foreach}
 
-<p>
-    {$product->description}
-</p>
+                {foreach $photos as $photo}
+                    {if $photo->productId == $product->productId}
+                        <img src="{$basePath.'/img/products/'.$photo->productPhotoId.'.'.$photo->photoExtension}" alt="{$product->title}" width="250" height="312">
+                    {/if}
+                {/foreach}
+
+                <p>
+                    {$product->description}
+                </p>
+       
+                <div class="mt-4 row">
+                    <div class="col-4">
+                        <label class="my-1 mr-2 h5" for="ram">Paměť</label>
+                        <select id="ram" class="custom-select mr-2">
+                            <option selected>128 GB</option>
+                            <option value="1">256 GB</option>
+                        </select>
+                    </div>
+                    <div class="col-4">
+                        <label class="my-1 mr-2 h5" for="color">Barva</label>
+                        <select id="color" class="custom-select">
+                            <option value="0" class="text-dark">&#9632; Černá</option>
+                            <option value="1" class="text-primary">&#9632; Modrá</option>
+                            <option value="2" class="text-muted">&#9632; Bílá</option>
+                            <option value="3" class="text-success">&#9632; Zelená</option>
+                            <option value="4" class="text-danger">&#9632; Červená</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mt-4 text-success h6">
+                    Skladem > 12 kusů
+                </div>
+                <div class="mt-4 row">
+                    <div class="col-5">
+                        {var $priceDiscount = $product->price * 0.95}
+                        <div class="price h3 text-danger">{$product->price} Kč <span class="text-secondary h6"><del><small>{$priceDiscount} Kč</small></del></span></div>
+                        {var $priceWithoutDPH = $product->price * 0.85}
+                        <div class="price text-muted h6">{$priceWithoutDPH} Kč bez DPH</div>
+                    </div>
+                    <div class="col-3">
+                        {control productCartForm-$product->productId}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="mt-4">
+                <h2 class="h3 text-center">Popis</h2>
+                <p class="mt-4 h6">{$product->description}</p>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="mt-4 text-center">
+                <h2 class="h3">Hodnocení</h2>
+                <p class="my-3 h4">4,7</p>
+                {for $i = 1; $i <= 5; $i++}
+                    <span class="fa fa-star checked h3 text-warning"></span>
+                {/for}
+                <div class="text-muted mt-1 h6">Hodnoceno 73 uživateli</div>
+            </div>
+            <!-- foreach reviews -->
+            <div class="mt-4">
+                <div class="row">
+                {for $i = 1; $i <= 5; $i++}
+                <div class="mt-4">
+                    <div>
+                        <div class="h5"><strong>John Doe</strong></div>
+                        <p class="text-muted h6 font-italic"><small>Přidáno 14.2.2023</small></p>
+                        <span>
+                            {for $j = 1; $j <= 5; $j++}
+                                <span class="fa fa-star
+                                {if $j <= 4}checked{/if} text-warning"></span>
+                            {/for}
+                        </span>
+                    </div>
+                    <div class="clearfix"></div>
+                    <p class="text-muted h6">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                </div>
+                {/for}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

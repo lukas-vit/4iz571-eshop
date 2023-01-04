@@ -1,0 +1,18 @@
+{varType App\Model\Entities\Product[] $products}
+{contentType application/xml}
+  <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+      <loc>{$baseUrl}</loc>
+      <changefreq>weekly</changefreq>
+      <priority>0.8</priority>
+    </url>
+    
+    {foreach $products as $product}
+      <url>
+        <loc>{link //Product:show url=>$product->url}</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+      </url>
+    {/foreach}
+    
+  </urlset>
