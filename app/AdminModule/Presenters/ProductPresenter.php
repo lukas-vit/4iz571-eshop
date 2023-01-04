@@ -71,6 +71,14 @@ class ProductPresenter extends BasePresenter{
     $this->redirect('default');
   }
 
+    /**
+     * Metoda na nastavení náhledové fotografie
+     * @param int $photoId
+     * @param int $productId
+     * @param bool $isThumbnail
+     * @return void
+     * @throws \Nette\Application\AbortException
+     */
   public function handleThumbnail(int $photoId, int $productId, bool $isThumbnail = true){
     try{
         $productPhoto = $this->productPhotoFacade->getProductPhoto($photoId);
@@ -86,6 +94,29 @@ class ProductPresenter extends BasePresenter{
         }
     }
     $this->redirect('this');
+      //TODO automaticky odebrat předešlý thumbnail a ponechat jen jeden
+  }
+
+    /**
+     * Metoda pro odstranění fotografie
+     * @param int $photoId
+     * @return void
+     * @throws \Nette\Application\AbortException
+     */
+  public function handleDeletePhoto(int $photoId):void{
+    try{
+        $productPhoto = $this->productPhotoFacade->getProductPhoto($photoId);
+    } catch (\Exception $e) {
+        $this->flashMessage('Tato fotografie už tu není.');
+        $this->redirect('this');
+    }
+    if($this->productPhotoFacade->deletePhoto($productPhoto)){
+        $this->flashMessage('Fotografie byla smazána');
+    }else{
+        $this->flashMessage('Fotografii se nepodařilo smazat', 'error');
+    }
+    $this->redirect('this');
+    //TODO odebrat fotografii ze složky na serveru
   }
 
   /**
