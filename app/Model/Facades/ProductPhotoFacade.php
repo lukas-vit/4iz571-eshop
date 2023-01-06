@@ -71,6 +71,16 @@ class ProductPhotoFacade{
     }
 
     /**
+     * Metoda pro nalezení fotografií produktu
+     * @param int $id
+     * @return array
+     * @throws \Exception
+     */
+    public function getProductPhotosByProductId(int $id):array{
+        return $this->productPhotoRepository->findAllBy(['product_id'=>$id]);
+    }
+
+    /**
      * Metoda pro vyhledání všech fotek
      * @return array
      */
