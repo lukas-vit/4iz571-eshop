@@ -47,7 +47,7 @@ class ReviewsFacade{
    * @param Review &$Review
    */
   public function saveReview(Review &$review):void {
-    //TODO
+    $this->reviewRepository->persist($review);
   }
 
     /**

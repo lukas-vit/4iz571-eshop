@@ -11,7 +11,7 @@ use LeanMapper\Entity;
  * @property int $productId
  * @property int $userId
  * @property string|null $description
- * @property float $rating
+ * @property int $rating
  * @property \DateTimeImmutable $date
  * @property-read Product $product m:hasOne
  * @property-read User $user m:hasOne
