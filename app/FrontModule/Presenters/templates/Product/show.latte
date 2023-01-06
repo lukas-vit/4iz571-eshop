@@ -12,6 +12,11 @@
         <div class="col-md-6">
             <div class="product-image">
                 {* <img src="{$product->image}" alt="{$product->title}" class="img-responsive"> *}
+                {foreach $photos as $photo}
+                    {if $photo->productId == $product->productId}
+                        <img src="{$basePath.'/img/products/'.$photo->productPhotoId.'.'.$photo->photoExtension}" alt="{$product->title}" width="250" height="312" class="img-responsive">
+                    {/if}
+                {/foreach}
             </div>
         </div>
         <div class="col-md-6">
@@ -32,18 +37,10 @@
                     </div>
                     {if $numberOfRatings != 0}
                     <span class="text-muted h6">Hodnoceno {$numberOfRatings} uživateli</span>
+                    {else}
+                    <span class="text-muted h6">Dosud nehodnoceno</span>
                     {/if}
                 </div>
-
-                {foreach $photos as $photo}
-                    {if $photo->productId == $product->productId}
-                        <img src="{$basePath.'/img/products/'.$photo->productPhotoId.'.'.$photo->photoExtension}" alt="{$product->title}" width="250" height="312">
-                    {/if}
-                {/foreach}
-
-                <p>
-                    {$product->description}
-                </p>
 
                 <div class="mt-4 row">
                     <div class="col-4">
@@ -115,7 +112,10 @@
         <div class="col-12">
             <div class="mt-4 text-center">
                 <h2 class="h3">Hodnocení</h2>
-                <p class="my-3 h4">{$rating}</p>
+
+                {if $numberOfRatings > 0}
+                    <p class="my-3 h4">{$rating}</p>
+                {/if}
 
                 <div class="product-rating text-warning">
                     <div>
@@ -136,8 +136,7 @@
                 <div class="text-muted mt-1 h6">Hodnoceno {$numberOfRatings} uživateli</div>
                 {/if}
 
-                <div class="mx-auto col-2 mt-3"><button type="button" class="btn btn-block btn-outline-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Ohodnotit</button></div>
-
+                <div class="mx-auto col-2 mt-3 mb-3"><button type="button" class="btn btn-block btn-outline-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Ohodnotit</button></div>
                 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -147,22 +146,11 @@
                             <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        {* {control reviewForm} *}
-                       {*  <form id="ratingForm" method="post">
-                            <div class="modal-body">
-                                <div class="container">
-                                    <span id="rateMe1"></span>
-                                </div>
-                                <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Hodnocení (1-5)</label>
-                                    <input type="text" class="form-control" id="recipient-name">
-                                </div>
-                                <div class="form-group">
-                                    <label for="message-text" class="col-form-label">Popis</label>
-                                    <textarea class="form-control" id="message-text"></textarea>
-                                </div>
+                        <div class="modal-body">
+                            <div class="text-left">
+                            {control reviewForm-$product->productId}
                             </div>
-                        </form> *}
+                        </div>
                     </div>
                 </div>
                 </div>

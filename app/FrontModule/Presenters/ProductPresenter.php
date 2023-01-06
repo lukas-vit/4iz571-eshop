@@ -7,10 +7,13 @@ use App\FrontModule\Components\ProductCartForm\ProductCartFormFactory;
 use App\Model\Facades\ProductPhotoFacade;
 use App\FrontModule\Components\ReviewForm\ReviewForm;
 use App\FrontModule\Components\ReviewForm\ReviewFormFactory;
+use App\Model\Entities\Review;
 use App\Model\Facades\ProductsFacade;
 use App\Model\Facades\ReviewsFacade;
+use App\Model\Facades\UsersFacade;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Multiplier;
+use Nette\Security\User;
 
 /**
  * Class ProductPresenter
@@ -23,6 +26,7 @@ class ProductPresenter extends BasePresenter{
   private ProductCartFormFactory $productCartFormFactory;
   private ProductPhotoFacade $productPhotoFacade;
   private ReviewFormFactory $reviewFormFactory;
+  private UsersFacade $usersFacade;
 
   /** @persistent */
   public string $category;
@@ -41,7 +45,7 @@ class ProductPresenter extends BasePresenter{
       $numberOfRatings = 0;
     
       try {
-        $reviews = $this->reviewsFacade->findReviews(['order'=>'rating', 'product_id'=>$product->productId]);
+        $reviews = $this->reviewsFacade->findReviews(['order'=>'date DESC', 'product_id'=>$product->productId]);
         if (count($reviews)!= 0) {
           $averageRating = 0.0;
           foreach ($reviews as $review) {
@@ -50,12 +54,12 @@ class ProductPresenter extends BasePresenter{
           $averageRating /= count($reviews);
           $numberOfRatings = count($reviews);
           $productRating =  round($averageRating, 1);
-        } else {
+        } /* else {
           $productRating = 4.5;
           $numberOfRatings = 0;
-        }
+        } */
       } catch (\Exception $e) {
-        $productRating = 4.5;
+        $productRating = 0;
         $numberOfRatings = 0;
       }
     }catch (\Exception $e){
@@ -94,30 +98,33 @@ class ProductPresenter extends BasePresenter{
     });
   }
   
-  /**
-   * Formulář na přidání review
-   * @return ReviewForm
-   */
-  protected function createComponentReviewForm():ReviewForm {
-    $form = $this->reviewFormFactory->create();
-    
-    $form->onSubmit[]=function(ReviewForm $form){
-      try{
-        $product = $this->productsFacade->getProduct($form->values->productId);
-        //TODO kontrola, zdali uživatel může napsat review - zdali má produkt koupený
-      }catch (\Exception $e){
-        $this->flashMessage('Uživatel nemůže napsat recenzi k produktu, který nezakoupil','error');
+  protected function createComponentReviewForm():Multiplier {
+    return new Multiplier(function($productId){
+      $form = $this->reviewFormFactory->create();
+      $form->setDefaults(['productId'=>$productId]);
+      $form->onSubmit[]=function(ReviewForm $form){
+        $userId = $this->getUser()->getId();
+
+        if ($userId == null) {
+          $this->flashMessage('Pro přidání recenze se musíte přihlásit','error');
+          $this->redirect('this');
+        }
+
+        //TODO check, že si opravdu produkt zakoupil - jinak by neměl psát recenzi
+
+        $review = new Review();
+        $review->productId = (int)$form->values->productId;
+        $review->userId = $userId;
+        $review->description = $form->values->description;
+        $review->rating = $form->values->rating;
+        $review->date = new \DateTimeImmutable();
+        $this->reviewsFacade->saveReview($review);
+        $this->flashMessage('Recenze byla úspěšně přidána','success');       
         $this->redirect('this');
-      }
-    };
+      };
 
-    $form->onFinished[]=function(ReviewForm $form){
-      $this->flashMessage('Recenze byla úspěšně přidána','success');
-      $this->redirect('this');
-    };
-    //TODO
-
-    return $form;
+      return $form;
+    });
   }
 
   /**
@@ -149,6 +156,10 @@ class ProductPresenter extends BasePresenter{
   #region injections
   public function injectProductsFacade(ProductsFacade $productsFacade):void {
     $this->productsFacade=$productsFacade;
+  }
+
+  public function injectUsersFacade(UsersFacade $usersFacade):void {
+    $this->usersFacade=$usersFacade;
   }
 
   public function injectReviewsFacade(ReviewsFacade $reviewsFacade):void {
