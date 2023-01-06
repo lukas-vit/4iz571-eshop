@@ -4,6 +4,8 @@ namespace App\FrontModule\Presenters;
 
 use App\FrontModule\Components\ProductCartForm\ProductCartForm;
 use App\FrontModule\Components\ProductCartForm\ProductCartFormFactory;
+use App\FrontModule\Components\ProductCartFormBig\ProductCartFormBig;
+use App\FrontModule\Components\ProductCartFormBig\ProductCartFormBigFactory;
 use App\Model\Facades\ProductPhotoFacade;
 use App\FrontModule\Components\ReviewForm\ReviewForm;
 use App\FrontModule\Components\ReviewForm\ReviewFormFactory;
@@ -24,6 +26,7 @@ class ProductPresenter extends BasePresenter{
   private ProductsFacade $productsFacade;
   private ReviewsFacade $reviewsFacade;
   private ProductCartFormFactory $productCartFormFactory;
+  private ProductCartFormBigFactory $productCartFormBigFactory;
   private ProductPhotoFacade $productPhotoFacade;
   private ReviewFormFactory $reviewFormFactory;
   private UsersFacade $usersFacade;
@@ -72,7 +75,7 @@ class ProductPresenter extends BasePresenter{
     $this->template->rating = $productRating;
     $this->template->numberOfRatings = $numberOfRatings;
     $this->template->reviews = $reviews;
-    $this->template->photos = $this->productPhotoFacade->findAllPhotos();
+    $this->template->photos = $this->productPhotoFacade->getProductPhotosByProductId($product->productId);
   }
 
   protected function createComponentProductCartForm():Multiplier {
@@ -80,6 +83,29 @@ class ProductPresenter extends BasePresenter{
       $form = $this->productCartFormFactory->create();
       $form->setDefaults(['productId'=>$productId]);
       $form->onSubmit[]=function(ProductCartForm $form){
+        try{
+          $product = $this->productsFacade->getProduct($form->values->productId);
+          //kontrola zakoupitelnosti
+        }catch (\Exception $e){
+          $this->flashMessage('Produkt nejde přidat do košíku','error');
+          $this->redirect('this');
+        }
+        //přidání do košíku
+        /** @var CartControl $cart */
+        $cart = $this->getComponent('cart');
+        $cart->addToCart($product, (int)$form->values->count);
+        $this->redirect('this');
+      };
+
+      return $form;
+    });
+  }
+  
+  protected function createComponentProductCartFormBig():Multiplier {
+    return new Multiplier(function($productId){
+      $form = $this->productCartFormBigFactory->create();
+      $form->setDefaults(['productId'=>$productId]);
+      $form->onSubmit[]=function(ProductCartFormBig $form){
         try{
           $product = $this->productsFacade->getProduct($form->values->productId);
           //kontrola zakoupitelnosti
@@ -168,6 +194,9 @@ class ProductPresenter extends BasePresenter{
 
   public function injectProductCartFormFactory(ProductCartFormFactory $productCartFormFactory):void {
     $this->productCartFormFactory=$productCartFormFactory;
+  }
+  public function injectProductCartFormBigFactory(ProductCartFormBigFactory $productCartFormBigFactory):void {
+    $this->productCartFormBigFactory=$productCartFormBigFactory;
   }
   public function injectProductPhotoFacade(ProductPhotoFacade $productPhotoFacade){
       $this->productPhotoFacade=$productPhotoFacade;
