@@ -17,6 +17,7 @@ use LeanMapper\Entity;
  * @property int $stock = 0
  * @property bool $available = true
  * @property Category|null $category m:hasOne
+ * @property ProductPhoto[] $photos m:belongsToMany
  */
 class Product extends Entity implements \Nette\Security\Resource{
 

@@ -39,6 +39,7 @@ services:
 	- App\FrontModule\Components\NewPasswordForm\NewPasswordFormFactory
 	- App\FrontModule\Components\ProductCartForm\ProductCartFormFactory
 	- App\FrontModule\Components\ProductCartFormBig\ProductCartFormBigFactory
+	- App\FrontModule\Components\ConfirmationForm\ConfirmationFormFactory
 	- App\FrontModule\Components\CartControl\CartControlFactory
 	- App\FrontModule\Components\UserLoginControl\UserLoginControlFactory
 	- App\FrontModule\Components\ReviewForm\ReviewFormFactory
