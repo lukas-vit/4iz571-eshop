@@ -15,7 +15,6 @@ use LeanMapper\Entity;
  * @property int $ram|null
  * @property string $color|null
  * @property int $stock = 0
- * @property string $photoExtension = ''
  * @property bool $available = true
  * @property Category|null $category m:hasOne
  */
