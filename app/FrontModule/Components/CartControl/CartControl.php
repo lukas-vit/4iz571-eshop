@@ -2,11 +2,14 @@
 
 namespace App\FrontModule\Components\CartControl;
 
+use App\FrontModule\Components\ConfirmationForm\ConfirmationForm;
+use App\FrontModule\Components\ConfirmationForm\ConfirmationFormFactory;
 use App\Model\Entities\Cart;
 use App\Model\Entities\CartItem;
 use App\Model\Entities\Product;
 use App\Model\Facades\CartFacade;
 use Nette\Application\UI\Control;
+use Nette\Application\UI\Multiplier;
 use Nette\Application\UI\Template;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
@@ -22,6 +25,13 @@ class CartControl extends Control
   private SessionSection $cartSession;
   private CartFacade $cartFacade;
   private Cart $cart;
+  private ConfirmationFormFactory $confirmationFormFactory;
+
+
+   /** @var callable[] $onFinished */
+   public $onFinished = [];
+   /** @var callable[] $onCancel */
+   public $onCancel = [];
 
   /**
    * Akce renderující šablonu s odkazem pro zobrazení košíku
@@ -45,6 +55,34 @@ class CartControl extends Control
     $this->cart->updateCartItems();
     try{
       $this->cartFacade->deleteCartItem($this->cartFacade->getCartItem($cartItemId));
+    }catch (\Exception $e){
+      //chybu odstranění ignorujeme (položka už tam pravděpodobně není)
+    }
+    $this->redirect('this');
+  }
+
+  public function handleAddCount($cartItemId){
+    $this->cart->updateCartItems();
+    try{
+      $cartItem = $this->cartFacade->getCartItem($cartItemId);
+      $cartItem->count++;
+      $this->cartFacade->saveCartItem($cartItem);
+    }catch (\Exception $e){
+      //chybu odstranění ignorujeme (položka už tam pravděpodobně není)
+    }
+    $this->redirect('this');
+  }
+
+  public function handleRemoveCount($cartItemId){
+    $this->cart->updateCartItems();
+    try{
+      $cartItem = $this->cartFacade->getCartItem($cartItemId);
+      $cartItem->count--;
+      if ($cartItem->count<=0){
+        $this->cartFacade->deleteCartItem($cartItem);
+      }else{
+        $this->cartFacade->saveCartItem($cartItem);
+      }
     }catch (\Exception $e){
       //chybu odstranění ignorujeme (položka už tam pravděpodobně není)
     }
@@ -86,13 +124,15 @@ class CartControl extends Control
    * @param User $user
    * @param Session $session
    * @param CartFacade $cartFacade
+   * @param ConfirmationFormFactory $confirmationFormFactory
    */
-  public function __construct(User $user, Session $session, CartFacade $cartFacade)
+  public function __construct(User $user, Session $session, CartFacade $cartFacade, ConfirmationFormFactory $confirmationFormFactory)
   {
     $this->user = $user;
     $this->cartFacade = $cartFacade;
     $this->cartSession = $session->getSection('cart');
     $this->cart = $this->prepareCart();
+    $this->confirmationFormFactory = $confirmationFormFactory;
   }
 
   /**
@@ -164,6 +204,25 @@ class CartControl extends Control
     $this->cartSession->set('cartId', $cart->cartId);
 
     return $cart;
+  }
+
+  protected function createComponentConfirmationForm(): Multiplier {
+    return new Multiplier(function($cartItemId) {
+      $form = $this->confirmationFormFactory->create();
+      $form->setDefaults(['cartItemId' => $cartItemId]);
+
+      $form->onSubmit[] = function(ConfirmationForm $form) {
+        if ($form['remove']->isSubmittedBy()) {
+          $this->cartFacade->deleteCartItem($this->cartFacade->getCartItem($form->values->cartItemId));
+          $this->cart = $this->prepareCart();
+          $this->redrawControl('cart');
+        } else {
+          $this->redirect('this');
+        }
+      };
+
+      return $form;
+    });
   }
 
   /**
