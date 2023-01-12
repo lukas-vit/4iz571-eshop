@@ -53,7 +53,6 @@ class BillingAddressForm extends Form{
       ->setRequired('Zadejte telefonní číslo');
     
     $this->addSubmit('submit','Pokračovat k platební metodě')
-      ->setValidationScope([])
       ->onClick[]=function(SubmitButton $button){
         $this->onFinished();
       };

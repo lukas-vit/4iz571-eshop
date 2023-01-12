@@ -41,10 +41,10 @@ class DeliveryForm extends Form{
       'dpd' => 'DPD',
       'ppl' => 'PPL',
     ];
-    $this->addRadioList('delivery', 'Způsob dopravy:', $deliveryMethods);
+    $this->addRadioList('delivery', 'Způsob dopravy:', $deliveryMethods)
+      ->setRequired('Vyberte způsob dopravy');
     
     $this->addSubmit('submit','Pokračovat na doručovací adresu')
-      ->setValidationScope([])
       ->onClick[]=function(SubmitButton $button){
         $this->onFinished();
       };

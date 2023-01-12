@@ -8,9 +8,9 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-8">
+        <div class="col-8 pl-0">
             <div id="accordion">
-                <div class="card border-0 shadow h6 text-small">
+                <div id="email" class="card border-0 shadow h6 text-small">
                     <div class="card-header" id="headingOne">
                         <h5 class="mb-0">
                             <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
@@ -21,7 +21,7 @@
 
                     <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
                         <div class="card-body">
-                            <form n:name=emailForm class=form>
+                            <form n:name=emailForm>
                                 <label class="h4 mb-3 mt-2 pb-2 pt-1">Jaká je vaše emailová adresa?</label>
                             <!-- TODO check přihlášení -->
                                 <div class="form-group">
@@ -30,23 +30,23 @@
                                     <input n:name=email type="text" class="form-control" id="email">
                                 </div>
                                 <div>
-                                    <input n:name=submit class="btn btn-primary w-100">
+                                    <input type="button" id="emailSubmitButton" n:name=submit class="btn btn-primary w-100">
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
-                <div class="card border-0  shadow h6 text-small">
+                <div id="delivery" class="card border-0  shadow h6 text-small">
                     <div class="card-header" id="headingTwo">
                         <h5 class="mb-0">
-                            <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            <button id="deliveryButton" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                                 Způsob dopravy
                             </button>
                         </h5>
                     </div>
                     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
                         <div class="card-body">
-                            <form n:name=deliveryForm class=form>
+                            <form n:name=deliveryForm>
                                 <div class="form-group">
                                     <label class="h4 mb-3 mt-2 pb-2 pt-1" n:name="delivery:$key" for="delivery:$key">Jak chcete objednávku doručit?</label>
 
@@ -64,23 +64,23 @@
                                     {/foreach}
                                 </div>
                                 <div>
-                                    <input n:name=submit class="btn btn-primary w-100">
+                                    <input type="button" id="deliverySubmitButton"  n:name=submit class="btn btn-primary w-100">
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
-                <div class="card border-0 shadow h6 text-small">
+                <div id="deliveryAddress" class="card border-0 shadow h6 text-small">
                     <div class="card-header" id="headingThree">
                         <h5 class="mb-0">
-                            <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            <button id="deliveryAddressButton" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
                                 Doručovací adresa
                             </button>
                         </h5>
                     </div>
                     <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
                         <div class="card-body">
-                            <form n:name=deliveryAddressForm class=form>
+                            <form id="deliveryAddressForm" n:name=deliveryAddressForm>
                                 <label class="h4 mb-3 mt-2 pb-2 pt-1">Jaká je vaše doručovací adresa?</label>
                                 <div class="form-group pb-2">
                                     <label n:name=name for="name">Jméno a přijmení</label>
@@ -107,25 +107,32 @@
                                         <input n:name=phone type="text" class="form-control" id="phone">
                                     </div>
                                 </div>
+
+                                <div class="d-flex align-middle align-items-center pb-4">
+                                    <input class="mr-2" type="checkbox"  n:name="sameAsBilling" id="sameAsBilling">
+                                    <label class="form-check-label" for="sameAsBilling">
+                                        Fakturační adresa je stejná jako doručovací
+                                    </label>
+                                </div>
                                 
                                 <div>
-                                    <input n:name=submit class="btn btn-primary w-100">
+                                    <input type="button" id="deliveryAddressSubmitButton" n:name=submit class="btn btn-primary w-100">
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
-                <div class="card border-0 shadow h6 text-small">
+                <div class="card border-0 shadow h6 text-small" id="billingAddress">
                     <div class="card-header" id="headingThree">
                         <h5 class="mb-0">
-                            <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                            <button id="billingAddressButton" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
                                 Fakturační adresa
                             </button>
                         </h5>
                     </div>
                     <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
                         <div class="card-body">
-                            <form n:name=billingAddressForm class=form>
+                            <form id="billingAddressForm" n:name=billingAddressForm>
                                 <label class="h4 mb-3 mt-2 pb-2 pt-1">Jaká je vaše fakturační adresa?</label>
                                 <div class="form-group pb-2">
                                     <label n:name=name for="name">Jméno a přijmení</label>
@@ -154,23 +161,23 @@
                                 </div>
                                 
                                 <div>
-                                    <input n:name=submit class="btn btn-primary w-100">
+                                    <input type="button" id="billingAddressSubmitButton" n:name=submit class="btn btn-primary w-100">
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
-                <div class="card border-0 shadow h6">
+                <div id="payment" class="card border-0 shadow h6">
                     <div class="card-header" id="headingThree">
                         <h5 class="mb-0">
-                            <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                            <button id="paymentButton"class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
                             Platební metoda
                             </button>
                         </h5>
                     </div>
                     <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordion">
                         <div class="card-body">
-                            <form n:name=paymentForm class=form>
+                            <form id="paymentForm" n:name=paymentForm>
                                 <div class="form-group">
                                     <label class="h4 mb-3 mt-2 pb-2 pt-1" n:name="payment:$key" for="payment:$key">Jak budete platit?</label>
 
@@ -187,7 +194,7 @@
                                     {/foreach}
                                 </div>
                                 <div>
-                                    <input n:name=submit class="btn btn-primary w-100">
+                                    <input type="button" id="paymentSubmitButton" n:name=submit class="btn btn-primary w-100">
                                 </div>
                             </form>
                         </div>
@@ -202,7 +209,7 @@
                 <a class="d-flex table-row h6 back-to-cart align-items-center text-right" href="{plink Cart:default}">Zpět do košíku</a>
             </div>
             {foreach $cart->items as $item}
-                <div class="d-flex flex-row pb-4">
+                <div class="d-flex flex-row py-2">
                     <div class="d-flex col-2">
                         {if count($item->product->photos) == 0}
                             <div class="d-flex align-items-center justify-content-center">
@@ -234,7 +241,7 @@
             <table class="h6 table table-borderless">
                     <tr>
                         <td class="col-8">Doprava</td>
-                        <td class="col-4 text-right">1 234 Kč</td>
+                        <td class="col-4 text-right">0 Kč</td>
                     </tr>
                     <tr>
                         <td class="col-8">DPH</td>
@@ -295,5 +302,36 @@
 $("label input").on("focus blur",function(){
     $(this).parent().parent().toggleClass("focused").toggleClass("border-hover");
 });
+
+$("#sameAsBilling").on("change",function(){
+    if($(this).is(":checked")) {
+        $("#billingAddress").toggle("hidden");
+        $("#deliveryAddressSubmitButton").val("Pokračovat na platební metodu");
+    } else {
+        $("#billingAddress").toggle("hidden");
+        $("#deliveryAddressSubmitButton").val("Pokračovat na fakturační adresu");
+    }
+});
+
+$("#emailSubmitButton").on("click",function(){
+   $("#deliveryButton").click();
+});
+
+$("#deliverySubmitButton").on("click",function(){
+   $("#deliveryAddressButton").click();
+});
+
+$("#deliveryAddressSubmitButton").on("click",function(){
+    if ($("#sameAsBilling").is(":checked")) {
+        $("#paymentButton").click();
+    } else {
+        $("#billingAddressButton").click();
+    }
+});
+
+$("#billingAddressSubmitButton").on("click",function(){
+   $("#paymentButton").click();
+});
+
 
 </script>

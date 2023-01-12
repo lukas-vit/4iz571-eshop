@@ -8,7 +8,7 @@ use LeanMapper\Entity;
  * Class User
  * @package App\Model\Entities
  * @property int $userId
- * @property string $name
+ * @property string\null $name
  * @property Role|null $role m:hasOne
  * @property string $email
  * @property string|null $facebookId = null

@@ -41,10 +41,6 @@ class EmailForm extends Form{
       ->setRequired('Zadejte platný email');
 
     
-    $this->addSubmit('submit','Pokračovat ke způsobu dopravy')
-      ->setValidationScope([])
-      ->onClick[]=function(SubmitButton $button){
-        $this->onFinished();
-      };
+    $this->addSubmit('submit','Pokračovat ke způsobu dopravy');
   }
 }

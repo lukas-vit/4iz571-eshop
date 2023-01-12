@@ -48,6 +48,7 @@ services:
 	- App\FrontModule\Components\DeliveryAddressForm\DeliveryAddressFormFactory
 	- App\FrontModule\Components\BillingAddressForm\BillingAddressFormFactory
 	- App\FrontModule\Components\DeliveryForm\DeliveryFormFactory
+	- App\FrontModule\Components\CartControl\CartControl
 
 	- App\Model\Facades\CartFacade
 	- App\Model\Facades\CategoriesFacade

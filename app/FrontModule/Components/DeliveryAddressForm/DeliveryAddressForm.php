@@ -51,9 +51,10 @@ class DeliveryAddressForm extends Form{
 
     $this->addText('phone','Telefon')
       ->setRequired('Zadejte telefonní číslo');
+
+    $this->addCheckbox('sameAsBilling','Fakturační adresa je stejná jako dodací adresa');
     
     $this->addSubmit('submit','Pokračovat na fakturační adresu')
-      ->setValidationScope([])
       ->onClick[]=function(SubmitButton $button){
         $this->onFinished();
       };

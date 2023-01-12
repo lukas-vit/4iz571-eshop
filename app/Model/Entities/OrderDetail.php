@@ -10,12 +10,7 @@ use LeanMapper\Entity;
  * @package App\Model\Entities
  * @property int $orderId
  * @property int|null $userId = null
- * @property int $paymentId
- * @property int $cartId
- * @property decimal $total
- * @property Cart $cart m:hasOne()
- * @property User $user m:hasOne()
- * @property Payment $payment m:hasOne()
+ * @property float $total
  * @property DateTime|null $created
  * @property DateTime|null $lastModified
  */

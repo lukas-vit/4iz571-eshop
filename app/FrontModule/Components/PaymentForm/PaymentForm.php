@@ -41,10 +41,10 @@ class PaymentForm extends Form{
       'card' => 'Platební karta',
       'cash' => 'Hotovost',
     ];
-    $this->addRadioList('payment', 'Platební metoda:', $paymentMethods);
+    $this->addRadioList('payment', 'Platební metoda:', $paymentMethods)
+      ->setRequired('Vyberte prosím platební metodu.');
     
     $this->addSubmit('submit','Závazně odeslat objednávku')
-      ->setValidationScope([])
       ->onClick[]=function(SubmitButton $button){
         $this->onFinished();
       };
