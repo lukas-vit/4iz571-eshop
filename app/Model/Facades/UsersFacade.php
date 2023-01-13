@@ -83,11 +83,6 @@ class UsersFacade{
     return (bool)$this->userRepository->persist($user);
   }
 
-  public function saveUserAndReturnUserId(User &$user) {
-    $this->userRepository->persist($user);
-    return $user->id;
-  }
-
   //TODO metoda pro smazání uživatele
 
     /**
