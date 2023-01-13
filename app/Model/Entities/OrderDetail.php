@@ -8,36 +8,19 @@ use LeanMapper\Entity;
 /**
  * Class OrderDetail
  * @package App\Model\Entities
- * @property int $orderId
- * @property int|null $userId = null
+ * @property int $orderDetailId
+ * @property int|null $userId
+ * @property int|null $paymentId
+ * @property string|null $paymentStatus
+ * @property int|null $deliveryId
+ * @property string|null $status
  * @property float $total
  * @property DateTime|null $created
  * @property DateTime|null $lastModified
+ * @property-read User|null $user m:hasOne
+ * @property-read Payment|null $payment m:hasOne
+ * @property-read Delivery|null $delivery m:hasOne
  */
 class OrderDetail extends Entity{
 
-/*   public function updateCartItems(){
-    $this->row->cleanReferencingRowsCache('cart_item'); //smažeme cache, aby se položky v košíku znovu načetly z DB bez nutnosti načtení celého košíku
-  } */
-
-/*   public function getTotalCount():int {
-    $result = 0;
-    if (!empty($this->items)){
-      foreach ($this->items as $item){
-        $result+=$item->count;
-      }
-    }
-    return $result;
-  }
-
-  public function getTotalPrice():float {
-    $result=0;
-    if (!empty($this->items)){
-      foreach ($this->items as $item){
-        $result+=$item->product->price*$item->count;
-      }
-    }
-    return $result;
-  }
- */
 }

@@ -1,5 +1,7 @@
 {varType App\Model\Entities\OrderDetail $order}   
 {varType App\Model\Entities\Cart $cart}
+{varType App\Model\Entities\Payment[] $payments}
+{varType App\Model\Entities\Delivery[] $deliveries}
 
 {var $totalWithoutDph = $cart->getTotalPrice() / 1.21}
 {var $totalDph = $cart->getTotalPrice() - $totalWithoutDph}
@@ -27,7 +29,7 @@
                                 <div class="form-group">
                                     <label class="h6 text-small mb-3 text-center">Pro pokračování jako host vyplňte svoji emailovou adresu. Nebo se <a href="{plink User:login}">přihlašte</a> do svého účtu.</label>
                                     <label n:name=email for="email">Emailová adresa</label>
-                                    <input n:name=email type="text" class="form-control" id="email">
+                                    <input n:name=email type="email" class="form-control" id="email">
                                 </div>
                                 <div>
                                     <input type="button" id="emailSubmitButton" n:name=emailSubmitButton class="btn btn-primary w-100">
@@ -49,6 +51,11 @@
                                     <label class="h4 mb-3 mt-2 pb-2 pt-1" n:name="delivery:$key" for="delivery:$key">Jak chcete objednávku doručit?</label>
 
                                     {foreach $form[delivery]->getItems() as $key => $label}
+                                        {foreach $deliveries as $delivery}
+                                            {if $delivery->deliveryId == $key}
+                                                {var $itemDelivery = $delivery}
+                                            {/if}
+                                        {/foreach}
                                         <label class="w-100 mb-1 p-4 border border-1 border-hover border-light rounded my-2">
                                                 <div class="d-flex align-middle align-items-center">
                                                     <input class="mr-4" type="radio" n:name="delivery:$key" id="delivery:$key">
@@ -57,9 +64,12 @@
                                                         <div class="text-small"><strong>Doručení do 2 dnů</strong></div>
                                                     </span>
                                                     {if $cart->getTotalPrice() > 10000}
-                                                        <span class="ml-auto text-primary">zdarma</span>
+                                                        <div>
+                                                            <p class="ml-auto text-muted text-small line-through">{$itemDelivery->price} Kč</p>
+                                                            <span class="ml-auto text-primary">zdarma</span>
+                                                        </div>
                                                     {else}
-                                                        <span class="ml-auto text-primary">123 Kč</span>
+                                                        <span class="ml-auto text-primary">{$itemDelivery->price} Kč</span>
                                                     {/if}
                                                 </div>
                                         </label>
@@ -178,13 +188,18 @@
                                     <label class="h4 mb-3 mt-2 pb-2 pt-1" n:name="payment:$key" for="payment:$key">Jak budete platit?</label>
 
                                     {foreach $form[payment]->getItems() as $key => $label}
+                                        {foreach $payments as $payment}
+                                            {if $payment->paymentId == $key}
+                                                {var $itemPayment = $payment}
+                                            {/if}
+                                        {/foreach}
                                         <label class="w-100 mb-1 p-4 border border-1 border-hover border-light rounded my-2">
                                                 <div class="d-flex align-middle align-items-center">
                                                     <input class="mr-4" type="radio" n:name="payment:$key" id="delivery:$key">
                                                     <span class="mr-auto">
                                                         <div class="text-primary">{$label}</div>
                                                     </span>
-                                                    <span class="ml-auto text-primary">123 Kč</span>
+                                                    <span class="ml-auto text-primary">{$itemPayment->price} Kč</span>
                                                 </div>
                                         </label>
                                     {/foreach}
@@ -292,6 +307,11 @@
     padding: 0.75rem;
 }
 
+.line-through {
+    font-size: 12px;
+    text-decoration: line-through;
+}
+
 input::placeholder {
     color: #c7c7c7 !important;
 }
@@ -315,7 +335,7 @@ $(document).ready(function() {
     });
 
     $("#emailSubmitButton").on("click",function(){
-    $("#deliveryButton").click();
+        $("#deliveryButton").click();
     });
 
     $("#deliverySubmitButton").on("click",function(){

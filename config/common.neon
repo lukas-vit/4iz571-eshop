@@ -53,6 +53,8 @@ services:
 	- App\Model\Facades\ReviewsFacade
 	- App\Model\Facades\UsersFacade
 	- App\Model\Facades\OrdersFacade
+	- App\Model\Facades\DeliveriesFacade
+	- App\Model\Facades\PaymentsFacade
 
 	- App\Model\Repositories\CartItemRepository
 	- App\Model\Repositories\CartRepository
@@ -66,3 +68,8 @@ services:
 	- App\Model\Repositories\UserRepository
 	- App\Model\Repositories\ReviewRepository
 	- App\Model\Repositories\OrderDetailRepository
+	- App\Model\Repositories\OrderItemRepository
+	- App\Model\Repositories\UserAddressRepository
+	- App\Model\Repositories\PaymentRepository
+	- App\Model\Repositories\DeliveryRepository
+	

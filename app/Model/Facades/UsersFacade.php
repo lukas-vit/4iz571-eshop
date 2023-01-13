@@ -9,10 +9,12 @@ use App\Model\Entities\Permission;
 use App\Model\Entities\Resource;
 use App\Model\Entities\Role;
 use App\Model\Entities\User;
+use App\Model\Entities\UserAddress;
 use App\Model\Repositories\ForgottenPasswordRepository;
 use App\Model\Repositories\PermissionRepository;
 use App\Model\Repositories\ResourceRepository;
 use App\Model\Repositories\RoleRepository;
+use App\Model\Repositories\UserAddressRepository;
 use App\Model\Repositories\UserRepository;
 use LeanMapper\Exception\InvalidStateException;
 use Nette\Security\SimpleIdentity;
@@ -25,6 +27,8 @@ use Nette\Utils\Random;
 class UsersFacade{
   /** @var UserRepository $userRepository */
   private $userRepository;
+  /** @var UserAddressRepository $userAddressRepository */
+  private $userAddressRepository;
   /** @var PermissionRepository $permissionRepository */
   private $permissionRepository;
   /** @var RoleRepository $roleRepository */
@@ -36,12 +40,13 @@ class UsersFacade{
 
   public function __construct(UserRepository $userRepository, PermissionRepository $permissionRepository,
                               RoleRepository $roleRepository, ResourceRepository $resourceRepository,
-                              ForgottenPasswordRepository $forgottenPasswordRepository){
+                              ForgottenPasswordRepository $forgottenPasswordRepository, UserAddressRepository $userAddressRepository){
     $this->userRepository=$userRepository;
     $this->permissionRepository=$permissionRepository;
     $this->roleRepository=$roleRepository;
     $this->resourceRepository=$resourceRepository;
     $this->forgottenPasswordRepository=$forgottenPasswordRepository;
+    $this->userAddressRepository=$userAddressRepository;
   }
 
   /**
@@ -94,6 +99,10 @@ class UsersFacade{
      */
   public function findUsers(array $params=null,int $offset=null,int $limit=null):array{
       return $this->userRepository->findAllBy($params,$offset,$limit);
+  }
+
+  public function saveUserAddress(UserAddress &$address) {
+    return (bool)$this->userAddressRepository->persist($address);
   }
 
   /**

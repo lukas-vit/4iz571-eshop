@@ -55,7 +55,6 @@ class CartFacade{
     }catch (\Exception $e){}
   }
 
-
   /**
    * Metoda vracející konkrétní CartItem
    * @param int $cartItemId

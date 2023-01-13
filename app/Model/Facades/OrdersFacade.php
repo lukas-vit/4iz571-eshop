@@ -2,8 +2,14 @@
 
 namespace App\Model\Facades;
 
+use App\Model\Entities\Delivery;
 use App\Model\Entities\OrderDetail;
+use App\Model\Entities\OrderItem;
+use App\Model\Entities\Payment;
+use App\Model\Repositories\DeliveryRepository;
 use App\Model\Repositories\OrderDetailRepository;
+use App\Model\Repositories\OrderItemRepository;
+use App\Model\Repositories\PaymentRepository;
 use Nette\Utils\Strings;
 
 /**
@@ -13,6 +19,9 @@ use Nette\Utils\Strings;
 class OrdersFacade{
 
   private OrderDetailRepository $orderDetailRepository;
+  private OrderItemRepository $orderItemRepository;
+  private PaymentRepository $paymentRepository;
+  private DeliveryRepository $deliveryRepository;
 
   /**
    * Metoda pro získání jednoho order detailu
@@ -56,7 +65,15 @@ class OrdersFacade{
     }
   }
 
-  public function __construct(OrderDetailRepository $orderDetailRepository){
-    $this->orderDetailRepository=$orderDetailRepository;
+  public function saveOrderItem(OrderItem &$orderItem):void {
+    $this->orderItemRepository->persist($orderItem);
+  }
+
+  public function __construct(OrderDetailRepository $orderDetailRepository,OrderItemRepository $orderItemRepository,PaymentRepository $paymentRepository,DeliveryRepository $deliveryRepository)
+  {
+    $this->orderDetailRepository = $orderDetailRepository;
+    $this->orderItemRepository = $orderItemRepository;
+    $this->paymentRepository = $paymentRepository;
+    $this->deliveryRepository = $deliveryRepository;
   }
 }

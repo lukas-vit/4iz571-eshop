@@ -5,14 +5,14 @@ namespace App\Model\Entities;
 use LeanMapper\Entity;
 
 /**
- * Class Payment
+ * Class Delivery
  * @package App\Model\Entities
- * @property int $paymentId
+ * @property int $deliveryId
  * @property string $name
- * @property string $type
  * @property float $price
+ * @property int $deliveryTime
  * @property \DateTimeImmutable $lastModified
  */
-class Payment extends Entity {
+class Delivery extends Entity {
 
 }

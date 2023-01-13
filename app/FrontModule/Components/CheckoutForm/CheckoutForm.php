@@ -2,6 +2,8 @@
 
 namespace App\FrontModule\Components\CheckoutForm;
 
+use App\Model\Facades\DeliveriesFacade;
+use App\Model\Facades\PaymentsFacade;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
@@ -21,14 +23,19 @@ class CheckoutForm extends Form{
 
   use SmartObject;
 
+  private DeliveriesFacade $deliveriesFacade;
+  private PaymentsFacade $paymentsFacade;
+
   /**
    * CheckoutForm constructor.
    * @param Nette\ComponentModel\IContainer|null $parent
    * @param string|null $name
    */
-  public function __construct(Nette\ComponentModel\IContainer $parent = null, string $name = null){
+  public function __construct(Nette\ComponentModel\IContainer $parent = null, string $name = null, DeliveriesFacade $deliveriesFacade, PaymentsFacade $paymentsFacade){
     parent::__construct($parent, $name);
     $this->setRenderer(new Bs4FormRenderer(FormLayout::VERTICAL));
+    $this->deliveriesFacade = $deliveriesFacade;
+    $this->paymentsFacade = $paymentsFacade;
     $this->createSubcomponents();
   }
 
@@ -40,10 +47,12 @@ class CheckoutForm extends Form{
     $this->addButton('emailSubmitButton','Pokračovat ke způsobu dopravy');
 
     //delivery form
-    $deliveryMethods = [
-      'dpd' => 'DPD',
-      'ppl' => 'PPL',
-    ];
+    // get values from database
+    $deliveryMethods = $this->deliveriesFacade->findAllDeliveries();
+    $deliveryMethods = array_map(function ($delivery) {
+      return $delivery->name;
+    }, $deliveryMethods);
+
     $this->addRadioList('delivery', 'Způsob dopravy:', $deliveryMethods);
      /*  ->setRequired('Vyberte způsob dopravy'); */
     
@@ -94,10 +103,13 @@ class CheckoutForm extends Form{
     $this->addButton('billingAddressSubmitButton','Pokračovat k platební metodě');
 
     //payment form
-    $paymentMethods = [
-      'card' => 'Platební karta',
-      'cash' => 'Hotovost',
-    ];
+    // get values from database
+
+    $paymentMethods = $this->paymentsFacade->findAllPayments();
+    $paymentMethods = array_map(function ($payment) {
+      return $payment->name;
+    }, $paymentMethods);
+
     $this->addRadioList('payment', 'Platební metoda:', $paymentMethods);
 /*       ->setRequired('Vyberte prosím platební metodu.'); */
     
