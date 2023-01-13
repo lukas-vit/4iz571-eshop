@@ -17,7 +17,9 @@
         </div>
         
         <p class="mt-2 text-muted h5">Celkem (bez DPH) {$totalWithoutDph|number:0,',',' '} Kč</p>
-        <p class="mt-4 h6 font-weight-bold"><i class="fa-solid fa-circle-check mr-2" style="color:green"></i>Máš dopravu zdarma!</p>
+        {if $cart->getTotalPrice() > 10000}
+            <p class="mt-4 h6 font-weight-bold"><i class="fa-solid fa-circle-check mr-2" style="color:green"></i>Máte dopravu zdarma!</p>
+        {/if}
         <a href="{plink Checkout:default}" class="mt-4 mx-auto btn btn-success btn-lg btn-block w-25">K pokladně</a>
     </div>
     <div class="container my-5">

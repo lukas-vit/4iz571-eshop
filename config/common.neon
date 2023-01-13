@@ -43,11 +43,7 @@ services:
 	- App\FrontModule\Components\CartControl\CartControlFactory
 	- App\FrontModule\Components\UserLoginControl\UserLoginControlFactory
 	- App\FrontModule\Components\ReviewForm\ReviewFormFactory
-	- App\FrontModule\Components\EmailForm\EmailFormFactory
-	- App\FrontModule\Components\PaymentForm\PaymentFormFactory
-	- App\FrontModule\Components\DeliveryAddressForm\DeliveryAddressFormFactory
-	- App\FrontModule\Components\BillingAddressForm\BillingAddressFormFactory
-	- App\FrontModule\Components\DeliveryForm\DeliveryFormFactory
+	- App\FrontModule\Components\CheckoutForm\CheckoutFormFactory
 	- App\FrontModule\Components\CartControl\CartControl
 
 	- App\Model\Facades\CartFacade

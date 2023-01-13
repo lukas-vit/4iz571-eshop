@@ -3,17 +3,9 @@
 
 namespace App\FrontModule\Presenters;
 
-use App\FrontModule\Components\BillingAddressForm\BillingAddressForm;
-use App\FrontModule\Components\BillingAddressForm\BillingAddressFormFactory;
 use App\FrontModule\Components\CartControl\CartControl;
-use App\FrontModule\Components\DeliveryAddressForm\DeliveryAddressForm;
-use App\FrontModule\Components\DeliveryAddressForm\DeliveryAddressFormFactory;
-use App\FrontModule\Components\DeliveryForm\DeliveryForm;
-use App\FrontModule\Components\DeliveryForm\DeliveryFormFactory;
-use App\FrontModule\Components\EmailForm\EmailForm;
-use App\FrontModule\Components\EmailForm\EmailFormFactory;
-use App\FrontModule\Components\PaymentForm\PaymentForm;
-use App\FrontModule\Components\PaymentForm\PaymentFormFactory;
+use App\FrontModule\Components\CheckoutForm\CheckoutForm;
+use App\FrontModule\Components\CheckoutForm\CheckoutFormFactory;
 use App\Model\Entities\Cart;
 use App\Model\Entities\OrderDetail;
 use App\Model\Entities\User as EntitiesUser;
@@ -29,16 +21,8 @@ use Nette\Application\BadRequestException;
 * @package App\FrontModule\Presenters
 */
 class CheckoutPresenter extends BasePresenter{
-    /** @var EmailFormFactory $emailFormFactory */
-    private $emailFormFactory;
-    /** @var DeliveryFormFactory $deliveryFormFactory */
-    private $deliveryFormFactory;
-    /** @var DeliveryAddressFormFactory $deliveryAddressFormFactory */
-    private $deliveryAddressFormFactory;
-    /** @var BillingAddressFormFactory $billingAddressFormFactory */
-    private $billingAddressFormFactory;
-    /** @var PaymentFormFactory $paymentFormFactory */
-    private $paymentFormFactory;
+    /** @var CheckoutFormFactory $checkoutFormFactory */
+    private $checkoutFormFactory;
     /** @var UsersFacade $usersFacade */
     private $usersFacade;
     /** @var OrdersFacade $ordersFacade */
@@ -50,13 +34,9 @@ class CheckoutPresenter extends BasePresenter{
     private Cart $cart;
     private User $user;
 
-    public function __construct(User $user, EmailFormFactory $emailFormFactory, DeliveryFormFactory $deliveryFormFactory, DeliveryAddressFormFactory $deliveryAddressFormFactory, BillingAddressFormFactory $billingAddressFormFactory, PaymentFormFactory $paymentFormFactory, UsersFacade $usersFacade, OrdersFacade $ordersFacade, CartFacade $cartFacade, CartControl $cartControl) {
+    public function __construct(User $user, CheckoutFormFactory $checkoutFormFactory, UsersFacade $usersFacade, OrdersFacade $ordersFacade, CartFacade $cartFacade, CartControl $cartControl) {
         parent::__construct();
-        $this->emailFormFactory=$emailFormFactory;
-        $this->deliveryFormFactory=$deliveryFormFactory;
-        $this->deliveryAddressFormFactory=$deliveryAddressFormFactory;
-        $this->billingAddressFormFactory=$billingAddressFormFactory;
-        $this->paymentFormFactory=$paymentFormFactory;
+        $this->checkoutFormFactory=$checkoutFormFactory;
         $this->usersFacade=$usersFacade;
         $this->ordersFacade=$ordersFacade;
         $this->cartFacade=$cartFacade;
@@ -65,25 +45,23 @@ class CheckoutPresenter extends BasePresenter{
         $this->user = $user;
     }
 
-    /**
-     * Akce pro zobrazení jednoho produktu
-     * @param string $cartId
-     * @throws BadRequestException
-     */
     public function renderDefault():void {
         $this->template->cart = $this->cart;
+        if ($this->cart->getTotalPrice() == 0.0) {
+            $this->redirect("Cart:default");
+        }
     }
 
     /**
      * Formulář pro zadání emailu
-     * @return EmailForm
+     * @return CheckoutForm
      */
-    protected function createComponentEmailForm():EmailForm {
-        $form=$this->emailFormFactory->create();
-        $form->onSubmit[]=function(EmailForm $form){
+    protected function createComponentCheckoutForm():CheckoutForm {
+        $form=$this->checkoutFormFactory->create();
+        $form->onSubmit[]=function(CheckoutForm $form){
             $values=$form->getValues('array');
 
-           /*  //Check if user is logged in
+            //Check if user is logged in
             if ($this->user->isLoggedIn()) {
                 $user = $this->usersFacade->getUser($this->user->getId());
             } else {
@@ -109,109 +87,13 @@ class CheckoutPresenter extends BasePresenter{
             } catch (\Exception $e) {
                 $this->flashMessage('Nepodařilo se uložit email','danger');
                 $this->redirect('this');
-            } */
+            }
         };
         return $form;
     }
 
-    /**
-     * Formulář pro zadání způsobu dopravy
-     * @return DeliveryForm
-     */
-    protected function createComponentDeliveryForm():DeliveryForm {
-        $form=$this->deliveryFormFactory->create();
-        $form->onFinished[]=function()use($form){
-        $values=$form->getValues('array');
-        /* try{
-            $this->usersFacade->saveUser($values['name']);
-            $this->usersFacade->saveUserAdress($values['']);
-        }catch (\Exception $e){
-            $this->flashMessage('Nepodařilo se uložit email','danger');
-            $this->redirect('this');
-        } */
-
-        };
-        return $form;
-    }
-
-    /**
-     * Formulář pro zadání adresy dodání
-     * @return DeliveryAddressForm
-     */
-    protected function createComponentDeliveryAddressForm():DeliveryAddressForm {
-        $form=$this->deliveryAddressFormFactory->create();
-        $form->onFinished[]=function()use($form){
-        $values=$form->getValues('array');
-        /* try{
-            $this->usersFacade->saveUser($values['name']);
-            $this->usersFacade->saveUserAdress($values['']);
-        }catch (\Exception $e){
-            $this->flashMessage('Nepodařilo se uložit email','danger');
-            $this->redirect('this');
-        } */
-
-        };
-        return $form;
-    }
-
-    /**
-     * Formulář pro zadání adresy fakturace
-     * @return BillingAddressForm
-     */
-    protected function createComponentBillingAddressForm():BillingAddressForm {
-        $form=$this->billingAddressFormFactory->create();
-        $form->onFinished[]=function()use($form){
-        $values=$form->getValues('array');
-        /* try{
-            $this->usersFacade->saveUser($values['name']);
-            $this->usersFacade->saveUserAdress($values['']);
-        }catch (\Exception $e){
-            $this->flashMessage('Nepodařilo se uložit email','danger');
-            $this->redirect('this');
-        } */
-
-        };
-        return $form;
-    }
-
-    /**
-     * Formulář pro zadání způsobu platby
-     * @return PaymentForm
-     */
-    protected function createComponentPaymentForm():PaymentForm {
-        $form=$this->paymentFormFactory->create();
-        $form->onFinished[]=function()use($form){
-        $values=$form->getValues('array');
-        /* try{
-            $this->usersFacade->saveUser($values['name']);
-            $this->usersFacade->saveUserAdress($values['']);
-        }catch (\Exception $e){
-            $this->flashMessage('Nepodařilo se uložit email','danger');
-            $this->redirect('this');
-        } */
-
-        };
-        return $form;
-    }
-
-    public function injectCheckoutFormFactory(EmailFormFactory $emailFormFactory){
-        $this->emailFormFactory=$emailFormFactory;
-    }
-
-    public function injectDeliveryFormFactory(DeliveryFormFactory $deliveryFormFactory){
-        $this->deliveryFormFactory=$deliveryFormFactory;
-    }
-
-    public function injectDeliveryAddressFormFactory(DeliveryAddressFormFactory $deliveryAddressFormFactory){
-        $this->deliveryAddressFormFactory=$deliveryAddressFormFactory;
-    }
-
-    public function injectBillingAddressFormFactory(BillingAddressFormFactory $billingAddressFormFactory){
-        $this->billingAddressFormFactory=$billingAddressFormFactory;
-    }
-
-    public function injectPaymentFormFactory(PaymentFormFactory $paymentFormFactory){
-        $this->paymentFormFactory=$paymentFormFactory;
+    public function injectCheckoutFormFactory(CheckoutFormFactory $checkoutFormFactory){
+        $this->checkoutFormFactory=$checkoutFormFactory;
     }
 
     public function injectUsersFacade(UsersFacade $usersFacade){
