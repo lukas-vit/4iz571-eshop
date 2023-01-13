@@ -119,9 +119,11 @@
                 <div class="mt-4 row">
                     <div class="col-5">
                         {var $priceDiscount = round($product->price * 0.95)}
-                        <div class="price h3 text-danger">{$product->price} Kč <span class="text-secondary price-sale"><del><small>{$priceDiscount} Kč</small></del></span></div>
+                        <div class="price h3 text-danger">{$product->price|number:0,',',' '} Kč
+                        {*  <span class="text-secondary price-sale"><del><small>{$priceDiscount} Kč</small></del></span> *}
+                        </div>
                         {var $priceWithoutDPH = round($product->price * 0.85)}
-                        <div class="price text-muted h6">{$priceWithoutDPH} Kč bez DPH</div>
+                        <div class="price text-muted h6">{$priceWithoutDPH|number:0,',',' '} Kč bez DPH</div>
                     </div>
                     <div class="col-5">
                         {control productCartFormBig-$product->productId}
@@ -130,14 +132,6 @@
             </div>
         </div>
     </div>
-   {*  <div class="row mt-4">
-        <div class="col-12">
-            <div class="mt-4">
-                <h2 class="h3 text-center">Popis</h2>
-                <p class="mt-4 text-muted h6">{$product->description}</p>
-            </div>
-        </div>
-    </div> *}
 
     <div class="row mt-2">
         <div class="col-12">
@@ -220,7 +214,7 @@
 
 <style scoped>
 .price-sale {
-    font-size: 14px;
+    font-size: 12px;
 }
 
 .description {

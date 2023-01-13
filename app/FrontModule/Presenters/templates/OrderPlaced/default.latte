@@ -1,0 +1,28 @@
+{block content}
+
+<div class="text-center h6 mt-5">
+    <div class="popper">🎉</div>
+    <div class="h1 py-4">Objednávka byla úspěšně odeslána.</div>
+    <p>Děkujeme za váš nákup!<p>
+    <p>Informace o platbě a dalším postupu naleznete v emailu.</p>
+</div>
+
+<a href="{plink Homepage:default}" class="mt-4 mx-auto btn btn-primary btn-block w-25">Objevujte další věci v katalogu</a>
+
+<style scoped>
+    .popper {
+        font-size: 5rem;
+        animation: popper 1s ease-in-out infinite;
+    }
+    @keyframes popper {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.2);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+</style>

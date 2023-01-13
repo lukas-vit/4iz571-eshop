@@ -10,8 +10,8 @@ use LeanMapper\Entity;
  * @package App\Model\Entities
  * @property int $cartId
  * @property int|null $userId = null
- * @property CartItem[] $items m:belongsToMany
  * @property DateTime|null $lastModified
+ * @property CartItem[] $items m:belongsToMany
  */
 class Cart extends Entity{
 

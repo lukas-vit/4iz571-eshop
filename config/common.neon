@@ -43,6 +43,8 @@ services:
 	- App\FrontModule\Components\CartControl\CartControlFactory
 	- App\FrontModule\Components\UserLoginControl\UserLoginControlFactory
 	- App\FrontModule\Components\ReviewForm\ReviewFormFactory
+	- App\FrontModule\Components\CheckoutForm\CheckoutFormFactory
+	- App\FrontModule\Components\CartControl\CartControl
 
 	- App\Model\Facades\CartFacade
 	- App\Model\Facades\CategoriesFacade
@@ -50,6 +52,9 @@ services:
 	- App\Model\Facades\ProductsFacade
 	- App\Model\Facades\ReviewsFacade
 	- App\Model\Facades\UsersFacade
+	- App\Model\Facades\OrdersFacade
+	- App\Model\Facades\DeliveriesFacade
+	- App\Model\Facades\PaymentsFacade
 
 	- App\Model\Repositories\CartItemRepository
 	- App\Model\Repositories\CartRepository
@@ -62,3 +67,9 @@ services:
 	- App\Model\Repositories\RoleRepository
 	- App\Model\Repositories\UserRepository
 	- App\Model\Repositories\ReviewRepository
+	- App\Model\Repositories\OrderDetailRepository
+	- App\Model\Repositories\OrderItemRepository
+	- App\Model\Repositories\UserAddressRepository
+	- App\Model\Repositories\PaymentRepository
+	- App\Model\Repositories\DeliveryRepository
+	

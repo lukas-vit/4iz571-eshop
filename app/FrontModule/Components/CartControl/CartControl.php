@@ -156,7 +156,7 @@ class CartControl extends Control
   /**
    * Metoda pro přípravu košíku uloženého v DB
    */
-  private function prepareCart(): Cart
+  public function prepareCart(): Cart
   {
     #region zkusíme najít košík podle ID ze session
     try {
