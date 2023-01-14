@@ -97,6 +97,7 @@ class CheckoutPresenter extends BasePresenter{
 
             //create order items
             foreach ($this->cart->getItems() as $item) {
+                //TODO odečtení z počtu skladem
                 $orderItem = new OrderItem();
                 $orderItem->orderDetailId = $order->orderDetailId;
                 $orderItem->productId = $item->product->productId;
@@ -143,7 +144,12 @@ class CheckoutPresenter extends BasePresenter{
             
             //calculate total
             $orderTotal = $this->cart->getTotalPrice();
-            $orderTotal += $orderDelivery->price;
+
+            //doprava zdarma nad 20000
+            if ($orderTotal < 20000) {
+                $orderTotal += $orderDelivery->price;
+            }
+
             $orderTotal += $orderPayment->price;
 
             $order->total = $orderTotal;

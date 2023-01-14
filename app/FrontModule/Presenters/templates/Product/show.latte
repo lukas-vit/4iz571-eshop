@@ -10,7 +10,7 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-md-6 p-4">
+        <div class="col-md-6 px-5">
             <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
                 <ol class="carousel-indicators">
                     {for $i = 0; $i < count($photos); $i++}
@@ -74,26 +74,26 @@
                 </div>
 
                 <div class="mt-4 row">
-                    <div class="col-5">
+                    <div class="col col-md-5">
                         <label class="my-1 mr-2 h5" for="ram">Paměť</label>
                         <div class="dropdown">
                             <button class="border rounded btn dropdown-toggle w-100 text-left" type="button" id="dropdownRam" data-toggle="dropdown" aria-expanded="false">
                                 {$product->ram} GB
                             </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownRam">
+                            <ul class="dropdown-menu w-100" aria-labelledby="dropdownRam">
                                 {foreach $modelProductsRams as $modelProduct}
                                     <li><a class="dropdown-item p-2" href="{$modelProduct->url}">{$modelProduct->ram} GB</a></li>
                                 {/foreach}
                             </ul>   
                         </div>
                     </div>
-                    <div class="col-5">
+                    <div class="col col-md-5">
                         <label class="my-1 mr-2 h5" for="color">Barva</label>
                         <div class="dropdown">
                             <button class="border rounded btn dropdown-toggle w-100 text-left" type="button" id="dropdownColor" data-toggle="dropdown" aria-expanded="false">
                                 <span class="align-middle" style="color:{$product->color}">&#9632;</span><span class="align-middle ml-1">{$product->color}<span>
                             </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownColor">
+                            <ul class="dropdown-menu w-100" aria-labelledby="dropdownColor">
                                 {foreach $modelProductsColors as $modelProduct}
                                     <li><a class="dropdown-item px-1 py-0" href="{$modelProduct->url}"><span class="h2 align-middle" style="color:{$modelProduct->color}">&#9632;</span><span class="align-middle ml-1">{$modelProduct->color}<span></a></li>
                                 {/foreach }
@@ -125,7 +125,7 @@
                         {var $priceWithoutDPH = round($product->price * 0.85)}
                         <div class="price text-muted h6">{$priceWithoutDPH|number:0,',',' '} Kč bez DPH</div>
                     </div>
-                    <div class="col-5">
+                    <div class="col col-md-5">
                         {control productCartFormBig-$product->productId}
                     </div>
                 </div>
@@ -161,7 +161,7 @@
                 <div class="text-muted mt-1 h6">Hodnoceno {$numberOfRatings} uživateli</div>
                 {/if}
 
-                <div class="mx-auto col-2 mt-3 mb-3"><button type="button" class="btn btn-block btn-outline-primary" data-toggle="modal" data-target="#exampleModal">Ohodnotit</button></div>
+                <div class="mx-auto col-6 col-md-2 mt-3 mb-3"><button type="button" class="btn btn-block btn-outline-primary" data-toggle="modal" data-target="#exampleModal">Ohodnotit</button></div>
                 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">

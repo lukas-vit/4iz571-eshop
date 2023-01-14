@@ -10,16 +10,19 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-8 pl-0">
+        <div class="col-12 col-md-8 pl-0">
             <form id="checkout-form" n:name=checkoutForm>
                 <div id="accordion">
                     <div id="email" class="card border-0 shadow h6 text-small">
                         <div class="card-header" id="headingOne">
-                            <h5 class="mb-0">
-                                <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                    Emailová adresa
-                                </button>
-                            </h5>
+                            <div class="d-flex">
+                                <h5 class="mb-0">
+                                    <button type="button"id="emailButton" class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        Emailová adresa
+                                    </button>
+                                </h5>
+                                <button type="button" id="editButtonEmail" class="btn back-to-cart ml-auto d-none">upravit</button>
+                            </div>
                         </div>
 
                         <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
@@ -37,13 +40,16 @@
                             </div>
                         </div>
                     </div>
-                    <div id="delivery" class="card border-0  shadow h6 text-small">
+                    <div id="deliveryDiv" class="card border-0  shadow h6 text-small">
                         <div class="card-header" id="headingTwo">
-                            <h5 class="mb-0">
-                                <button type="button" id="deliveryButton" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                    Způsob dopravy
-                                </button>
-                            </h5>
+                            <div class="d-flex">
+                                <h5 class="mb-0">
+                                    <button type="button" id="deliveryButton" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        Způsob dopravy
+                                    </button>
+                                </h5>
+                                <button type="button" id="editButtonDelivery" class="btn back-to-cart ml-auto d-none">upravit</button>
+                            </div>
                         </div>
                         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
                             <div class="card-body">
@@ -58,12 +64,12 @@
                                         {/foreach}
                                         <label class="w-100 mb-1 p-4 border border-1 border-hover border-light rounded my-2">
                                                 <div class="d-flex align-middle align-items-center">
-                                                    <input class="mr-4" type="radio" n:name="delivery:$key" id="delivery:$key">
+                                                    <input class="mr-4" type="radio" n:name="delivery:$key" id="delivery" data-value="{$itemDelivery->price}">
                                                     <span class="mr-auto">
                                                         <div class="text-primary">{$label}</div>
-                                                        <div class="text-small"><strong>Doručení do 2 dnů</strong></div>
+                                                        <div class="text-small"><strong>Doručení do {$itemDelivery->deliveryTime} dnů</strong></div>
                                                     </span>
-                                                    {if $cart->getTotalPrice() > 10000}
+                                                    {if $cart->getTotalPrice() > 20000}
                                                         <div>
                                                             <p class="ml-auto text-muted text-small line-through">{$itemDelivery->price} Kč</p>
                                                             <span class="ml-auto text-primary">zdarma</span>
@@ -83,11 +89,14 @@
                     </div>
                     <div id="deliveryAddress" class="card border-0 shadow h6 text-small">
                         <div class="card-header" id="headingThree">
-                            <h5 class="mb-0">
-                                <button type="button" id="deliveryAddressButton" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                    Doručovací adresa
-                                </button>
-                            </h5>
+                            <div class="d-flex">
+                                <h5 class="mb-0">
+                                    <button type="button" id="deliveryAddressButton" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                        Doručovací adresa
+                                    </button>
+                                </h5>
+                                <button type="button" id="editButtonDeliveryAddress" class="btn back-to-cart ml-auto d-none">upravit</button>
+                            </div>
                         </div>
                         <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
                             <div class="card-body">
@@ -133,11 +142,14 @@
                     </div>
                     <div class="card border-0 shadow h6 text-small" id="billingAddress">
                         <div class="card-header" id="headingThree">
-                            <h5 class="mb-0">
-                                <button type="button" id="billingAddressButton" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                                    Fakturační adresa
-                                </button>
-                            </h5>
+                            <div class="d-flex">
+                                <h5 class="mb-0">
+                                    <button type="button" id="billingAddressButton" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                        Fakturační adresa
+                                    </button>
+                                </h5>
+                                <button type="button" id="editButtonBillingAddress" class="btn back-to-cart ml-auto d-none">upravit</button>
+                            </div>
                         </div>
                         <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
                             <div class="card-body">
@@ -174,13 +186,16 @@
                             </div>
                         </div>
                     </div>
-                    <div id="payment" class="card border-0 shadow h6">
+                    <div id="paymentDiv" class="card border-0 shadow h6">
                         <div class="card-header" id="headingThree">
-                            <h5 class="mb-0">
-                                <button type="button" id="paymentButton"class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-                                Platební metoda
-                                </button>
-                            </h5>
+                            <div class="d-flex">
+                                <h5 class="mb-0">
+                                    <button type="button" id="paymentButton"class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                                    Platební metoda
+                                    </button>
+                                </h5>
+                                <button type="button" id="editButtonPayment" class="btn back-to-cart ml-auto d-none">upravit</button>
+                            </div>
                         </div>
                         <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordion">
                             <div class="card-body">
@@ -195,7 +210,7 @@
                                         {/foreach}
                                         <label class="w-100 mb-1 p-4 border border-1 border-hover border-light rounded my-2">
                                                 <div class="d-flex align-middle align-items-center">
-                                                    <input class="mr-4" type="radio" n:name="payment:$key" id="delivery:$key">
+                                                    <input class="mr-4" type="radio" n:name="payment:$key" id="payment" data-value="{$itemPayment->price}">
                                                     <span class="mr-auto">
                                                         <div class="text-primary">{$label}</div>
                                                     </span>
@@ -214,7 +229,7 @@
             </form>
         </div>
            
-        <div class="col-4 shadow">
+        <div class="col-12 col-md-4 shadow">
             <div class="d-flex flex-row py-4">
                 <div class="d-flex table-row mr-auto h4 font-weight-bold">Shrnutí</div>
                 <a class="d-flex table-row h6 back-to-cart align-items-center text-right" href="{plink Cart:default}">Zpět do košíku</a>
@@ -252,15 +267,19 @@
             <table class="h6 table table-borderless">
                     <tr>
                         <td class="col-8">Doprava</td>
-                        <td class="col-4 text-right">0 Kč</td>
+                        <td class="col-4 text-right"><span id="deliveryPrice">0</span> Kč</td>
+                    </tr>
+                    <tr>
+                        <td class="col-8">Platba</td>
+                        <td class="col-4 text-right"><span id="paymentPrice">0</span> Kč</td>
                     </tr>
                     <tr>
                         <td class="col-8">DPH</td>
-                        <td class="col-4 text-right">{$totalDph|number:0,',',' '} Kč</td>
+                        <td class="col-4 text-right"><span id="dph">{$totalDph|number:0,',',' '}</span> Kč</td>
                     </tr>
                     <tr>
                         <td class="col-8">Celkem (bez DPH)</td>
-                        <td class="col-4 text-right">{$totalWithoutDph|number:0,',',' '} Kč</td>
+                        <td class="col-4 text-right"><span id="totalWithoutDph">{$totalWithoutDph|number:0,',',' '}</span> Kč</td>
                     </tr>
                 </tbody>
             </table>
@@ -268,7 +287,7 @@
                 <tbody>
                     <tr>
                         <td class="py-4 col-8 h6"><strong>Cena objednávky s DPH<strong></td>
-                        <td class="py-4 col-4 h6 text-right"><strong>{$cart->getTotalPrice()|number:0,',',' '} Kč<strong></td>
+                        <td class="py-4 col-4 h6 text-right"><strong><span id="total">{$cart->getTotalPrice()|number:0,',',' '}</span> Kč<strong></td>
                     </tr>
                 </tbody>
             </table>
@@ -336,10 +355,12 @@ $(document).ready(function() {
 
     $("#emailSubmitButton").on("click",function(){
         $("#deliveryButton").click();
+        $("#editButtonEmail").removeClass("d-none");
     });
 
     $("#deliverySubmitButton").on("click",function(){
-    $("#deliveryAddressButton").click();
+        $("#deliveryAddressButton").click();
+        $("#editButtonDelivery").removeClass("d-none");
     });
 
     $("#deliveryAddressSubmitButton").on("click",function(){
@@ -347,11 +368,64 @@ $(document).ready(function() {
             $("#paymentButton").click();
         } else {
             $("#billingAddressButton").click();
+            $("#editButtonDeliveryAddress").removeClass("d-none");
         }
     });
 
     $("#billingAddressSubmitButton").on("click",function(){
-    $("#paymentButton").click();
+        $("#paymentButton").click();
+        $("#editButtonBillingAddress").removeClass("d-none");
+    });
+
+    $("#editButtonEmail").on("click", function(){
+        $("#emailButton").click();
+    })
+
+    $("#editButtonDelivery").on("click", function(){
+        $("#deliveryButton").click();
+    })
+
+    $("#editButtonDeliveryAddress").on("click", function(){
+        $("#deliveryAddressButton").click();
+    })
+
+    $("#editButtonBillingAddress").on("click", function(){
+        $("#billingAddressButton").click();
+    })
+
+    $("#editButtonPayment").on("click", function(){
+        $("#paymentButton").click();
+    })
+
+    var orderTotal = {$cart->getTotalPrice()};
+    //calculate total and totalWihtoudDph and dph
+    function calculateTotalAndDph(orderTotal) {
+        var total = orderTotal + parseInt($("#deliveryPrice").html()) + parseInt($("#paymentPrice").html());
+        var totalWithoutDph = total / 1.21;
+        var dph = total - totalWithoutDph;
+        $("#total").html((Math.round(total)).toLocaleString());
+        $("#totalWithoutDph").html((Math.round(totalWithoutDph)).toLocaleString());
+        $("#dph").html((Math.round(dph)).toLocaleString());
+    }
+
+    // change price of delivery based on selected delivery method
+    $("input[name='delivery']").on("change",function(){
+        var deliveryMethod = $("input[name='delivery']:checked").val();
+        var deliveryPrice = $(this).data("value");
+        if (orderTotal > 20000) {
+            $("#deliveryPrice").html(0);
+        } else {
+            $("#deliveryPrice").html(deliveryPrice);
+        }
+        calculateTotalAndDph(orderTotal);
+    });
+
+    // change price of payment based on selected payment method
+    $("input[name='payment']").on("change",function(){
+        var paymentMethod = $("input[name='payment']:checked").val();
+        var paymentPrice = $(this).data("value");
+        $("#paymentPrice").html(paymentPrice);
+        calculateTotalAndDph(orderTotal);
     });
 });
 
