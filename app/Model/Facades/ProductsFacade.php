@@ -104,6 +104,10 @@ class ProductsFacade{
     }
   }
 
+  public function findProductsByCategory(int $id):array{
+      return $this->productRepository->findAllBy(['category_id'=> $id]);
+  }
+
   public function __construct(ProductRepository $productRepository){
     $this->productRepository=$productRepository;
   }
