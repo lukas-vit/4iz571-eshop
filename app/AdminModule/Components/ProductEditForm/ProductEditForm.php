@@ -164,10 +164,12 @@ class ProductEditForm extends Form{
             }
         }
 
-        if(!$thumbnailExists){
-            $newThumbnail=$productPhotosArr[0];
-            $newThumbnail->isThumbnail=true;
-            $this->productPhotoFacade->savePhoto($newThumbnail);
+        if(!empty($existingPhotos)){
+            if(!$thumbnailExists){
+                $newThumbnail=$productPhotosArr[0];
+                $newThumbnail->isThumbnail=true;
+                $this->productPhotoFacade->savePhoto($newThumbnail);
+            }
         }
 
         $this->onFinished('Produkt byl uložen.');
