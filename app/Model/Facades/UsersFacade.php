@@ -105,6 +105,16 @@ class UsersFacade{
     return (bool)$this->userAddressRepository->persist($address);
   }
 
+    /**
+     * Metoda pro nalezení všech adres uživatele
+     * @param int $id
+     * @return array
+     * @throws \Exception
+     */
+  public function findUserAdresses(int $id):array{
+      return $this->userAddressRepository->findAllBy(['user_id'=>$id]);
+  }
+
   /**
    * Metoda pro nalezení či zaregistrování uživatele podle facebookId, která vrací SimpleIdentity použitelnou pro přihlášení uživatele
    * @param FacebookUser $facebookUser

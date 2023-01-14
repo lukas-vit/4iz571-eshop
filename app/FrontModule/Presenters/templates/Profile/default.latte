@@ -1,3 +1,91 @@
+{varType App\Model\Entities\User $currentUser}
+{varType App\Model\Entities\UserAddress[] $userAddresses}
+{varType App\Model\Entities\OrderDetail[] $userOrders}
 {block content}
 
+{foreach $userAddresses as $address}
+    {if $address->type == App\Model\Entities\UserAddress::TYPE_DELIVERY}
+        {var App\Model\Entities\UserAddress $deliveryAddress = $address}
+    {else}
+        {var App\Model\Entities\UserAddress $billingAddress = $address}
+    {/if}
+{/foreach}
+
 <h1 n:block="title">Profil</h1>
+
+<div>
+    <div class="container">
+        <div class="row">
+            <h2 class="mt-3">Objednávky</h2>
+        </div>
+        <div class="row mt-2">
+            <a href="{link orders}" class="btn btn-primary">Zobrazit Vaše objednávky</a>
+        </div>
+        <div class="row">
+            <h2 class="mt-3">Změna informací profilu</h2>
+        </div>
+        <div class="row mt-2">
+            <a href="{link personal}" ><button type="button" class="btn btn-primary mr-2">Změna osobních informací</button></a>
+            <a href="{link password}" ><button type="button" class="btn btn-primary mr-2">Změna hesla</button></a>
+            <a href="{link delivery}" ><button type="button" class="btn btn-primary mr-2">Změna doručovací adresy</button></a>
+            <a href="{link billing}" ><button type="button" class="btn btn-primary mr-2">Změna fakturační adresy</button></a>
+        </div>
+        <div class="row">
+            <h2 class="mt-3">Informace Vašeho profilu</h2>
+        </div>
+        <h3 class="mt-2">Jméno</h3>
+        <div class="row">
+            <p>{$currentUser->name}</p>
+        </div>
+        <h3 class="mt-3">E-mailová adresa</h3>
+        <div class="row">
+            <p>{$currentUser->email}</p>
+        </div>
+        {if $deliveryAddress != null}
+        <h3 class="mt-3">Doručovací adresa</h3>
+        <h4 class="mt-3"> Jméno</h4>
+        <div class="row">
+            <p>{$deliveryAddress->name}</p>
+        </div>
+        <h4 class="mt-3">Město</h4>
+        <div class="row">
+            <p>{$deliveryAddress->city}</p>
+        </div>
+        <h4 class="mt-3">Ulice</h4>
+        <div class="row">
+            <p>{$deliveryAddress->street}</p>
+        </div>
+        <h4 class="mt-3">PSČ</h4>
+        <div class="row">
+            <p>{$deliveryAddress->zip}</p>
+        </div>
+        <h4 class="mt-3">Telefon</h4>
+        <div class="row">
+            <p>{$deliveryAddress->phone}</p>
+        </div>
+        {/if}
+        {if $billingAddress != null}
+            <h3 class="mt-3">Fakturační adresa</h3>
+            <h4 class="mt-3"> Jméno</h4>
+            <div class="row">
+                <p>{$billingAddress->name}</p>
+            </div>
+            <h4 class="mt-3">Město</h4>
+            <div class="row">
+                <p>{$billingAddress->city}</p>
+            </div>
+            <h4 class="mt-3">Ulice</h4>
+            <div class="row">
+                <p>{$billingAddress->street}</p>
+            </div>
+            <h4 class="mt-3">PSČ</h4>
+            <div class="row">
+                <p>{$billingAddress->zip}</p>
+            </div>
+            <h4 class="mt-3">Telefon</h4>
+            <div class="row">
+                <p>{$billingAddress->phone}</p>
+            </div>
+        {/if}
+    </div>
+</div>
