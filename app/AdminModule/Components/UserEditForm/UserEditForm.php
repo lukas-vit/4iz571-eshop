@@ -58,7 +58,9 @@ class UserEditForm extends Form {
         $roles=$this->usersFacade->findRoles();
         $rolesArr=[];
         foreach ($roles as $role){
-            $rolesArr[$role->roleId]=$role->roleId;
+            if($role->roleId != 'guest' && $role->roleId != 'authenticated'){
+                $rolesArr[$role->roleId]=$role->roleId;
+            }
         }
         $this->addSelect('roleId','Role',$rolesArr)
             ->setPrompt('--Vyberte roli--')

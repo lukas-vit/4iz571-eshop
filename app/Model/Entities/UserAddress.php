@@ -14,8 +14,10 @@ use LeanMapper\Entity;
  * @property string $city
  * @property string $zip
  * @property string $phone
- * @property string $type
+ * @property string $type m:Enum(self::TYPE_*)
  */
 class UserAddress extends Entity{
 
+    const TYPE_BILLING = 'billing';
+    const TYPE_DELIVERY = 'delivery';
 }
