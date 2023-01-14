@@ -140,17 +140,34 @@ class ProductEditForm extends Form{
         $this->productsFacade->saveProduct($product);
         $this->setValues(['productId'=>$product->productId]);
 
-
+        $productPhotosArr=[];
         foreach ($values['photos'] as $photo){
             if(($photo instanceof Nette\Http\FileUpload) && ($photo->isOk())){
                 try{
                     $productPhoto = new ProductPhoto();
                     $this->productPhotoFacade->savePhotoParameters($photo, $productPhoto, $product);
+                    $productPhotosArr[]=$productPhoto;
                     $photo->move(__DIR__.'/../../../../www/img/products/'.$productPhoto->productPhotoId.'.'.$productPhoto->photoExtension);
                 }catch (\Exception $e){
                     $this->onFailed('Produkt byl uložen, ale nepodařilo se uložit jeho fotky.');
                 }
             }
+        }
+
+        $thumbnailExists=false;
+        $existingPhotos = $this->productPhotoFacade->getProductPhotosByProductId((int)$values['productId']);
+        foreach ($existingPhotos as $existingPhoto){
+            if($existingPhoto instanceof ProductPhoto){
+                if($existingPhoto->isThumbnail){
+                    $thumbnailExists=true;
+                }
+            }
+        }
+
+        if(!$thumbnailExists){
+            $newThumbnail=$productPhotosArr[0];
+            $newThumbnail->isThumbnail=true;
+            $this->productPhotoFacade->savePhoto($newThumbnail);
         }
 
         $this->onFinished('Produkt byl uložen.');
