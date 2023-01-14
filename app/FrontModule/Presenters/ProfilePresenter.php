@@ -5,6 +5,8 @@ namespace App\FrontModule\Presenters;
 
 use App\FrontModule\Components\BillingAddressForm\BillingAddressForm;
 use App\FrontModule\Components\BillingAddressForm\BillingAddressFormFactory;
+use App\FrontModule\Components\DeliveryAddressForm\DeliveryAddressForm;
+use App\FrontModule\Components\DeliveryAddressForm\DeliveryAddressFormFactory;
 use App\FrontModule\Components\NewPasswordForm\NewPasswordForm;
 use App\FrontModule\Components\NewPasswordForm\NewPasswordFormFactory;
 use App\FrontModule\Components\PersonalInfoForm\PersonalInfoForm;
@@ -28,6 +30,8 @@ class ProfilePresenter extends BasePresenter{
     private $personalInfoFormFactory;
     /** @var BillingAddressFormFactory $billingAddressFromFactory*/
     private $billingAddressFormFactory;
+    /** @var DeliveryAddressFormFactory $deliveryAddressFormFactory */
+    private $deliveryAddressFormFactory;
 
     /**
      * Metoda pro vykreslení uživatelského profilu
@@ -67,7 +71,23 @@ class ProfilePresenter extends BasePresenter{
     }
 
     public function renderDelivery(){
+        try {
+            $userAddresses = $this->usersFacade->findUserAdresses($this->user->id);
+        }catch (\Exception $e){
+            $this->flashMessage('Požadovaná dodací adresa nebyla nalezena.', 'error');
+            $this->redirect('default');
+        }
 
+        foreach($userAddresses as $userAddress){
+            if($userAddress instanceof UserAddress){
+                if($userAddress->type == UserAddress::TYPE_DELIVERY){
+                    $deliveryAddress = $userAddress;
+                }
+            }
+        }
+
+        $form = $this->getComponent('deliveryAddressForm');
+        $form->setDefaults($deliveryAddress);
     }
 
     public function renderBilling(){
@@ -150,6 +170,26 @@ class ProfilePresenter extends BasePresenter{
         return $form;
     }
 
+    protected function createComponentDeliveryAddressForm():DeliveryAddressForm{
+        $form = $this->deliveryAddressFormFactory->create();
+        $form->onFinished[]=function($message=''){
+            if (!empty($message)){
+                $this->flashMessage($message);
+            }
+            $this->redirect('default');
+        };
+        $form->onFailed[]=function($message=''){
+            if (!empty($message)){
+                $this->flashMessage($message);
+            }
+            $this->redirect('default');
+        };
+        $form->onCancel[]=function(){
+            $this->redirect('default');
+        };
+        return $form;
+    }
+
 
     #region injections
     public function injectUsersFacade(UsersFacade $usersFacade){
@@ -166,6 +206,9 @@ class ProfilePresenter extends BasePresenter{
     }
     public function injectBillingAddressFormFactory(BillingAddressFormFactory $billingAddressFormFactory){
         $this->billingAddressFormFactory = $billingAddressFormFactory;
+    }
+    public function injectDeliveryAddressFormFactory(DeliveryAddressFormFactory $deliveryAddressFormFactory){
+        $this->deliveryAddressFormFactory = $deliveryAddressFormFactory;
     }
     #endregion injections
 }
