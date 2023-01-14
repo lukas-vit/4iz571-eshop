@@ -45,6 +45,7 @@ services:
 	- App\FrontModule\Components\ReviewForm\ReviewFormFactory
 	- App\FrontModule\Components\CheckoutForm\CheckoutFormFactory
 	- App\FrontModule\Components\CartControl\CartControl
+	- App\FrontModule\Components\PersonalInfoForm\PersonalInfoFormFactory
 
 	- App\Model\Facades\CartFacade
 	- App\Model\Facades\CategoriesFacade

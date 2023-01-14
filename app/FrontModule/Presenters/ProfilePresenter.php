@@ -5,6 +5,8 @@ namespace App\FrontModule\Presenters;
 
 use App\FrontModule\Components\NewPasswordForm\NewPasswordForm;
 use App\FrontModule\Components\NewPasswordForm\NewPasswordFormFactory;
+use App\FrontModule\Components\PersonalInfoForm\PersonalInfoForm;
+use App\FrontModule\Components\PersonalInfoForm\PersonalInfoFormFactory;
 use App\Model\Facades\OrdersFacade;
 use App\Model\Facades\UsersFacade;
 
@@ -19,6 +21,8 @@ class ProfilePresenter extends BasePresenter{
     private $ordersFacade;
     /** @var NewPasswordFormFactory $newPasswordFormFactory */
     private $newPasswordFormFactory;
+    /** @var PersonalInfoFormFactory $personalInfoFormFactory */
+    private $personalInfoFormFactory;
 
     /**
      * Metoda pro vykreslení uživatelského profilu
@@ -32,7 +36,14 @@ class ProfilePresenter extends BasePresenter{
     }
 
     public function renderPersonal(){
-
+        try {
+            $user = $this->usersFacade->getUser($this->user->id);
+        }catch (\Exception $e){
+            $this->flashMessage('Požadovaný uživatel nebyl nalezen.', 'error');
+            $this->redirect('default');
+        }
+        $form = $this->getComponent('personalInfoForm');
+        $form->setDefaults($user);
     }
 
     public function renderOrders(){
@@ -78,6 +89,26 @@ class ProfilePresenter extends BasePresenter{
         return $form;
     }
 
+    protected function createComponentPersonalInfoForm():PersonalInfoForm{
+        $form = $this->personalInfoFormFactory->create();
+        $form->onFinished[]=function($message=''){
+            if (!empty($message)){
+                $this->flashMessage($message);
+            }
+            $this->redirect('default');
+        };
+        $form->onFailed[]=function($message=''){
+            if (!empty($message)){
+                $this->flashMessage($message);
+            }
+            $this->redirect('default');
+        };
+        $form->onCancel[]=function(){
+            $this->redirect('default');
+        };
+        return $form;
+    }
+
 
     #region injections
     public function injectUsersFacade(UsersFacade $usersFacade){
@@ -88,6 +119,9 @@ class ProfilePresenter extends BasePresenter{
     }
     public function injectNewPasswordFormFactory(NewPasswordFormFactory $newPasswordFormFactory){
         $this->newPasswordFormFactory = $newPasswordFormFactory;
+    }
+    public function injectPersonalInfoFormFactory(PersonalInfoFormFactory $personalInfoFormFactory){
+        $this->personalInfoFormFactory = $personalInfoFormFactory;
     }
     #endregion injections
 }
