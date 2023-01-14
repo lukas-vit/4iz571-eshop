@@ -3,10 +3,13 @@
 
 namespace App\FrontModule\Presenters;
 
+use App\FrontModule\Components\BillingAddressForm\BillingAddressForm;
+use App\FrontModule\Components\BillingAddressForm\BillingAddressFormFactory;
 use App\FrontModule\Components\NewPasswordForm\NewPasswordForm;
 use App\FrontModule\Components\NewPasswordForm\NewPasswordFormFactory;
 use App\FrontModule\Components\PersonalInfoForm\PersonalInfoForm;
 use App\FrontModule\Components\PersonalInfoForm\PersonalInfoFormFactory;
+use App\Model\Entities\UserAddress;
 use App\Model\Facades\OrdersFacade;
 use App\Model\Facades\UsersFacade;
 
@@ -23,6 +26,8 @@ class ProfilePresenter extends BasePresenter{
     private $newPasswordFormFactory;
     /** @var PersonalInfoFormFactory $personalInfoFormFactory */
     private $personalInfoFormFactory;
+    /** @var BillingAddressFormFactory $billingAddressFromFactory*/
+    private $billingAddressFormFactory;
 
     /**
      * Metoda pro vykreslení uživatelského profilu
@@ -66,7 +71,23 @@ class ProfilePresenter extends BasePresenter{
     }
 
     public function renderBilling(){
+        try {
+            $userAddresses = $this->usersFacade->findUserAdresses($this->user->id);
+        }catch (\Exception $e){
+            $this->flashMessage('Požadovaná fakturační adresa nebyla nalezena.', 'error');
+            $this->redirect('default');
+        }
 
+        foreach($userAddresses as $userAddress){
+            if($userAddress instanceof UserAddress){
+                if($userAddress->type == UserAddress::TYPE_BILLING){
+                    $billingAddress = $userAddress;
+                }
+            }
+        }
+
+        $form = $this->getComponent('billingAddressForm');
+        $form->setDefaults($billingAddress);
     }
 
     protected function createComponentNewPasswordForm():NewPasswordForm{
@@ -109,6 +130,26 @@ class ProfilePresenter extends BasePresenter{
         return $form;
     }
 
+    protected function createComponentBillingAddressForm():BillingAddressForm{
+        $form = $this->billingAddressFormFactory->create();
+        $form->onFinished[]=function($message=''){
+            if (!empty($message)){
+                $this->flashMessage($message);
+            }
+            $this->redirect('default');
+        };
+        $form->onFailed[]=function($message=''){
+            if (!empty($message)){
+                $this->flashMessage($message);
+            }
+            $this->redirect('default');
+        };
+        $form->onCancel[]=function(){
+            $this->redirect('default');
+        };
+        return $form;
+    }
+
 
     #region injections
     public function injectUsersFacade(UsersFacade $usersFacade){
@@ -122,6 +163,9 @@ class ProfilePresenter extends BasePresenter{
     }
     public function injectPersonalInfoFormFactory(PersonalInfoFormFactory $personalInfoFormFactory){
         $this->personalInfoFormFactory = $personalInfoFormFactory;
+    }
+    public function injectBillingAddressFormFactory(BillingAddressFormFactory $billingAddressFormFactory){
+        $this->billingAddressFormFactory = $billingAddressFormFactory;
     }
     #endregion injections
 }
