@@ -8,6 +8,7 @@
                 <tr>
                     <th scope="col">Název produktu</th>
                     <th scope="col" class="col-xl-1 col-md-2">Akce</th>
+                    <th scope="col" class="col-xl-1 col-md-2">Odebrat produkt</th>
                 </tr>
             </thead>
             <tbody>
@@ -16,6 +17,9 @@
                         <td>{$product->title}</td>
                         <td class="text-nowrap">
                             <a href="{link edit id=>$product->productId}" class="btn btn-sm btn-outline-primary">upravit</a>
+                        </td>
+                        <td class="text-nowrap">
+                            <a href="{link delete id=>$product->productId}" class="btn btn-sm btn-danger">odstranit</a>
                         </td>
                     </tr>
                 {/foreach}

@@ -62,7 +62,7 @@ class ProductsFacade{
     #region URL produktu
     if (empty($product->url)){
       //pokud je URL prázdná, vygenerujeme ji podle názvu produktu
-      $baseUrl=Strings::webalize($product->title);
+      $baseUrl=Strings::webalize($product->title.'-'.$product->ram.'-'.$product->color);
     }else{
       $baseUrl=$product->url;
     }
