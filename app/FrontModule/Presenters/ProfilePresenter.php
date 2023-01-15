@@ -85,6 +85,10 @@ class ProfilePresenter extends BasePresenter{
             }
         }
 
+        if(empty($deliveryAddress)){
+            $deliveryAddress['userId'] = $this->user->id;
+        }
+
         $form = $this->getComponent('deliveryAddressForm');
         $form->setDefaults($deliveryAddress);
     }
@@ -103,6 +107,10 @@ class ProfilePresenter extends BasePresenter{
                     $billingAddress = $userAddress;
                 }
             }
+        }
+
+        if(empty($billingAddress)){
+            $billingAddress['userId'] = $this->user->id;
         }
 
         $form = $this->getComponent('billingAddressForm');

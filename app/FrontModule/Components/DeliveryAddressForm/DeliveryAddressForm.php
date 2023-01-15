@@ -66,21 +66,27 @@ class DeliveryAddressForm extends Form {
 
             try{
                 $userAddresses = $this->usersFacade->findUserAdresses($values['userId']);
-                foreach($userAddresses as $userAddress){
-                    if($userAddress instanceof UserAddress){
-                        if($userAddress->type == UserAddress::TYPE_DELIVERY){
-                            $deliveryAddress = $userAddress;
+                    foreach($userAddresses as $userAddress){
+                        if($userAddress instanceof UserAddress){
+                            if($userAddress->type == UserAddress::TYPE_DELIVERY){
+                                $deliveryAddress = $userAddress;
+                            }
                         }
                     }
-                }
             }catch (\Exception $e){
                 $this->onFailed('Zvolená fakturační adresa nebyla nalezena.');
                 return;
             }
 
+            if(empty($deliveryAddress)){
+                $deliveryAddress = new UserAddress();
+            }
+
             $deliveryAddress->assign($values, ['name','city','street']);
+            $deliveryAddress->userId=(int)$values['userId'];
             $deliveryAddress->zip = (string)$values['zip'];
             $deliveryAddress->phone = (string)$values['phone'];
+            $deliveryAddress->type = UserAddress::TYPE_DELIVERY;
             $this->usersFacade->saveUserAddress($deliveryAddress);
 
             $this->onFinished('Dodací údaje byly změněny');
@@ -107,7 +113,7 @@ class DeliveryAddressForm extends Form {
                 'city'=>$values->city,
                 'zip'=>$values->zip,
                 'phone'=>$values->phone,
-                'type'=>UserAddress::TYPE_BILLING
+                'type'=>UserAddress::TYPE_DELIVERY
             ];
         }
         parent::setDefaults($values, $erase);

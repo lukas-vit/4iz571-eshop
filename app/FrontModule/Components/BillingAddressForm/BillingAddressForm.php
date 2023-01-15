@@ -78,9 +78,15 @@ class BillingAddressForm extends Form {
                 return;
             }
 
+            if(empty($billingAddress)){
+                $billingAddress = new UserAddress();
+            }
+
             $billingAddress->assign($values, ['name','city','street']);
+            $billingAddress->userId=(int)$values['userId'];
             $billingAddress->zip = (string)$values['zip'];
             $billingAddress->phone = (string)$values['phone'];
+            $billingAddress->type = UserAddress::TYPE_BILLING;
             $this->usersFacade->saveUserAddress($billingAddress);
 
             $this->onFinished('Fakturační údaje byly změněny');
