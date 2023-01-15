@@ -79,6 +79,19 @@ class UsersFacade{
     return $this->userRepository->findBy(['email'=>$email]);
   }
 
+    /**
+     * Metoda vrátí true, pokud nalezne uživatele dle emailu, jinak vrací false
+     * @param string $email
+     * @return bool
+     */
+    public function getBoolForUserByEmail(string $email):bool {
+        try {
+            return (bool)$this->userRepository->findBy(['email'=>$email]);
+        }catch (\Exception $e){
+            return false;
+        }
+    }
+
   /**
    * Metoda pro uložení uživatele
    * @param User &$user
