@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'da829332c43aedac200476e45c4c7fe3ce0fe105',
+        'reference' => 'c42de4e4ea65b6a7380b5c2248bf661254c6370d',
         'name' => '4iz571/notes-leanmapper',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'da829332c43aedac200476e45c4c7fe3ce0fe105',
+            'reference' => 'c42de4e4ea65b6a7380b5c2248bf661254c6370d',
             'dev_requirement' => false,
         ),
         'components/jquery' => array(
@@ -221,6 +221,15 @@
             'install_path' => __DIR__ . '/../nextras/forms-rendering',
             'aliases' => array(),
             'reference' => '8776b68caa30796814994442a6a329bd61b0182c',
+            'dev_requirement' => false,
+        ),
+        'setasign/tfpdf' => array(
+            'pretty_version' => 'v1.33',
+            'version' => '1.33.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../setasign/tfpdf',
+            'aliases' => array(),
+            'reference' => '050de12ab5359ce475dab49bae5cedbcf455f708',
             'dev_requirement' => false,
         ),
         'tharos/leanmapper' => array(

@@ -69,15 +69,15 @@ class OrdersFacade{
     $this->orderItemRepository->persist($orderItem);
   }
 
-  public function getOrderItemsByOrderDetail(OrderDetail $orderDetail):array{
-      return $this->orderItemRepository->findAllBy(['order_detail_id' => $orderDetail->orderDetailId]);
+  public function getOrderItemsByOrderDetail(OrderDetail $orderDetail):array {
+    return $this->orderItemRepository->findAllBy(['order_detail_id'=>$orderDetail->orderDetailId]);
   }
 
-    /**
-     * Metoda pro nalezení všech detailů objednávvek uživatele
-     * @param int $id
-     * @return array
-     */
+  /**
+   * Metoda pro nalezení všech detailů objednávvek uživatele
+   * @param int $id
+   * @return array
+   */
   public function findOrdersByUser(int $id):array{
       return $this->orderDetailRepository->findAllBy(['user_id'=>$id]);
   }

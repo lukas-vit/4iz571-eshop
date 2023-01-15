@@ -23,7 +23,8 @@
 		"facebook/graph-sdk": "^5.7",
 		"nextras/forms-rendering": "^1.1",
 		"components/jquery": "^3.6",
-		"fpdf/fpdf": "^1.85"
+		"fpdf/fpdf": "^1.85",
+		"setasign/tfpdf": "^1.33"
 	},
 	"autoload": {
 		"psr-4": {

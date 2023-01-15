@@ -18,10 +18,11 @@ use App\Model\Facades\OrdersFacade;
 use App\Model\Facades\PaymentsFacade;
 use App\Model\Facades\ProductsFacade;
 use App\Model\Facades\UsersFacade;
-use Fpdf\Fpdf;
+use DateTime;
 use Latte\Engine;
 use Nette;
 use Nette\Application\BadRequestException;
+use tFPDF;
 
 /**
 * Class CheckoutPresenter - presenter pro akce týkající se checkoutu
@@ -117,6 +118,7 @@ class CheckoutPresenter extends BasePresenter{
 
             //delivery method
             $orderDelivery = $this->deliveriesFacade->getDelivery((int)$values['delivery']);
+            $order->deliveryId = $orderDelivery->deliveryId;
             //payment method
             $orderPayment = $this->paymentsFacade->getPayment((int)$values['payment']);
             $order->paymentId = $orderPayment->paymentId;
@@ -192,6 +194,9 @@ class CheckoutPresenter extends BasePresenter{
             $orderTotal = $orderTotal + $orderPayment->price;
 
             $order->total = $orderTotal;
+            $orderTotalWithoutDph = round(($orderTotal / 1.21), 0);
+            $orderDph = round(($orderTotal - $orderTotalWithoutDph), 0);
+            $orderCreated = new DateTime();
 
             if ($orderPayment->type == "cash")
                 $order->status = "paid";
@@ -219,16 +224,89 @@ class CheckoutPresenter extends BasePresenter{
             $urlToEmailTemplate = __DIR__ . "/templates/email.latte";
 
             //TODO faktura
-            $pdf = new Fpdf();
+            $pdf = new tFPDF();
+
+
             $pdf->AddPage();
-            $pdf->SetFont('Arial','B',16);
-            foreach ($orderItems as $item) {
-                $pdf->Cell(40,10,$item->product->title);
-                $pdf->Cell(40,10,$item->product->price);
-                $pdf->Cell(40,10,$item->quantity);
-                $pdf->Cell(40,10,$item->product->price * $item->quantity);
-                $pdf->Ln();
+            
+            //set UTF8
+            $pdf->AddFont('DejaVu','','DejaVuSansCondensed.ttf',true);
+            $pdf->AddFont('DejaVu','B','DejaVuSansCondensed-Bold.ttf',true);
+            $pdf->SetFont('DejaVu','',14);
+
+            $pdf->Cell(130 ,5,'Společnost iShop',0,0);
+            $pdf->Cell(59 ,5,'FAKTURA',0,1);//end of line
+
+            $pdf->SetFont('DejaVu','',12);
+
+            $pdf->Cell(130 ,5,'Pražská 908/3',0,0);
+            $pdf->Cell(59 ,5,'',0,1);//end of line
+
+            $pdf->Cell(130 ,5,'165 01 Praha',0,0);
+            $pdf->Cell(25 ,5,'Date',0,0);
+            $pdf->Cell(34 ,5,$orderCreated->format('d.m.Y'),0,1);//end of line
+
+            $pdf->Cell(130 ,5,'12345689',0,0);
+            $pdf->Cell(25 ,5,'Faktura #',0,0);
+            $pdf->Cell(34 ,5,$order->orderDetailId,0,1);//end of line
+
+            $pdf->Cell(189 ,10,'',0,1);//end of line
+
+            //billing address
+            $pdf->Cell(100 ,5,'Adresa příjemce',0,1);//end of line
+
+            $pdf->Cell(130 ,5,$deliveryAddress->name,0,0);
+            $pdf->Cell(59 ,5,'',0,1);
+
+            $pdf->Cell(130 ,5,$deliveryAddress->street,0,0);
+            $pdf->Cell(59 ,5,'',0,1);
+
+            $pdf->Cell(130 ,5,$deliveryAddress->zip .' '. $deliveryAddress->city,0,0);
+            $pdf->Cell(59 ,5,'',0,1);
+
+            $pdf->Cell(130 ,5,$deliveryAddress->phone,0,0);
+            $pdf->Cell(59 ,5,'',0,1);
+
+            $pdf->Cell(189 ,10,'',0,1);//end of line
+
+            //invoice contents
+            $pdf->SetFont('DejaVu','B',12);
+
+            $pdf->Cell(130 ,5,'Název',1,0);
+            $pdf->Cell(25 ,5,'Počet',1,0);
+            $pdf->Cell(34 ,5,'Cena',1,1);//end of line
+
+            $pdf->SetFont('DejaVu','',12);
+
+            //Numbers are right-aligned so we give 'R' after new line parameter
+
+            foreach($orderItems as $item) {
+                $pdf->Cell(130 ,5,$item->product->title,1,0);
+                $pdf->Cell(25 ,5,$item->quantity,1,0);
+                $pdf->Cell(34 ,5,number_format($item->price, 2, ',', ' ') . ' Kč',1,1,'R');//end of line
             }
+
+            //summary
+            $pdf->Cell(130 ,5,'',0,0);
+            $pdf->Cell(25 ,5,'Doprava',0,0);
+            $pdf->Cell(34 ,5,number_format($orderDelivery->price, 2, ',', ' ') . ' Kč',1,1,'R');//end of line
+
+            $pdf->Cell(130 ,5,'',0,0);
+            $pdf->Cell(25 ,5,'Platba',0,0);
+            $pdf->Cell(34 ,5,number_format($orderPayment->price, 2, ',', ' ') . ' Kč',1,1,'R');//end of line
+
+            $pdf->Cell(130 ,5,'',0,0);
+            $pdf->Cell(25 ,5,'Mezisoučet',0,0);
+            $pdf->Cell(34 ,5, number_format($orderTotalWithoutDph, 2, ',', ' ') . ' Kč',1,1,'R');//end of line
+
+            $pdf->Cell(130 ,5,'',0,0);
+            $pdf->Cell(25 ,5,'DPH',0,0);
+            $pdf->Cell(34 ,5,number_format($orderDph, 2, ',', ' ') . ' Kč',1,1,'R');//end of line
+
+            $pdf->Cell(130 ,5,'',0,0);
+            $pdf->Cell(25 ,5,'Celkem',0,0);
+            $pdf->Cell(34 ,5,number_format($orderTotal, 2, ',', ' ') . ' Kč',1,1,'R');//end of line
+
             $invoiceDir = __DIR__ . "/../../../www/invoices/";
             $pdf->Output("F", $invoiceDir . $order->orderDetailId . ".pdf");
 
@@ -236,10 +314,10 @@ class CheckoutPresenter extends BasePresenter{
             $mail->setFrom('ishop@vse.cz', 'iShop')
                 ->setSubject('Potvrzení objednávky')
                 ->addTo($user->email)
-                ->addAttachment($invoiceDir . $order->orderDetailId . ".pdf")
                 ->setHtmlBody(
                     $latte->renderToString($urlToEmailTemplate, $params)
-                );
+                )
+                ->addAttachment($invoiceDir . $order->orderDetailId . ".pdf");
             
             $mailer = new Nette\Mail\SendmailMailer;
             $mailer->send($mail);
