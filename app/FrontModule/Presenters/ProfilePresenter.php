@@ -41,7 +41,6 @@ class ProfilePresenter extends BasePresenter{
     public function renderDefault(){
         $this->template->currentUser = $this->usersFacade->getUser($this->user->id);
         $this->template->userAddresses = $this->usersFacade->findUserAdresses($this->user->id);
-        $this->template->userOrders = $this->ordersFacade->findOrdersByUser($this->user->id);
     }
 
     public function renderPersonal(){
@@ -56,7 +55,7 @@ class ProfilePresenter extends BasePresenter{
     }
 
     public function renderOrders(){
-
+        $this->template->orderDetails = $this->ordersFacade->findOrdersByUser($this->user->id);
     }
 
     public function renderPassword(){

@@ -1,3 +1,19 @@
+{varType App\Model\Entities\OrderDetail[] $orderDetails}
 {block content}
 
 <h1 n:block="title">Vaše objednávky</h1>
+
+<div class="container">
+    <div class="row">
+        {if !empty($orderDetails)}
+            {foreach $orderDetails as $orderDetail}
+                    <div class="col-12 sm:col-6 col-xl-4 bg-light py-4 mt-2 mx-1">
+                        {$orderDetail->payment->name}
+                        <div class="mb-2">{$orderDetail->delivery->name}</div>
+                        <div class="mb-2">{$orderDetail->status}</div>
+                        <div class="mb-2">{$orderDetail->total}</div>
+                    </div>
+            {/foreach}
+        {else}
+            <p class="text-muted">Nebyly nalezeny žádné objednávky</p>
+        {/if}
