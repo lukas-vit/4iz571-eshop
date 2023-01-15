@@ -24,66 +24,79 @@
             <h2 class="mt-3">Změna informací profilu</h2>
         </div>
         <div class="row mt-2">
-            <a href="{link personal}" ><button type="button" class="btn btn-primary mr-2">Změna osobních informací</button></a>
-            <a href="{link password}" ><button type="button" class="btn btn-primary mr-2">Změna hesla</button></a>
-            <a href="{link delivery}" ><button type="button" class="btn btn-primary mr-2">Změna doručovací adresy</button></a>
-            <a href="{link billing}" ><button type="button" class="btn btn-primary mr-2">Změna fakturační adresy</button></a>
+            <a href="{link personal}" ><button type="button" class="btn btn-primary mr-2 mt-2">Změna osobních informací</button></a>
+            <a href="{link password}" ><button type="button" class="btn btn-primary mr-2 mt-2">Změna hesla</button></a>
+            <a href="{link delivery}" ><button type="button" class="btn btn-primary mr-2 mt-2">Změna doručovací adresy</button></a>
+            <a href="{link billing}" ><button type="button" class="btn btn-primary mr-2 mt-2">Změna fakturační adresy</button></a>
         </div>
+
         <div class="row">
-            <h2 class="mt-3">Informace Vašeho profilu</h2>
+        <h2 class="mt-3">Informace Vašeho profilu</h2>
+        <table class="table table-hover mt-4">
+            <thead>
+            <tr>
+                <th scope="col" class="col-xl-1 col-md-2">Jméno</th>
+                <th scope="col" class="col-xl-1 col-md-2">Email</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{$currentUser->name}</td>
+                <td>{$currentUser->email}</td>
+            </tr>
+            </tbody>
+        </table>
         </div>
-        <h3 class="mt-2">Jméno</h3>
-        <div class="row">
-            <p>{$currentUser->name}</p>
-        </div>
-        <h3 class="mt-3">E-mailová adresa</h3>
-        <div class="row">
-            <p>{$currentUser->email}</p>
-        </div>
+
         {if $deliveryAddress != null}
-        <h3 class="mt-3">Doručovací adresa</h3>
-        <h4 class="mt-3"> Jméno</h4>
-        <div class="row">
-            <p>{$deliveryAddress->name}</p>
-        </div>
-        <h4 class="mt-3">Město</h4>
-        <div class="row">
-            <p>{$deliveryAddress->city}</p>
-        </div>
-        <h4 class="mt-3">Ulice</h4>
-        <div class="row">
-            <p>{$deliveryAddress->street}</p>
-        </div>
-        <h4 class="mt-3">PSČ</h4>
-        <div class="row">
-            <p>{$deliveryAddress->zip}</p>
-        </div>
-        <h4 class="mt-3">Telefon</h4>
-        <div class="row">
-            <p>{$deliveryAddress->phone}</p>
-        </div>
+            <div class="row">
+            <h3 class="mt-3">Doručovací adresa</h3>
+            <table class="table table-hover mt-4">
+                <thead>
+                <tr>
+                    <th scope="col" class="col-xl-1 col-md-2">Jméno</th>
+                    <th scope="col" class="col-xl-1 col-md-2">Město</th>
+                    <th scope="col" class="col-xl-1 col-md-2">Ulice a číslo</th>
+                    <th scope="col" class="col-xl-1 col-md-2">PSČ</th>
+                    <th scope="col" class="col-xl-1 col-md-2">Telefon</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{$deliveryAddress->name}</td>
+                    <td>{$deliveryAddress->city}</td>
+                    <td>{$deliveryAddress->street}</td>
+                    <td>{$deliveryAddress->zip}</td>
+                    <td>{$deliveryAddress->phone}</td>
+                </tr>
+                </tbody>
+            </table>
+            </div>
         {/if}
+
         {if $billingAddress != null}
+            <div class="row">
             <h3 class="mt-3">Fakturační adresa</h3>
-            <h4 class="mt-3"> Jméno</h4>
-            <div class="row">
-                <p>{$billingAddress->name}</p>
-            </div>
-            <h4 class="mt-3">Město</h4>
-            <div class="row">
-                <p>{$billingAddress->city}</p>
-            </div>
-            <h4 class="mt-3">Ulice</h4>
-            <div class="row">
-                <p>{$billingAddress->street}</p>
-            </div>
-            <h4 class="mt-3">PSČ</h4>
-            <div class="row">
-                <p>{$billingAddress->zip}</p>
-            </div>
-            <h4 class="mt-3">Telefon</h4>
-            <div class="row">
-                <p>{$billingAddress->phone}</p>
+            <table class="table table-hover mt-4">
+                <thead>
+                <tr>
+                    <th scope="col" class="col-xl-1 col-md-2">Jméno</th>
+                    <th scope="col" class="col-xl-1 col-md-2">Město</th>
+                    <th scope="col" class="col-xl-1 col-md-2">Ulice a číslo</th>
+                    <th scope="col" class="col-xl-1 col-md-2">PSČ</th>
+                    <th scope="col" class="col-xl-1 col-md-2">Telefon</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{$billingAddress->name}</td>
+                    <td>{$billingAddress->city}</td>
+                    <td>{$billingAddress->street}</td>
+                    <td>{$billingAddress->zip}</td>
+                    <td>{$billingAddress->phone}</td>
+                </tr>
+                </tbody>
+            </table>
             </div>
         {/if}
     </div>

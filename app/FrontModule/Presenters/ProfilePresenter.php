@@ -58,6 +58,16 @@ class ProfilePresenter extends BasePresenter{
         $this->template->orderDetails = $this->ordersFacade->findOrdersByUser($this->user->id);
     }
 
+    public function renderShow(int $id){
+        try {
+            $order = $this->ordersFacade->getOrderDetail($id);
+        } catch (\Exception $e){
+            $this->flashMessage('Požadovaná objednávka nebyla nalezena', 'error');
+            $this->redirect('default');
+        }
+        $this->template->order = $order;
+    }
+
     public function renderPassword(){
         try {
             $user = $this->usersFacade->getUser($this->user->id);

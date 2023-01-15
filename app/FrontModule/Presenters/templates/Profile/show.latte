@@ -26,6 +26,10 @@
                     <td>
                         <img src="{$basePath.'/img/products/'.$photo->productPhotoId.'.'.$photo->photoExtension}" alt="{$orderItem->product->title}" class="d-block w-50">
                     </td>
+                {elseif count($orderItem->product->photos) == 0}
+                    <td>
+                        <img src="{$basePath.'/img/products/placeholder.png'}" alt="placeholder" class="d-block w-50">
+                    </td>
                 {/if}
             {/foreach}
             {/if}
@@ -36,5 +40,5 @@
     </tbody>
 </table>
 <div>
-    <a href="{link default}"><button class="btn btn-secondary">Zpět na přehled objednávek</button></a>
+    <a href="{link orders}"><button class="btn btn-secondary">Zpět na přehled objednávek</button></a>
 </div>
