@@ -54,6 +54,11 @@ class ProductPhotoFacade{
      */
     public function deletePhoto(ProductPhoto $productPhoto):bool{
         try {
+            $photoDir = __DIR__.'/../../../www/img/products/'.$productPhoto->productPhotoId.'.'.$productPhoto->photoExtension;
+            if (file_exists($photoDir) && is_file($photoDir)){
+                unlink($photoDir);
+            }
+
             return (bool)$this->productPhotoRepository->delete($productPhoto);
         } catch (\Exception $e){
             return false;
