@@ -1,0 +1,128 @@
+{varType App\Model\Entities\OrderDetail $order}
+{varType App\Model\Entities\UserAddress $deliveryAddress}
+{varType App\Model\Entities\Payment $payment}
+{varType App\Model\Entities\Delivery $delivery}
+{varType App\Model\Entities\OrderDetail[] $orderItems}
+
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Potvrzení objednávky</title>
+</head>
+<body>
+    <div align="center">
+        <img src="https://img.icons8.com/carbon-copy/100/000000/checked-checkbox.png" width="125" height="120" style="display: block; border: 0px;" /><br>
+        <h2 style="font-size: 30px; font-weight: 800; line-height: 36px; color: #333333; margin: 0;">
+           Děkujeme za Vaši objednávku!
+        </h2>
+    </div>
+	<p>Dobrý den,</p>
+
+    <p>potvrzujeme, že jsme přijali Vaši objednávku č. {$order->orderDetailId}.</p>
+
+    {if $payment->type == 'bank_account'}
+        <h3 style="color:red">Pro dokončení platby prosím převod provedete na následující účet</h3>
+    {/if}
+    <table cellspacing="0" cellpadding="0" border="0" width="100%">
+        <tr>
+            <td colspan="2" width="75%" align="left" bgcolor="#eeeeee" style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 800; line-height: 24px; padding: 10px;">
+                Detaily platby
+            </td>
+        </tr>
+        <tr>
+            <td width="75%" align="left" style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 400; line-height: 24px; padding: 5px 10px;">
+                Methoda platby
+            </td>
+            <td width="25%" align="left" style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 400; line-height: 24px; padding: 5px 10px;">
+                {$payment->name}
+            </td>
+        </tr>
+        {if $payment->type == 'bank_account'}
+            <tr>
+                <td width="75%" align="left" style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 400; line-height: 24px; padding: 5px 10px;">
+                    Číslo účtu
+                </td>
+                <td width="25%" align="left" style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 400; line-height: 24px; padding: 5px 10px;">
+                    {$payment->description}
+                </td>
+            </tr>
+        {/if}
+        <tr>
+            <td width="75%" align="left" style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 400; line-height: 24px; padding: 5px 10px;">
+                Částka
+            </td>
+            <td width="25%" align="left" style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 400; line-height: 24px; padding: 5px 10px;">
+                {$order->total} Kč
+            </td>
+        </tr>
+    </table>
+
+    <table style="margin-top:20px" cellspacing="0" cellpadding="0" border="0" width="100%">
+        <tr>
+            <td width="75%" align="left" bgcolor="#eeeeee" style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 800; line-height: 24px; padding: 10px;">
+                Order Confirmation
+            </td>
+            <td width="25%" align="left" bgcolor="#eeeeee" style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 800; line-height: 24px; padding: 10px;">
+                #{$order->orderDetailId}
+            </td>
+        </tr>
+        <tr>
+            {foreach $orderItems as $item}
+                <td width="75%" align="left" style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 400; line-height: 24px; padding: 15px 10px 5px 10px;">
+                    {$item->product->title}
+                </td>
+                <td width="25%" align="left" style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 400; line-height: 24px; padding: 15px 10px 5px 10px;">
+                    {if $item->quantity > 1}
+                        {$item->quantity} * 
+                    {/if}
+                    {$item->price} Kč
+                </td>
+            {/foreach}
+        </tr>
+        <tr>
+            <td width="75%" align="left" style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 400; line-height: 24px; padding: 5px 10px;">
+                Doprava
+            </td>
+            <td width="25%" align="left" style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 400; line-height: 24px; padding: 5px 10px;">
+                {if $order->total > 20000} 
+                    {$delivery->price = 0.0} Kč 
+                {else}
+                    {$delivery->price} Kč
+                {/if}
+               
+            </td>
+        </tr>
+        <tr>
+            <td width="75%" align="left" style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 400; line-height: 24px; padding: 5px 10px;">
+                Platba
+            </td>
+            <td width="25%" align="left" style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 400; line-height: 24px; padding: 5px 10px;">
+                {$payment->price} Kč
+            </td>
+        </tr>
+        <tr>
+            <td width="75%" align="left" style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 800; line-height: 24px; padding: 5px 10px;">
+                Celkem
+            </td>
+            <td width="25%" align="left" style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 800; line-height: 24px; padding: 5px 10px;">
+                {$order->total + $delivery->price + $payment->price} Kč
+            </td>
+        </tr>
+    </table>
+
+    <h3>Doručovací adresa</h3>
+    <table>
+        <tr>
+            <td>
+                <p>{$deliveryAddress->street}<br>{$deliveryAddress->zip} {$deliveryAddress->city}</p>
+            </td>
+        </tr>
+    </table>
+
+    <p style="margin-top:20px">Děkujeme za Vaši objednávku.</p>
+
+    <p>S pozdravem,</p>
+
+    <p>Obchodní oddělení iShop</p>
+</body>
+</html>

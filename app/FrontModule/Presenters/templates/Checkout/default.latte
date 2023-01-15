@@ -13,33 +13,34 @@
         <div class="col-12 col-md-8 pl-0">
             <form id="checkout-form" n:name=checkoutForm>
                 <div id="accordion">
-                    <div id="email" class="card border-0 shadow h6 text-small">
-                        <div class="card-header" id="headingOne">
-                            <div class="d-flex">
-                                <h5 class="mb-0">
-                                    <button type="button"id="emailButton" class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                        Emailová adresa
-                                    </button>
-                                </h5>
-                                <button type="button" id="editButtonEmail" class="btn back-to-cart ml-auto d-none">upravit</button>
+                    {if !$user->isLoggedIn()}
+                        <div id="email" class="card border-0 shadow h6 text-small">
+                            <div class="card-header" id="headingOne">
+                                <div class="d-flex">
+                                    <h5 class="mb-0">
+                                        <button type="button"id="emailButton" class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                            Emailová adresa
+                                        </button>
+                                    </h5>
+                                    <button type="button" id="editButtonEmail" class="btn back-to-cart ml-auto d-none">upravit</button>
+                                </div>
                             </div>
-                        </div>
 
-                        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-                            <div class="card-body">
-                                <label class="h4 mb-3 mt-2 pb-2 pt-1">Jaká je vaše emailová adresa?</label>
-                            <!-- TODO check přihlášení -->
-                                <div class="form-group">
-                                    <label class="h6 text-small mb-3 text-center">Pro pokračování jako host vyplňte svoji emailovou adresu. Nebo se <a href="{plink User:login}">přihlašte</a> do svého účtu.</label>
-                                    <label n:name=email for="email">Emailová adresa</label>
-                                    <input n:name=email type="email" class="form-control" id="email">
-                                </div>
-                                <div>
-                                    <input type="button" id="emailSubmitButton" n:name=emailSubmitButton class="btn btn-primary w-100">
+                            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                                <div class="card-body">
+                                    <label class="h4 mb-3 mt-2 pb-2 pt-1">Jaká je vaše emailová adresa?</label>
+                                    <div class="form-group">
+                                        <label class="h6 text-small mb-3 text-center">Pro pokračování jako host vyplňte svoji emailovou adresu. Nebo se <a href="{plink User:login}">přihlašte</a> do svého účtu.</label>
+                                        <label n:name=email for="email">Emailová adresa</label>
+                                        <input n:name=email type="email" class="form-control" id="email">
+                                    </div>
+                                    <div>
+                                        <input type="button" id="emailSubmitButton" n:name=emailSubmitButton class="btn btn-primary w-100">
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    {/if}
                     <div id="deliveryDiv" class="card border-0  shadow h6 text-small">
                         <div class="card-header" id="headingTwo">
                             <div class="d-flex">
@@ -427,6 +428,12 @@ $(document).ready(function() {
         $("#paymentPrice").html(paymentPrice);
         calculateTotalAndDph(orderTotal);
     });
+
+    //pokud je uživatel přihlášen, schová se formulář pro zadání emailu a otevře se formulář pro zadání adresy
+    {ifset $user->id}
+        $("#collapseTwo").collapse("show");
+        $("#collapseOne").collapse("hide");
+    {/ifset}
 });
 
 </script>

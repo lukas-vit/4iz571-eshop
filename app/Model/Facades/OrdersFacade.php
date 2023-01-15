@@ -69,6 +69,10 @@ class OrdersFacade{
     $this->orderItemRepository->persist($orderItem);
   }
 
+  public function getOrderItemsByOrderDetail(OrderDetail $orderDetail):array {
+    return $this->orderItemRepository->findAllBy(['order_detail_id'=>$orderDetail->orderDetailId]);
+  }
+
   public function __construct(OrderDetailRepository $orderDetailRepository,OrderItemRepository $orderItemRepository,PaymentRepository $paymentRepository,DeliveryRepository $deliveryRepository)
   {
     $this->orderDetailRepository = $orderDetailRepository;
