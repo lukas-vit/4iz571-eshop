@@ -161,12 +161,12 @@
             },
             "installation-source": "dist",
             "autoload": {
-                "psr-4": {
-                    "Facebook\\": "src/Facebook/"
-                },
                 "files": [
                     "src/Facebook/polyfills.php"
-                ]
+                ],
+                "psr-4": {
+                    "Facebook\\": "src/Facebook/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -188,6 +188,7 @@
                 "issues": "https://github.com/facebook/php-graph-sdk/issues",
                 "source": "https://github.com/facebook/php-graph-sdk/tree/5.7.0"
             },
+            "abandoned": true,
             "install-path": "../facebook/graph-sdk"
         },
         {

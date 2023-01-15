@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'bc565affa0d26fbd884fa18f84668d708f6235c7',
+        'reference' => '621ecf9bdbcb3d1c42112e8f5aa83ced30d70e61',
         'name' => '4iz571/notes-leanmapper',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'bc565affa0d26fbd884fa18f84668d708f6235c7',
+            'reference' => '621ecf9bdbcb3d1c42112e8f5aa83ced30d70e61',
             'dev_requirement' => false,
         ),
         'components/jquery' => array(
