@@ -21,10 +21,18 @@
         <tr>
             <td>{$orderDetail->orderDetailId}</td>
             <td>{$orderDetail->payment->name}</td>
-            <td>{$orderDetail->paymentStatus}</td>
+            {if $orderDetail->paymentStatus == App\Model\Entities\OrderDetail::TYPE_PAYMENT_PAID}
+                <td class="btn btn-success btn-sm mt-1">Zaplaceno</td>
+            {else}
+                <td class="btn btn-warning btn-sm mt-1">Čeká na zaplacení</td>
+            {/if}
             <td>{$orderDetail->delivery->name}</td>
-            <td>{$orderDetail->status}</td>
-            <td>{$orderDetail->total}</td>
+            {if $orderDetail->status == App\Model\Entities\OrderDetail::TYPE_ORDER_DONE}
+                <td class="btn btn-success btn-sm mt-1">Vyřešeno</td>
+            {else}
+                <td class="btn btn-warning btn-sm mt-1">Čeká na vyřešení</td>
+            {/if}
+            <td>{$orderDetail->total} Kč</td>
             <td class="text-nowrap">
                 <a href="{link show id=>$orderDetail->orderDetailId}" class="btn btn-sm btn-outline-primary">Zobrazit</a>
             </td>
