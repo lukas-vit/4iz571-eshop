@@ -54,8 +54,8 @@ class BillingAddressForm extends Form {
             ->setRequired('Zadejte své jméno');
         $this->addText('city','Město')
             ->setRequired('Zadejte město');
-        $this->addText('street','Ulice')
-            ->setRequired('Zadejte ulici');
+        $this->addText('street','Ulice a číslo')
+            ->setRequired('Zadejte ulici a číslo popisné');
         $this->addInteger('zip', 'PSČ')
             ->setRequired('Zadejte PSČ');
         $this->addInteger('phone', 'Telefonní číslo')
