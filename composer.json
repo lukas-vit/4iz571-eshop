@@ -22,7 +22,8 @@
 		"vojir/leanmapper-mappers": "^1.0",
 		"facebook/graph-sdk": "^5.7",
 		"nextras/forms-rendering": "^1.1",
-		"components/jquery": "^3.6"
+		"components/jquery": "^3.6",
+		"fpdf/fpdf": "^1.85"
 	},
 	"autoload": {
 		"psr-4": {

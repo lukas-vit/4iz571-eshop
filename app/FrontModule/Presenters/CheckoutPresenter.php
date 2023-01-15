@@ -18,6 +18,7 @@ use App\Model\Facades\OrdersFacade;
 use App\Model\Facades\PaymentsFacade;
 use App\Model\Facades\ProductsFacade;
 use App\Model\Facades\UsersFacade;
+use Fpdf\Fpdf;
 use Latte\Engine;
 use Nette;
 use Nette\Application\BadRequestException;
@@ -206,24 +207,40 @@ class CheckoutPresenter extends BasePresenter{
             $this->cartControl->unsetSessionCart();
 
             $latte = new Engine;
+            $orderItems = $this->ordersFacade->getOrderItemsByOrderDetail($order);
             $params = [
                 'order' => $order,
                 'deliveryAddress' => $deliveryAddress,
                 'payment' => $orderPayment,
                 'delivery' => $orderDelivery,
-                'orderItems' => $this->ordersFacade->getOrderItemsByOrderDetail($order),
+                'orderItems' => $orderItems,
             ];
 
             $urlToEmailTemplate = __DIR__ . "/templates/email.latte";
+
+            //TODO faktura
+            $pdf = new Fpdf();
+            $pdf->AddPage();
+            $pdf->SetFont('Arial','B',16);
+            foreach ($orderItems as $item) {
+                $pdf->Cell(40,10,$item->product->title);
+                $pdf->Cell(40,10,$item->product->price);
+                $pdf->Cell(40,10,$item->quantity);
+                $pdf->Cell(40,10,$item->product->price * $item->quantity);
+                $pdf->Ln();
+            }
+            $invoiceDir = __DIR__ . "/../../../www/invoices/";
+            $pdf->Output("F", $invoiceDir . $order->orderDetailId . ".pdf");
+
             $mail = new Nette\Mail\Message;
             $mail->setFrom('ishop@vse.cz', 'iShop')
                 ->setSubject('Potvrzení objednávky')
                 ->addTo($user->email)
+                ->addAttachment($invoiceDir . $order->orderDetailId . ".pdf")
                 ->setHtmlBody(
                     $latte->renderToString($urlToEmailTemplate, $params)
                 );
-                /* ->addAttachment('invoice.pdf'); */
-            //TODO faktura
+            
             $mailer = new Nette\Mail\SendmailMailer;
             $mailer->send($mail);
 

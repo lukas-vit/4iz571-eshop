@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '621ecf9bdbcb3d1c42112e8f5aa83ced30d70e61',
+        'reference' => 'da829332c43aedac200476e45c4c7fe3ce0fe105',
         'name' => '4iz571/notes-leanmapper',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '621ecf9bdbcb3d1c42112e8f5aa83ced30d70e61',
+            'reference' => 'da829332c43aedac200476e45c4c7fe3ce0fe105',
             'dev_requirement' => false,
         ),
         'components/jquery' => array(
@@ -50,6 +50,15 @@
             'install_path' => __DIR__ . '/../facebook/graph-sdk',
             'aliases' => array(),
             'reference' => '2d8250638b33d73e7a87add65f47fabf91f8ad9b',
+            'dev_requirement' => false,
+        ),
+        'fpdf/fpdf' => array(
+            'pretty_version' => '1.85.0',
+            'version' => '1.85.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../fpdf/fpdf',
+            'aliases' => array(),
+            'reference' => '5ba6a7d4363174ac828a0c15cc1b4a8f845b1e16',
             'dev_requirement' => false,
         ),
         'latte/latte' => array(

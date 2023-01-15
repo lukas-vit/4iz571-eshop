@@ -22,6 +22,7 @@ class ComposerStaticInit4c0af7f99a8028e1baa6eb57bbabacac
         ),
         'F' => 
         array (
+            'Fpdf\\' => 5,
             'Facebook\\' => 9,
         ),
         'A' => 
@@ -38,6 +39,10 @@ class ComposerStaticInit4c0af7f99a8028e1baa6eb57bbabacac
         'Nextras\\FormsRendering\\' => 
         array (
             0 => __DIR__ . '/..' . '/nextras/forms-rendering/src',
+        ),
+        'Fpdf\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/fpdf/fpdf/src/Fpdf',
         ),
         'Facebook\\' => 
         array (

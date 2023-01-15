@@ -430,10 +430,10 @@ $(document).ready(function() {
     });
 
     //pokud je uživatel přihlášen, schová se formulář pro zadání emailu a otevře se formulář pro zadání adresy
-    {ifset $user->id}
+    {if $user->isLoggedIn()}
         $("#collapseTwo").collapse("show");
         $("#collapseOne").collapse("hide");
-    {/ifset}
+    {/if}
 });
 
 </script>
