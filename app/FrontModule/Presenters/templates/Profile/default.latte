@@ -1,3 +1,103 @@
+{varType App\Model\Entities\User $currentUser}
+{varType App\Model\Entities\UserAddress[] $userAddresses}
 {block content}
 
+{foreach $userAddresses as $address}
+    {if $address->type == App\Model\Entities\UserAddress::TYPE_DELIVERY}
+        {var App\Model\Entities\UserAddress $deliveryAddress = $address}
+    {else}
+        {var App\Model\Entities\UserAddress $billingAddress = $address}
+    {/if}
+{/foreach}
+
 <h1 n:block="title">Profil</h1>
+
+<div>
+    <div class="container">
+        <div class="row">
+            <h2 class="mt-3">Objednávky</h2>
+        </div>
+        <div class="row mt-2">
+            <a href="{link orders}" class="btn btn-primary">Zobrazit Vaše objednávky</a>
+        </div>
+        <div class="row">
+            <h2 class="mt-3">Změna informací profilu</h2>
+        </div>
+        <div class="row mt-2">
+            <a href="{link personal}" ><button type="button" class="btn btn-primary mr-2 mt-2">Změna osobních informací</button></a>
+            <a href="{link password}" ><button type="button" class="btn btn-primary mr-2 mt-2">Změna hesla</button></a>
+            <a href="{link delivery}" ><button type="button" class="btn btn-primary mr-2 mt-2">Změna doručovací adresy</button></a>
+            <a href="{link billing}" ><button type="button" class="btn btn-primary mr-2 mt-2">Změna fakturační adresy</button></a>
+        </div>
+
+        <div class="row">
+        <h2 class="mt-3">Informace Vašeho profilu</h2>
+        <table class="table table-hover mt-4">
+            <thead>
+            <tr>
+                <th scope="col" class="col-xl-1 col-md-2">Jméno</th>
+                <th scope="col" class="col-xl-1 col-md-2">Email</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{$currentUser->name}</td>
+                <td>{$currentUser->email}</td>
+            </tr>
+            </tbody>
+        </table>
+        </div>
+
+        {if $deliveryAddress != null}
+            <div class="row">
+            <h3 class="mt-3">Doručovací adresa</h3>
+            <table class="table table-hover mt-4">
+                <thead>
+                <tr>
+                    <th scope="col" class="col-xl-1 col-md-2">Jméno</th>
+                    <th scope="col" class="col-xl-1 col-md-2">Město</th>
+                    <th scope="col" class="col-xl-1 col-md-2">Ulice a číslo</th>
+                    <th scope="col" class="col-xl-1 col-md-2">PSČ</th>
+                    <th scope="col" class="col-xl-1 col-md-2">Telefon</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{$deliveryAddress->name}</td>
+                    <td>{$deliveryAddress->city}</td>
+                    <td>{$deliveryAddress->street}</td>
+                    <td>{$deliveryAddress->zip}</td>
+                    <td>{$deliveryAddress->phone}</td>
+                </tr>
+                </tbody>
+            </table>
+            </div>
+        {/if}
+
+        {if $billingAddress != null}
+            <div class="row">
+            <h3 class="mt-3">Fakturační adresa</h3>
+            <table class="table table-hover mt-4">
+                <thead>
+                <tr>
+                    <th scope="col" class="col-xl-1 col-md-2">Jméno</th>
+                    <th scope="col" class="col-xl-1 col-md-2">Město</th>
+                    <th scope="col" class="col-xl-1 col-md-2">Ulice a číslo</th>
+                    <th scope="col" class="col-xl-1 col-md-2">PSČ</th>
+                    <th scope="col" class="col-xl-1 col-md-2">Telefon</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{$billingAddress->name}</td>
+                    <td>{$billingAddress->city}</td>
+                    <td>{$billingAddress->street}</td>
+                    <td>{$billingAddress->zip}</td>
+                    <td>{$billingAddress->phone}</td>
+                </tr>
+                </tbody>
+            </table>
+            </div>
+        {/if}
+    </div>
+</div>

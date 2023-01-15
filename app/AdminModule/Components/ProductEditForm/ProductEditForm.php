@@ -94,6 +94,17 @@ class ProductEditForm extends Form{
       ->addRule(Form::NUMERIC,'Musíte zadat číslo.')
       ->setRequired('Musíte zadat cenu produktu');//tady by mohly být další kontroly pro min, max atp.
 
+      $this->addInteger('ram', 'Velikost úlolžiště')
+          ->setRequired('Zadejte velikost úlolžiště produktu')
+            ->addRule(Form::MIN, 'Číslo musí být větší než 0', '1');
+
+      $this->addText('color', 'Barva')
+          ->setRequired('Zadejte barvu produktu');
+
+      $this->addInteger('stock', 'Počet kusů na skladě')
+          ->setRequired('Zadejte počet kusů produktu na skladě.')
+          ->addRule(Form::MIN, 'Počet kusů nemůže být záporný', '0');
+
     $this->addCheckbox('available', 'Nabízeno ke koupi')
       ->setDefaultValue(true);
 
@@ -119,21 +130,45 @@ class ProductEditForm extends Form{
         }else{
           $product=new Product();
         }
-        $product->assign($values,['title','url','description','available']);
+        $product->assign($values,['title','url','description','available', 'ram', 'color', 'stock']);
+        if($values['categoryId'] != null){
+            $product->category=$this->categoriesFacade->getCategory($values['categoryId']);
+        }else{
+            $product->category=null;
+        }
         $product->price=floatval($values['price']);
         $this->productsFacade->saveProduct($product);
         $this->setValues(['productId'=>$product->productId]);
 
-
+        $productPhotosArr=[];
         foreach ($values['photos'] as $photo){
             if(($photo instanceof Nette\Http\FileUpload) && ($photo->isOk())){
                 try{
                     $productPhoto = new ProductPhoto();
                     $this->productPhotoFacade->savePhotoParameters($photo, $productPhoto, $product);
+                    $productPhotosArr[]=$productPhoto;
                     $photo->move(__DIR__.'/../../../../www/img/products/'.$productPhoto->productPhotoId.'.'.$productPhoto->photoExtension);
                 }catch (\Exception $e){
                     $this->onFailed('Produkt byl uložen, ale nepodařilo se uložit jeho fotky.');
                 }
+            }
+        }
+
+        $thumbnailExists=false;
+        $existingPhotos = $this->productPhotoFacade->getProductPhotosByProductId((int)$values['productId']);
+        foreach ($existingPhotos as $existingPhoto){
+            if($existingPhoto instanceof ProductPhoto){
+                if($existingPhoto->isThumbnail){
+                    $thumbnailExists=true;
+                }
+            }
+        }
+
+        if(!empty($existingPhotos)){
+            if(!$thumbnailExists){
+                $newThumbnail=$productPhotosArr[0];
+                $newThumbnail->isThumbnail=true;
+                $this->productPhotoFacade->savePhoto($newThumbnail);
             }
         }
 
@@ -160,7 +195,10 @@ class ProductEditForm extends Form{
         'title'=>$values->title,
         'url'=>$values->url,
         'description'=>$values->description,
-        'price'=>$values->price
+        'price'=>$values->price,
+        'ram'=>$values->ram,
+        'color'=>$values->color,
+        'stock'=>$values->stock
       ];
     }
     parent::setDefaults($values, $erase);

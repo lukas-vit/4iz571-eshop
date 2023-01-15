@@ -1,0 +1,56 @@
+{varType App\Model\Entities\Product[] $products}
+{varType App\Model\Entities\Category[] $categories}
+{varType App\Model\Entities\ProductPhoto[] $photos}
+{varType App\Model\Entities\Category $currentCategory}
+{block content}
+    <div>
+        <h2>Kategorie</h2>
+        <div class="container">
+            <div class="row">
+                <a href="{link default}"><button type="button" class="btn btn-info mr-2">Zpět na hlavní stránku</button></a>
+                {foreach $categories as $category}
+                    {if $currentCategory->categoryId == $category->categoryId}
+                        <a href="{link category id=>$category->categoryId}"><button type="button" class="btn btn-primary mr-2">{$category->title}</button></a>
+                    {else}
+                        <a href="{link category id=>$category->categoryId}"><button type="button" class="btn btn-outline-primary mr-2">{$category->title}</button></a>
+                    {/if}
+                {/foreach}
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <h2>Seznam produktů</h2>
+        <div class="container">
+            <div class="row">
+                {if !empty($products)}
+                    {foreach $products as $product}
+                        <div class="col-12 sm:col-6 col-xl-4 bg-light py-4 mt-2 mx-1">
+                            <h5>{$product->title} {if $product->ram}<span>{$product->ram} GB</span>{/if} {if $product->color}<span>{$product->color}</span>{/if}</h5>
+                            <h6>Kategorie {$product->category->title}</h6>
+
+                            {foreach $photos as $photo}
+                                {if $photo->productId == $product->productId}
+                                    {if $photo->isThumbnail == true}
+                                        <img src="{$basePath.'/img/products/'.$photo->productPhotoId.'.'.$photo->photoExtension}" alt="{$product->title}" class="d-block w-100">
+                                    {/if}
+                                {/if}
+                            {/foreach}
+                            <div class="mb-2">{$product->description}</div>
+
+                            <div class="row">
+                                <div class="col-9"><a href="{link Product:show url=>$product->url}"><button type="button" class="btn btn-block btn-outline-primary">Detaily</button></a></div>
+                                <div class="col-3">
+                                    {control productCartForm-$product->productId}
+                                </div>
+                            </div>
+                        </div>
+                    {/foreach}
+                {else}
+                    <p class="text-muted">Nebyly nalezeny žádné produkty</p>
+                {/if}
+            </div>
+        </div>
+    </div>
+
+{/block}

@@ -34,6 +34,16 @@ class HomepagePresenter extends BasePresenter{
       $this->template->photos = $this->productPhotoFacade->findAllPhotos();
   }
 
+    /**
+     * Akce pro zobrazení seznamu produktů dle kategorie
+     */
+  public function renderCategory(int $id){
+      $this->template->products = $this->productsFacade->findProductsByCategory($id);
+      $this->template->categories = $this->categoriesFacade->findCategories(['order' => 'title']);
+      $this->template->photos = $this->productPhotoFacade->findAllPhotos();
+      $this->template->currentCategory = $this->categoriesFacade->getCategory($id);
+  }
+
   /**
    * Akce pro úpravu jednoho produktu
    * @param int $id

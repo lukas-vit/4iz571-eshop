@@ -7,7 +7,7 @@
     <div class="container">
         <div class="row">
             {foreach $categories as $category}
-            <a href="{link Category:edit id=>$category->categoryId}"><button type="button" class="btn btn-warning mr-2">{$category->title}</button></a>
+            <a href="{link category id=>$category->categoryId}"><button type="button" class="btn btn-outline-primary mr-2">{$category->title}</button></a>
             {/foreach}
         </div>
     </div>
@@ -26,11 +26,11 @@
                         {foreach $photos as $photo}
                             {if $photo->productId == $product->productId}
                                 {if $photo->isThumbnail == true}
-                                    <img src="{$basePath.'/img/products/'.$photo->productPhotoId.'.'.$photo->photoExtension}" alt="{$product->title}" width="250" height="312">
+                                    <img src="{$basePath.'/img/products/'.$photo->productPhotoId.'.'.$photo->photoExtension}" alt="{$product->title}" class="d-block w-100">
                                 {/if}
                             {/if}
                         {/foreach}
-                        <!--img src="{*$basePath.'/img/products/'.$product->productId.'.'.$product->photoExtension*}" alt="{*$product->title*}" width="150" height="187"-->
+
                         <div class="mb-2">{$product->description}</div>
 
                         <div class="row">

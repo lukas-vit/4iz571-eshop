@@ -53,12 +53,15 @@ class UserEditForm extends Form {
             ->setHtmlAttribute('maxlength',40)
             ->addRule(Form::MAX_LENGTH,'Jméno je příliš dlouhé, může mít maximálně 40 znaků.',40);;
         $this->addText('email', 'E-mail uživatele')
-            ->setRequired('Uživatel musí mít zadaný E-mail.');
+            ->setRequired('Uživatel musí mít zadaný E-mail.')
+            ->addRule(Form::EMAIL, 'Zadejte platný email');;
         #region role
         $roles=$this->usersFacade->findRoles();
         $rolesArr=[];
         foreach ($roles as $role){
-            $rolesArr[$role->roleId]=$role->roleId;
+            if($role->roleId != 'guest' && $role->roleId != 'authenticated'){
+                $rolesArr[$role->roleId]=$role->roleId;
+            }
         }
         $this->addSelect('roleId','Role',$rolesArr)
             ->setPrompt('--Vyberte roli--')
