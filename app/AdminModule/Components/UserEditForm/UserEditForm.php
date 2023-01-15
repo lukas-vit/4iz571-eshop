@@ -85,7 +85,17 @@ class UserEditForm extends Form {
             }else{
                 $user->role=null;
             }
-            $user->assign($values, ['name', 'email']);
+
+            if($this->usersFacade->getBoolForUserByEmail($values['email'])){
+                if($user->email == $values['email']){
+                    $user->assign($values, ['name', 'email']);
+                }else{
+                    $this->onFailed('Uživatel s daným emailem již existuje');
+                }
+            }else{
+                $user->assign($values, ['name', 'email']);
+            }
+
             $this->usersFacade->saveUser($user);
             $this->setValues(['userId'=>$user->userId]);
             $this->onFinished('Uživatel byl uložen');

@@ -122,7 +122,7 @@ class CheckoutPresenter extends BasePresenter{
             //payment method
             $orderPayment = $this->paymentsFacade->getPayment((int)$values['payment']);
             $order->paymentId = $orderPayment->paymentId;
-            $order->paymentStatus = "pending";
+            $order->paymentStatus = OrderDetail::TYPE_PAYMENT_PENDING;
 
             //if user does not have an address - create addresses
             $userAddresses = $this->usersFacade->getAddressesByUser($user);
@@ -134,7 +134,7 @@ class CheckoutPresenter extends BasePresenter{
                 $deliveryAddress->city = $values['delivery_city'];
                 $deliveryAddress->zip = $values['delivery_zip'];
                 $deliveryAddress->phone = $values['delivery_phone'];
-                $deliveryAddress->type = "delivery";
+                $deliveryAddress->type = UserAddress::TYPE_DELIVERY;
                 $this->usersFacade->saveUserAddress($deliveryAddress);
 
                 if ($values['sameAsBilling'] == 0) {
@@ -145,7 +145,7 @@ class CheckoutPresenter extends BasePresenter{
                     $billingAddress->city = $values['billing_city'];
                     $billingAddress->zip = $values['billing_zip'];
                     $billingAddress->phone = $values['billing_phone'];
-                    $billingAddress->type = "billing";
+                    $billingAddress->type = UserAddress::TYPE_BILLING;
                     $this->usersFacade->saveUserAddress($billingAddress);
                 } else {
                     $billingAddress = new UserAddress();
@@ -155,13 +155,13 @@ class CheckoutPresenter extends BasePresenter{
                     $billingAddress->city = $values['delivery_city'];
                     $billingAddress->zip = $values['delivery_zip'];
                     $billingAddress->phone = $values['delivery_phone'];
-                    $billingAddress->type = "billing";
+                    $billingAddress->type = UserAddress::TYPE_BILLING;
                     $this->usersFacade->saveUserAddress($billingAddress);
                 }
             } else {
                 //if user has an address - update addresses
                 foreach ($userAddresses as $address) {
-                    if ($address->type == "delivery") {
+                    if ($address->type == UserAddress::TYPE_DELIVERY) {
                         $address->name = $values['delivery_name'];
                         $address->street = $values['delivery_street'];
                         $address->city = $values['delivery_city'];
@@ -171,7 +171,7 @@ class CheckoutPresenter extends BasePresenter{
                         $this->usersFacade->saveUserAddress($deliveryAddress);
                     }
 
-                    if ($address->type == "billing") {
+                    if ($address->type == UserAddress::TYPE_BILLING) {
                         $address->name = $values['billing_name'];
                         $address->street = $values['billing_street'];
                         $address->city = $values['billing_city'];
@@ -198,10 +198,11 @@ class CheckoutPresenter extends BasePresenter{
             $orderDph = round(($orderTotal - $orderTotalWithoutDph), 0);
             $orderCreated = new DateTime();
 
-            if ($orderPayment->type == "cash")
-                $order->status = "paid";
-            else {
-                $order->status = "pending";
+            if($orderPayment->type == "cash"){
+                $order->paymentStatus = OrderDetail::TYPE_PAYMENT_PAID;
+                $order->status = OrderDetail::TYPE_ORDER_PENDING;
+            }else{
+                $order->status = OrderDetail::TYPE_ORDER_PENDING;
             }
 
             $this->ordersFacade->saveOrderDetail($order);

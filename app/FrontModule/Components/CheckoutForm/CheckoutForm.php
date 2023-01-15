@@ -2,6 +2,7 @@
 
 namespace App\FrontModule\Components\CheckoutForm;
 
+use App\Model\Entities\UserAddress;
 use App\Model\Facades\DeliveriesFacade;
 use App\Model\Facades\PaymentsFacade;
 use App\Model\Facades\UsersFacade;
@@ -56,7 +57,7 @@ class CheckoutForm extends Form{
 
       if (count($userAddresses) != 0) {
         foreach ($userAddresses as $userAddress) {
-          if ($userAddress->type == 'delivery') {
+          if ($userAddress->type == UserAddress::TYPE_DELIVERY) {
             $deliveryAddress = $userAddress;
           } else {
             $billingAddress = $userAddress;

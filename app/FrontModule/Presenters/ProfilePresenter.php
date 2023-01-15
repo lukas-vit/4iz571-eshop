@@ -137,7 +137,7 @@ class ProfilePresenter extends BasePresenter{
         };
         $form->onFailed[]=function($message=''){
             if (!empty($message)){
-                $this->flashMessage($message);
+                $this->flashMessage($message, 'error');
             }
             $this->redirect('default');
         };
@@ -157,7 +157,7 @@ class ProfilePresenter extends BasePresenter{
         };
         $form->onFailed[]=function($message=''){
             if (!empty($message)){
-                $this->flashMessage($message);
+                $this->flashMessage($message, 'error');
             }
             $this->redirect('default');
         };
@@ -177,7 +177,7 @@ class ProfilePresenter extends BasePresenter{
         };
         $form->onFailed[]=function($message=''){
             if (!empty($message)){
-                $this->flashMessage($message);
+                $this->flashMessage($message, 'error');
             }
             $this->redirect('default');
         };
@@ -197,7 +197,7 @@ class ProfilePresenter extends BasePresenter{
         };
         $form->onFailed[]=function($message=''){
             if (!empty($message)){
-                $this->flashMessage($message);
+                $this->flashMessage($message, 'error');
             }
             $this->redirect('default');
         };

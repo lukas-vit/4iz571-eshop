@@ -67,8 +67,20 @@ class PersonalInfoForm extends Form {
                 return;
             }
 
-            $user->name = $values['name'];
-            $user->email = $values['email'];
+            if($this->usersFacade->getBoolForUserByEmail($values['email'])){
+                if($user->email == $values['email']){
+                    $user->name = $values['name'];
+                    $user->email = $values['email'];
+                }else{
+                    $this->onFailed('Uživatel s daným emailem již existuje');
+                }
+            }else{
+                $user->name = $values['name'];
+                $user->email = $values['email'];
+            }
+
+
+
             $this->usersFacade->saveUser($user);
 
             $this->onFinished('Osobní údaje byly změněny');

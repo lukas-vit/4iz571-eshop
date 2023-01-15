@@ -3,12 +3,16 @@
 <h1 n:block="title">Registrace uživatele</h1>
 
 <form n:name="userRegistrationForm" class="form">
+    <ul class="errors" n:ifcontent>
+        <li n:foreach="$form->getOwnErrors() as $error">{$error}</li>
+    </ul>
     <h2>Osobní informace</h2>
     <div>
         <label n:name="name">Jméno a příjmení: <br><input n:name="name" id="name" size="20" autofocus></label>
     </div>
     <div>
         <label n:name="email">Email: <br><input n:name="email" id="email" size="20" autofocus></label>
+        <br><span class=error n:ifcontent>{inputError email}</span>
     </div>
     <div>
         <label n:name="password">Heslo: <br><input n:name="password" id="password" size="20" autofocus></label>
@@ -61,6 +65,10 @@
 
 <script>
     $(document).ready(function() {
+
+        if($('#sameAsBilling').is(":checked")){
+            $('#billingAddress').toggle('hidden');
+        }
 
         $("#sameAsBilling").on('change', function (){
             if($(this).is(":checked")) {

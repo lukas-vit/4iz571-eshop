@@ -2,6 +2,7 @@
 
 namespace App\AdminModule\Presenters;
 
+use App\Model\Entities\OrderDetail;
 use App\Model\Facades\OrdersFacade;
 
 class OrderPresenter extends BasePresenter{
@@ -21,6 +22,43 @@ class OrderPresenter extends BasePresenter{
             $this->redirect('default');
         }
         $this->template->order = $order;
+    }
+
+    public function handleDone(int $id){
+        try {
+            $order = $this->ordersFacade->getOrderDetail($id);
+        }catch (\Exception $e){
+            $this->flashMessage('Požadovaná objednávka nebyla nalezena', 'error');
+            $this->redirect('default');
+        }
+
+        if($order->paymentStatus == OrderDetail::TYPE_PAYMENT_PAID){
+            if ($order->status == OrderDetail::TYPE_ORDER_PENDING){
+                $order->status = OrderDetail::TYPE_ORDER_DONE;
+                $this->ordersFacade->saveOrderDetail($order);
+                $this->flashMessage('Stav objedkávky byl změněn na Done');
+                $this->redirect('this');
+            }
+        } else{
+            $this->flashMessage('Objednávka musí být zaplacena', 'error');
+            $this->redirect('this');
+        }
+    }
+
+    public function handlePayment(int $id){
+        try {
+            $order = $this->ordersFacade->getOrderDetail($id);
+        }catch (\Exception $e){
+            $this->flashMessage('Požadovaná objednávka nebyla nalezena', 'error');
+            $this->redirect('default');
+        }
+
+        if($order->paymentStatus == OrderDetail::TYPE_PAYMENT_PENDING){
+            $order->paymentStatus = OrderDetail::TYPE_PAYMENT_PAID;
+            $this->ordersFacade->saveOrderDetail($order);
+            $this->flashMessage('Objednávka byla zaplacena');
+            $this->redirect('this');
+        }
     }
 
     #region injections

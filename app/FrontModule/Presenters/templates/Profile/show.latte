@@ -33,7 +33,7 @@
                 {/if}
             {/foreach}
             {/if}
-            <td>{$orderItem->price}</td>
+            <td>{$orderItem->price} Kč</td>
             <td>{$orderItem->quantity}</td>
         </tr>
     {/foreach}
@@ -41,4 +41,9 @@
 </table>
 <div>
     <a href="{link orders}"><button class="btn btn-secondary">Zpět na přehled objednávek</button></a>
+    {if $order->status == App\Model\Entities\OrderDetail::TYPE_ORDER_DONE}
+        <div class="btn btn-success">Vyřešeno</div>
+    {else}
+        <div class="btn btn-warning">Čeká na vyřešení</div>
+    {/if}
 </div>
