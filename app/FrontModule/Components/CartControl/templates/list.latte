@@ -8,7 +8,7 @@
         <p>Momentálně nemáte žádné zboží ve vašem nákupním košíku.<p>
         <p>Zkuste něco přidat z našeho katalogu.</p>
     </div>
-<a href="{plink Homepage:default}" class="mt-4 mx-auto btn btn-primary btn-block w-25">Přejít na katalog</a>
+<a href="{plink Homepage:default}" class="mt-4 mx-auto btn btn-primary btn-block col-6 col-md-3">Přejít na katalog</a>
 
 {else}
     <div class="my-5 container text-center w-100">
@@ -20,11 +20,11 @@
         {if $cart->getTotalPrice() > 10000}
             <p class="mt-4 h6 font-weight-bold"><i class="fa-solid fa-circle-check mr-2" style="color:green"></i>Máte dopravu zdarma!</p>
         {/if}
-        <a href="{plink Checkout:default}" class="mt-4 mx-auto btn btn-success btn-lg btn-block w-25">K pokladně</a>
+        <a href="{plink Checkout:default}" class="mt-4 mx-auto btn btn-success btn-lg btn-block col-6 col-md-3">K pokladně</a>
     </div>
     <div class="container my-5">
         <div class="row">
-            <div class="col-8 px-5">
+            <div class="col-12 col-md-8 px-md-5">
                 <hr />
                 {foreach $cart->items as $item}
                     <div class="d-flex flex-row">
@@ -105,7 +105,7 @@
                     <hr />
                 {/foreach}
             </div>
-            <div class="col-4">
+            <div class="col-12 col-md-4">
                 <div class="p-3 shadow">
                     <table class="table table-borderless">
                         <thead class="h5 font-weight-bold">

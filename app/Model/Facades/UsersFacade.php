@@ -101,6 +101,10 @@ class UsersFacade{
       return $this->userRepository->findAllBy($params,$offset,$limit);
   }
 
+  public function getAddressesByUser(User $user):array{
+    return $this->userAddressRepository->findAllBy(['user_id'=>$user->userId]);
+  }
+
   public function saveUserAddress(UserAddress &$address) {
     return (bool)$this->userAddressRepository->persist($address);
   }

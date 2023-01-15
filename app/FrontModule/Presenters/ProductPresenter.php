@@ -83,6 +83,12 @@ class ProductPresenter extends BasePresenter{
       $form = $this->productCartFormFactory->create();
       $form->setDefaults(['productId'=>$productId]);
       $form->onSubmit[]=function(ProductCartForm $form){
+        //check jestli je produkt skladem
+        $product = $this->productsFacade->getProduct($form->values->productId);
+        if ($product->stock < $form->values->count) {
+          $this->flashMessage('Produkt není skladem','error');
+          $this->redirect('this');
+        }
         try{
           $product = $this->productsFacade->getProduct($form->values->productId);
           //kontrola zakoupitelnosti
@@ -106,11 +112,16 @@ class ProductPresenter extends BasePresenter{
       $form = $this->productCartFormBigFactory->create();
       $form->setDefaults(['productId'=>$productId]);
       $form->onSubmit[]=function(ProductCartFormBig $form){
+        //check jestli je produkt skladem
+        $product = $this->productsFacade->getProduct($form->values->productId);
+        if ($product->stock < $form->values->count) {
+          $this->flashMessage('Produkt není skladem','error');
+          $this->redirect('this');
+        }
         try{
           $product = $this->productsFacade->getProduct($form->values->productId);
-          //kontrola zakoupitelnosti
         }catch (\Exception $e){
-          $this->flashMessage('Produkt nejde přidat do košíku','error');
+          $this->flashMessage('Produkt nelze přidat do košíku','error');
           $this->redirect('this');
         }
         //přidání do košíku
@@ -136,7 +147,23 @@ class ProductPresenter extends BasePresenter{
           $this->redirect('this');
         }
 
-        //TODO check, že si opravdu produkt zakoupil - jinak by neměl psát recenzi
+        //check, že si opravdu produkt zakoupil - jinak by neměl psát recenzi
+        $userOrders = $this->ordersFacade->findOrders(['user_id'=>$userId]);
+        $userBoughtProduct = false;
+        foreach ($userOrders as $order) {
+          $orderItems = $this->orderItemsFacade->findOrderItems(['order_id'=>$order->orderId]);
+          foreach ($orderItems as $orderItem) {
+            if ($orderItem->productId == $form->values->productId) {
+              $userBoughtProduct = true;
+              break;
+            }
+          }
+        }
+
+        if (!$userBoughtProduct) {
+          $this->flashMessage('Pro přidání recenze musíte produkt zakoupit','error');
+          $this->redirect('this');
+        }
 
         $review = new Review();
         $review->productId = (int)$form->values->productId;

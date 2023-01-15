@@ -16,7 +16,10 @@ use App\Model\Facades\CartFacade;
 use App\Model\Facades\DeliveriesFacade;
 use App\Model\Facades\OrdersFacade;
 use App\Model\Facades\PaymentsFacade;
+use App\Model\Facades\ProductsFacade;
 use App\Model\Facades\UsersFacade;
+use Fpdf\Fpdf;
+use Latte\Engine;
 use Nette;
 use Nette\Application\BadRequestException;
 
@@ -35,6 +38,8 @@ class CheckoutPresenter extends BasePresenter{
     private $deliveriesFacade;
     /** @var PaymentsFacade $paymentsFacade */
     private $paymentsFacade;
+    /** @var ProductsFacade $productsFacade */
+    private $productsFacade;
     /** @var CartFacade $cartsFacade */
     private $cartFacade;
     /** @var CartControl $cartControl */
@@ -42,7 +47,7 @@ class CheckoutPresenter extends BasePresenter{
     private Cart $cart;
     private User $user;
 
-    public function __construct(User $user, CheckoutFormFactory $checkoutFormFactory, UsersFacade $usersFacade, OrdersFacade $ordersFacade, CartFacade $cartFacade, CartControl $cartControl, DeliveriesFacade $deliveriesFacade, PaymentsFacade $paymentsFacade) {
+    public function __construct(User $user, CheckoutFormFactory $checkoutFormFactory, UsersFacade $usersFacade, OrdersFacade $ordersFacade, CartFacade $cartFacade, CartControl $cartControl, DeliveriesFacade $deliveriesFacade, PaymentsFacade $paymentsFacade, ProductsFacade $productsFacade) {
         parent::__construct();
         $this->checkoutFormFactory=$checkoutFormFactory;
         $this->usersFacade=$usersFacade;
@@ -50,6 +55,7 @@ class CheckoutPresenter extends BasePresenter{
         $this->cartFacade=$cartFacade;
         $this->deliveriesFacade=$deliveriesFacade;
         $this->paymentsFacade=$paymentsFacade;
+        $this->productsFacade=$productsFacade;
         $this->cartControl=$cartControl;
         $this->cart = $this->cartControl->prepareCart();
         $this->user = $user;
@@ -103,48 +109,87 @@ class CheckoutPresenter extends BasePresenter{
                 $orderItem->quantity = (int)$item->count;
                 $orderItem->price = $item->product->price;
                 $this->ordersFacade->saveOrderItem($orderItem);
+                //remove 1 stock from DB
+                $product = $item->product;
+                $product->stock = $product->stock - 1;
+                $this->productsFacade->saveProduct($product);
             }
 
             //delivery method
             $orderDelivery = $this->deliveriesFacade->getDelivery((int)$values['delivery']);
-            $order->deliveryId = $orderDelivery->deliveryId;
-
             //payment method
             $orderPayment = $this->paymentsFacade->getPayment((int)$values['payment']);
             $order->paymentId = $orderPayment->paymentId;
             $order->paymentStatus = "pending";
 
-            //create addresses
-            $deliveryAddress = new UserAddress();
-            $deliveryAddress->userId = $user->userId;
-            $deliveryAddress->name = $values['delivery_name'];
-            $deliveryAddress->street = $values['delivery_street'];
-            $deliveryAddress->city = $values['delivery_city'];
-            $deliveryAddress->zip = $values['delivery_zip'];
-            $deliveryAddress->phone = $values['delivery_phone'];
-            $deliveryAddress->type = "delivery";
-            $this->usersFacade->saveUserAddress($deliveryAddress);
+            //if user does not have an address - create addresses
+            $userAddresses = $this->usersFacade->getAddressesByUser($user);
+            if (count($userAddresses) == 0) {
+                $deliveryAddress = new UserAddress();
+                $deliveryAddress->userId = $user->userId;
+                $deliveryAddress->name = $values['delivery_name'];
+                $deliveryAddress->street = $values['delivery_street'];
+                $deliveryAddress->city = $values['delivery_city'];
+                $deliveryAddress->zip = $values['delivery_zip'];
+                $deliveryAddress->phone = $values['delivery_phone'];
+                $deliveryAddress->type = "delivery";
+                $this->usersFacade->saveUserAddress($deliveryAddress);
 
-            if ($values['sameAsBilling'] == 0) {
-                $billingAddress = new UserAddress();
-                $billingAddress->userId = $user->userId;
-                $billingAddress->name = $values['billing_name'];
-                $billingAddress->street = $values['billing_street'];
-                $billingAddress->city = $values['billing_city'];
-                $billingAddress->zip = $values['billing_zip'];
-                $billingAddress->phone = $values['billing_phone'];
-                $billingAddress->type = "billing";
-                $this->usersFacade->saveUserAddress($billingAddress);
+                if ($values['sameAsBilling'] == 0) {
+                    $billingAddress = new UserAddress();
+                    $billingAddress->userId = $user->userId;
+                    $billingAddress->name = $values['billing_name'];
+                    $billingAddress->street = $values['billing_street'];
+                    $billingAddress->city = $values['billing_city'];
+                    $billingAddress->zip = $values['billing_zip'];
+                    $billingAddress->phone = $values['billing_phone'];
+                    $billingAddress->type = "billing";
+                    $this->usersFacade->saveUserAddress($billingAddress);
+                } else {
+                    $billingAddress = new UserAddress();
+                    $billingAddress->userId = $user->userId;
+                    $billingAddress->name = $values['delivery_name'];
+                    $billingAddress->street = $values['delivery_street'];
+                    $billingAddress->city = $values['delivery_city'];
+                    $billingAddress->zip = $values['delivery_zip'];
+                    $billingAddress->phone = $values['delivery_phone'];
+                    $billingAddress->type = "billing";
+                    $this->usersFacade->saveUserAddress($billingAddress);
+                }
             } else {
-                $billingAddress = $deliveryAddress;
-                $billingAddress->type = "billing";
-                $this->usersFacade->saveUserAddress($billingAddress);
+                //if user has an address - update addresses
+                foreach ($userAddresses as $address) {
+                    if ($address->type == "delivery") {
+                        $address->name = $values['delivery_name'];
+                        $address->street = $values['delivery_street'];
+                        $address->city = $values['delivery_city'];
+                        $address->zip = $values['delivery_zip'];
+                        $address->phone = $values['delivery_phone'];
+                        $deliveryAddress = $address;
+                        $this->usersFacade->saveUserAddress($deliveryAddress);
+                    }
+
+                    if ($address->type == "billing") {
+                        $address->name = $values['billing_name'];
+                        $address->street = $values['billing_street'];
+                        $address->city = $values['billing_city'];
+                        $address->zip = $values['billing_zip'];
+                        $address->phone = $values['billing_phone'];
+                        $billingAddress = $address;
+                        $this->usersFacade->saveUserAddress($billingAddress);
+                    }
+                }
             }
             
             //calculate total
             $orderTotal = $this->cart->getTotalPrice();
-            $orderTotal += $orderDelivery->price;
-            $orderTotal += $orderPayment->price;
+
+            //doprava zdarma nad 20000
+            if ($orderTotal < 20000) {
+                $orderTotal = $orderTotal + $orderDelivery->price;
+            }
+
+            $orderTotal = $orderTotal + $orderPayment->price;
 
             $order->total = $orderTotal;
 
@@ -161,7 +206,45 @@ class CheckoutPresenter extends BasePresenter{
             //delete cart from session
             $this->cartControl->unsetSessionCart();
 
-            //TODO finish order screen
+            $latte = new Engine;
+            $orderItems = $this->ordersFacade->getOrderItemsByOrderDetail($order);
+            $params = [
+                'order' => $order,
+                'deliveryAddress' => $deliveryAddress,
+                'payment' => $orderPayment,
+                'delivery' => $orderDelivery,
+                'orderItems' => $orderItems,
+            ];
+
+            $urlToEmailTemplate = __DIR__ . "/templates/email.latte";
+
+            //TODO faktura
+            $pdf = new Fpdf();
+            $pdf->AddPage();
+            $pdf->SetFont('Arial','B',16);
+            foreach ($orderItems as $item) {
+                $pdf->Cell(40,10,$item->product->title);
+                $pdf->Cell(40,10,$item->product->price);
+                $pdf->Cell(40,10,$item->quantity);
+                $pdf->Cell(40,10,$item->product->price * $item->quantity);
+                $pdf->Ln();
+            }
+            $invoiceDir = __DIR__ . "/../../../www/invoices/";
+            $pdf->Output("F", $invoiceDir . $order->orderDetailId . ".pdf");
+
+            $mail = new Nette\Mail\Message;
+            $mail->setFrom('ishop@vse.cz', 'iShop')
+                ->setSubject('Potvrzení objednávky')
+                ->addTo($user->email)
+                ->addAttachment($invoiceDir . $order->orderDetailId . ".pdf")
+                ->setHtmlBody(
+                    $latte->renderToString($urlToEmailTemplate, $params)
+                );
+            
+            $mailer = new Nette\Mail\SendmailMailer;
+            $mailer->send($mail);
+
+
             $this->redirect("OrderPlaced:default");
             $this->flashMessage("Objednávka byla úspěšně odeslána.", "success");
 
@@ -191,6 +274,10 @@ class CheckoutPresenter extends BasePresenter{
 
     public function injectPaymentsFacade(PaymentsFacade $paymentsFacade){
         $this->paymentsFacade=$paymentsFacade;
+    }
+
+    public function injectProductsFacade(ProductsFacade $productsFacade){
+        $this->productsFacade=$productsFacade;
     }
 
     public function injectCartControl(CartControl $cartControl){
