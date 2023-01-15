@@ -193,9 +193,10 @@ class CheckoutPresenter extends BasePresenter{
 
             $order->total = $orderTotal;
 
-            if ($orderPayment->type == "cash")
-                $order->status = OrderDetail::TYPE_ORDER_DONE;
-            else {
+            if($orderPayment->type == "cash"){
+                $order->paymentStatus = OrderDetail::TYPE_PAYMENT_PAID;
+                $order->status = OrderDetail::TYPE_ORDER_PENDING;
+            }else{
                 $order->status = OrderDetail::TYPE_ORDER_PENDING;
             }
 

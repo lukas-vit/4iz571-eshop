@@ -37,4 +37,14 @@
 </table>
 <div>
     <a href="{link default}"><button class="btn btn-secondary">Zpět na přehled objednávek</button></a>
+    {if $order->paymentStatus == App\Model\Entities\OrderDetail::TYPE_PAYMENT_PAID}
+            <div class="btn btn-success">Zaplaceno</div>
+    {else}
+            <a href="{link payment! id=>$order->orderDetailId}" class="btn btn-warning">Zaplatit</a>
+    {/if}
+    {if $order->status == App\Model\Entities\OrderDetail::TYPE_ORDER_DONE}
+            <div class="btn btn-success">Vyřešeno</div>
+    {else}
+            <a href="{link done! id=>$order->orderDetailId}" class="btn btn-warning">Vyřešit</a>
+    {/if}
 </div>
