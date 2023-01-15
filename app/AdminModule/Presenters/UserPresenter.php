@@ -5,6 +5,8 @@ use App\AdminModule\Components\UserCreateForm\UserCreateForm;
 use App\AdminModule\Components\UserCreateForm\UserCreateFormFactory;
 use App\AdminModule\Components\UserEditForm\UserEditForm;
 use App\AdminModule\Components\UserEditForm\UserEditFormFactory;
+use App\FrontModule\Components\NewPasswordForm\NewPasswordForm;
+use App\FrontModule\Components\NewPasswordForm\NewPasswordFormFactory;
 use App\Model\Facades\UsersFacade;
 
 /**
@@ -17,8 +19,10 @@ class UserPresenter extends BasePresenter {
     private $usersFacade;
     /** @var UserEditFormFactory $userEditFormFactory */
     private $userEditFormFactory;
-    /** @var UserCreateFormFactory */
+    /** @var UserCreateFormFactory $userCreateFormFactory*/
     private $userCreateFormFactory;
+    /** @var NewPasswordFormFactory $newPasswordForm */
+    private $newPasswordFormFactory;
 
     /**
      * Akce pro vykreslení seznamu uživatelů
@@ -41,6 +45,18 @@ class UserPresenter extends BasePresenter {
             $this->redirect('default');
         }
         $form=$this->getComponent('userEditForm');
+        $form->setDefaults($user);
+        $this->template->users=$user;
+    }
+
+    public function renderPassword(int $id){
+        try {
+            $user = $this->usersFacade->getUser($id);
+        }catch (\Exception $e){
+            $this->flashMessage('Požadovaný uživatel nebyl nalezen.');
+            $this->redirect('default');
+        }
+        $form=$this->getComponent('newPasswordForm');
         $form->setDefaults($user);
         $this->template->users=$user;
     }
@@ -79,6 +95,20 @@ class UserPresenter extends BasePresenter {
         return $form;
     }
 
+    public function createComponentNewPasswordForm():NewPasswordForm{
+        $form = $this->newPasswordFormFactory->create();
+        $form->onCancel[]=function (){
+            $this->redirect('default');
+        };
+        $form->onFinished[]=function ($message=null){
+            if(!empty($message)){
+                $this->flashMessage($message);
+            }
+            $this->redirect('default');
+        };
+        return $form;
+    }
+
     #region injections
     public function injectUsersFacade(UsersFacade $usersFacade){
         $this->usersFacade=$usersFacade;
@@ -88,6 +118,9 @@ class UserPresenter extends BasePresenter {
     }
     public function injectUserCreateFormFactory(UserCreateFormFactory $userCreateFormFactory){
         $this->userCreateFormFactory = $userCreateFormFactory;
+    }
+    public function injectNewPasswordFormFactory(NewPasswordFormFactory $newPasswordFormFactory){
+        $this->newPasswordFormFactory = $newPasswordFormFactory;
     }
     #endregion injections
 }
