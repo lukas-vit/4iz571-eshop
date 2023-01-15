@@ -52,7 +52,7 @@
                 Částka
             </td>
             <td width="25%" align="left" style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 400; line-height: 24px; padding: 5px 10px;">
-                {$order->total} Kč
+                {$order->total|number:0,',',' '} Kč
             </td>
         </tr>
     </table>
@@ -75,7 +75,7 @@
                     {if $item->quantity > 1}
                         {$item->quantity} * 
                     {/if}
-                    {$item->price} Kč
+                    {$item->price|number:0,',',' '} Kč
                 </td>
             {/foreach}
         </tr>
@@ -87,7 +87,7 @@
                 {if $order->total > 20000} 
                     {$delivery->price = 0.0} Kč 
                 {else}
-                    {$delivery->price} Kč
+                    {$delivery->price|number:0,',',' '} Kč
                 {/if}
                
             </td>
@@ -97,7 +97,7 @@
                 Platba
             </td>
             <td width="25%" align="left" style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 400; line-height: 24px; padding: 5px 10px;">
-                {$payment->price} Kč
+                {$payment->price|number:0,',',' '} Kč
             </td>
         </tr>
         <tr>
@@ -105,7 +105,7 @@
                 Celkem
             </td>
             <td width="25%" align="left" style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 800; line-height: 24px; padding: 5px 10px;">
-                {$order->total + $delivery->price + $payment->price} Kč
+                {($order->total + $delivery->price + $payment->price)|number:0,',',' '} Kč
             </td>
         </tr>
     </table>

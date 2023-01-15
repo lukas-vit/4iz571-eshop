@@ -222,6 +222,7 @@ class CheckoutPresenter extends BasePresenter{
                 ->setHtmlBody(
                     $latte->renderToString($urlToEmailTemplate, $params)
                 );
+                /* ->addAttachment('invoice.pdf'); */
             //TODO faktura
             $mailer = new Nette\Mail\SendmailMailer;
             $mailer->send($mail);

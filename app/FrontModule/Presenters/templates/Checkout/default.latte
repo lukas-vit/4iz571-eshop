@@ -72,11 +72,11 @@
                                                     </span>
                                                     {if $cart->getTotalPrice() > 20000}
                                                         <div>
-                                                            <p class="ml-auto text-muted text-small line-through">{$itemDelivery->price} Kč</p>
+                                                            <p class="ml-auto text-muted text-small line-through">{$itemDelivery->price|number:0,',',' '} Kč</p>
                                                             <span class="ml-auto text-primary">zdarma</span>
                                                         </div>
                                                     {else}
-                                                        <span class="ml-auto text-primary">{$itemDelivery->price} Kč</span>
+                                                        <span class="ml-auto text-primary">{$itemDelivery->price|number:0,',',' '} Kč</span>
                                                     {/if}
                                                 </div>
                                         </label>
@@ -215,7 +215,7 @@
                                                     <span class="mr-auto">
                                                         <div class="text-primary">{$label}</div>
                                                     </span>
-                                                    <span class="ml-auto text-primary">{$itemPayment->price} Kč</span>
+                                                    <span class="ml-auto text-primary">{$itemPayment->price|number:0,',',' '} Kč</span>
                                                 </div>
                                         </label>
                                     {/foreach}
