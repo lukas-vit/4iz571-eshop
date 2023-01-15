@@ -1,0 +1,40 @@
+{varType App\Model\Entities\OrderDetail $order}
+{block content}
+
+<h1 n:block="title">Detail objednávky {$order->orderDetailId}</h1>
+
+<table class="table table-hover mt-4">
+    <thead>
+    <tr>
+        <th scope="col" class="col-xl-1 col-md-2">Produkt</th>
+        <th scope="col" class="col-xl-1 col-md-2">Fotografie</th>
+        <th scope="col" class="col-xl-1 col-md-2">Cena za kus</th>
+        <th scope="col" class="col-xl-1 col-md-2">Počet kusů</th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach $order->orderItems as $orderItem}
+        <tr>
+            <td>{$orderItem->product->title} {$orderItem->product->ram} {$orderItem->product->color}</td>
+            {if count($orderItem->product->photos) == 0}
+            <td>
+                <img src="{$basePath.'/img/products/placeholder.png'}" alt="placeholder" class="d-block w-50">
+            </td>
+            {else}
+            {foreach $orderItem->product->photos as $photo}
+                {if $photo->isThumbnail}
+                    <td>
+                        <img src="{$basePath.'/img/products/'.$photo->productPhotoId.'.'.$photo->photoExtension}" alt="{$orderItem->product->title}" class="d-block w-50">
+                    </td>
+                {/if}
+            {/foreach}
+            {/if}
+            <td>{$orderItem->price}</td>
+            <td>{$orderItem->quantity}</td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>
+<div>
+    <a href="{link default}"><button class="btn btn-secondary">Zpět na přehled objednávek</button></a>
+</div>

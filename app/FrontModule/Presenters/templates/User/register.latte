@@ -2,4 +2,93 @@
 
 <h1 n:block="title">Registrace uživatele</h1>
 
-{control userRegistrationForm}
+<form n:name="userRegistrationForm" class="form">
+    <h2>Osobní informace</h2>
+    <div>
+        <label n:name="name">Jméno a příjmení: <br><input n:name="name" id="name" size="20" autofocus></label>
+    </div>
+    <div>
+        <label n:name="email">Email: <br><input n:name="email" id="email" size="20" autofocus></label>
+    </div>
+    <div>
+        <label n:name="password">Heslo: <br><input n:name="password" id="password" size="20" autofocus></label>
+    </div>
+    <div>
+        <label n:name="password2">Heslo znovu: <br><input n:name="password2" id="password2" size="20" autofocus></label>
+    </div>
+    <h2>Doručovací údaje</h2>
+    <div>
+        <label n:name="nameDelivery">Jméno a příjmení: <br><input n:name="nameDelivery" id="nameDelivery" size="20" autofocus></label>
+    </div>
+    <div>
+        <label n:name="cityDelivery">Město: <br><input n:name="cityDelivery" id="cityDelivery" size="20" autofocus></label>
+    </div>
+    <div>
+        <label n:name="streetDelivery">Ulice a číslo: <br><input n:name="streetDelivery" id="streetDelivery" size="20" autofocus></label>
+    </div>
+    <div>
+        <label n:name="zipDelivery">PSČ: <br><input n:name="zipDelivery" id="zipDelivery" size="20" autofocus></label>
+    </div>
+    <div>
+        <label n:name="phoneDelivery">Telefonní číslo: <br><input n:name="phoneDelivery" id="phoneDelivery" size="20" autofocus></label>
+    </div>
+    <div>
+        <label n:name="sameAsBilling">Je Vaše fakturační adresa stejná jako doručovací?:<input n:name="sameAsBilling" type="checkbox" id="sameAsBilling" size="20" autofocus></label>
+    </div>
+    <div id="billingAddress">
+        <h2>Fakturační údaje</h2>
+        <div>
+            <label n:name="nameBilling">Jméno a příjmení: <br><input n:name="nameBilling" id="nameBilling" size="20" autofocus></label>
+        </div>
+        <div>
+            <label n:name="cityBilling">Město: <br><input n:name="cityBilling" id="cityBilling" size="20" autofocus></label>
+        </div>
+        <div>
+            <label n:name="streetBilling">Ulice a číslo: <br><input n:name="streetBilling" id="streetBilling" size="20" autofocus></label>
+        </div>
+        <div>
+            <label n:name="zipBilling">PSČ: <br><input n:name="zipBilling" id="zipBilling" size="20" autofocus></label>
+        </div>
+        <div>
+            <label n:name="phoneBilling">Telefonní číslo: <br><input n:name="phoneBilling" id="phoneBilling" size="20" autofocus></label>
+        </div>
+    </div>
+    <div class="row">
+        <button n:name="ok" id="ok" class="btn btn-primary mr-3">registrovat se</button>
+        <button n:name="storno" id="storno" class="btn btn-secondary">zpět na hlavní stránku</button>
+    </div>
+</form>
+
+<script>
+    $(document).ready(function() {
+
+        $("#sameAsBilling").on('change', function (){
+            if($(this).is(":checked")) {
+                $('#billingAddress').toggle('hidden');
+                $('#nameBilling').val($('#nameDelivery').val());
+                $('#cityBilling').val($('#cityDelivery').val());
+                $('#streetBilling').val($('#streetDelivery').val());
+                $('#zipBilling').val($('#zipDelivery').val());
+                $('#phoneBilling').val($('#phoneDelivery').val());
+            }else{
+                $('#billingAddress').toggle('hidden');
+                $('#nameBilling').val('');
+                $('#cityBilling').val('');
+                $('#streetBilling').val('');
+                $('#zipBilling').val('');
+                $('#phoneBilling').val('');
+            }
+        });
+
+        $('#ok').on('click', function (){
+            if($('#sameAsBilling').is(":checked")){
+                $('#nameBilling').val($('#nameDelivery').val());
+                $('#cityBilling').val($('#cityDelivery').val());
+                $('#streetBilling').val($('#streetDelivery').val());
+                $('#zipBilling').val($('#zipDelivery').val());
+                $('#phoneBilling').val($('#phoneDelivery').val());
+            }
+        })
+
+    });
+</script>

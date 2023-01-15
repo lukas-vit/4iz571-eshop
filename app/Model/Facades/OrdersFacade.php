@@ -71,6 +71,14 @@ class OrdersFacade{
 
   public function getOrderItemsByOrderDetail(OrderDetail $orderDetail):array {
     return $this->orderItemRepository->findAllBy(['order_detail_id'=>$orderDetail->orderDetailId]);
+
+    /**
+     * Metoda pro nalezení všech detailů objednávvek uživatele
+     * @param int $id
+     * @return array
+     */
+  public function findOrdersByUser(int $id):array{
+      return $this->orderDetailRepository->findAllBy(['user_id'=>$id]);
   }
 
   public function __construct(OrderDetailRepository $orderDetailRepository,OrderItemRepository $orderItemRepository,PaymentRepository $paymentRepository,DeliveryRepository $deliveryRepository)

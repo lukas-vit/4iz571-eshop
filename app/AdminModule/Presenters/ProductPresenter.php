@@ -4,6 +4,7 @@ namespace App\AdminModule\Presenters;
 
 use App\AdminModule\Components\ProductEditForm\ProductEditForm;
 use App\AdminModule\Components\ProductEditForm\ProductEditFormFactory;
+use App\Model\Entities\ProductPhoto;
 use App\Model\Facades\ProductPhotoFacade;
 use App\Model\Facades\ProductsFacade;
 
@@ -41,7 +42,7 @@ class ProductPresenter extends BasePresenter{
     $form=$this->getComponent('productEditForm');
     $form->setDefaults($product);
     $this->template->product=$product;
-    $this->template->photos=$this->productPhotoFacade->findAllPhotos();
+    $this->template->photos=$this->productPhotoFacade->getProductPhotosByProductId($id);
   }
 
   /**
@@ -52,6 +53,7 @@ class ProductPresenter extends BasePresenter{
   public function actionDelete(int $id):void {
     try{
       $product=$this->productsFacade->getProduct($id);
+      $photos=$this->productPhotoFacade->getProductPhotosByProductId($id);
     }catch (\Exception $e){
       $this->flashMessage('Požadovaná kategorie nebyla nalezena.', 'error');
       $this->redirect('default');
@@ -60,6 +62,12 @@ class ProductPresenter extends BasePresenter{
     if (!$this->user->isAllowed($product,'delete')){
       $this->flashMessage('Tuto kategorii není možné smazat.', 'error');
       $this->redirect('default');
+    }
+
+    foreach ($photos as $photo){
+        if($photo instanceof ProductPhoto){
+            $this->productPhotoFacade->deletePhoto($this->productPhotoFacade->getProductPhoto($photo->productPhotoId));
+        }
     }
 
     if ($this->productsFacade->deleteProduct($product)){
@@ -82,9 +90,17 @@ class ProductPresenter extends BasePresenter{
   public function handleThumbnail(int $photoId, int $productId, bool $isThumbnail = true){
     try{
         $productPhoto = $this->productPhotoFacade->getProductPhoto($photoId);
+        $photos = $this->productPhotoFacade->getProductPhotosByProductId($productId);
     } catch (\Exception $e) {
         $this->flashMessage('Tato fotografie už tu není.');
         $this->redirect('this');
+    }
+
+    foreach ($photos as $photo){
+        if($photo instanceof ProductPhoto){
+            $photo->isThumbnail=false;
+            $this->productPhotoFacade->savePhoto($photo);
+        }
     }
 
       if($isThumbnail != $productPhoto->isThumbnail){
@@ -94,7 +110,6 @@ class ProductPresenter extends BasePresenter{
         }
     }
     $this->redirect('this');
-      //TODO automaticky odebrat předešlý thumbnail a ponechat jen jeden
   }
 
     /**

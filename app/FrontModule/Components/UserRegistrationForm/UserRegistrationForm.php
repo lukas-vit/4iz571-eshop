@@ -4,6 +4,7 @@ namespace App\FrontModule\Components\UserRegistrationForm;
 
 use App\Model\Entities\Category;
 use App\Model\Entities\User;
+use App\Model\Entities\UserAddress;
 use App\Model\Facades\UsersFacade;
 use Nette;
 use Nette\Application\UI\Form;
@@ -70,6 +71,32 @@ class UserRegistrationForm extends Form{
     $this->addPassword('password2','Heslo znovu:')
       ->addRule(Form::EQUAL,'Hesla se neshodují',$password);
 
+    //Doručovací adresa
+      $this->addText('nameDelivery','Jméno a příjmení:')
+          ->setRequired('Zadejte své jméno doručovací adresy');
+      $this->addText('cityDelivery','Město')
+          ->setRequired('Zadejte město doručovací adresy');
+      $this->addText('streetDelivery','Ulice a číslo')
+          ->setRequired('Zadejte ulici a číslo popisné doručovací adresy');
+      $this->addInteger('zipDelivery', 'PSČ')
+          ->setRequired('Zadejte PSČ doručovací adresy');
+      $this->addInteger('phoneDelivery', 'Telefonní číslo')
+          ->setRequired('Zadejte telefonní číslo doručovací adresy');
+
+      $this->addCheckbox('sameAsBilling', 'Je Vaše fakturační adresa stejná jako doručovací?');
+
+      //Fakturační adresa
+      $this->addText('nameBilling','Jméno a příjmení:')
+          ->setRequired('Zadejte své jméno doručovací adresy');
+      $this->addText('cityBilling','Město')
+          ->setRequired('Zadejte město doručovací adresy');
+      $this->addText('streetBilling','Ulice a číslo')
+          ->setRequired('Zadejte ulici a číslo popisné doručovací adresy');
+      $this->addInteger('zipBilling', 'PSČ')
+          ->setRequired('Zadejte PSČ doručovací adresy');
+      $this->addInteger('phoneBilling', 'Telefonní číslo')
+          ->setRequired('Zadejte telefonní číslo doručovací adresy');
+
     $this->addSubmit('ok','registrovat se')
       ->onClick[]=function(SubmitButton $button){
 
@@ -80,6 +107,37 @@ class UserRegistrationForm extends Form{
         $user->email=$values['email'];
         $user->password=$this->passwords->hash($values['password']); //heslo samozřejmě rovnou hashujeme :)
         $this->usersFacade->saveUser($user);
+
+        $userDeliveryAddress = new UserAddress();
+        $userDeliveryAddress->name = $values['nameDelivery'];
+        $userDeliveryAddress->city = $values['cityDelivery'];
+        $userDeliveryAddress->street = $values['streetDelivery'];
+        $userDeliveryAddress->userId = $user->userId;
+        $userDeliveryAddress->zip = (string)$values['zipDelivery'];
+        $userDeliveryAddress->phone = (string)$values['phoneDelivery'];
+        $userDeliveryAddress->type = UserAddress::TYPE_DELIVERY;
+        $this->usersFacade->saveUserAddress($userDeliveryAddress);
+
+        $userBillingAddress = new UserAddress();
+        if($values['sameAsBilling']){
+            $userBillingAddress->name = $values['nameDelivery'];
+            $userBillingAddress->city = $values['cityDelivery'];
+            $userBillingAddress->street = $values['streetDelivery'];
+            $userBillingAddress->userId = $user->userId;
+            $userBillingAddress->zip = (string)$values['zipDelivery'];
+            $userBillingAddress->phone = (string)$values['phoneDelivery'];
+            $userBillingAddress->type = UserAddress::TYPE_BILLING;
+            $this->usersFacade->saveUserAddress($userBillingAddress);
+        }else{
+            $userBillingAddress->name = $values['nameBilling'];
+            $userBillingAddress->city = $values['cityBilling'];
+            $userBillingAddress->street = $values['streetBilling'];
+            $userBillingAddress->userId = $user->userId;
+            $userBillingAddress->zip = (string)$values['zipBilling'];
+            $userBillingAddress->phone = (string)$values['phoneBilling'];
+            $userBillingAddress->type = UserAddress::TYPE_BILLING;
+            $this->usersFacade->saveUserAddress($userBillingAddress);
+        }
 
         $this->onFinished();
       };
