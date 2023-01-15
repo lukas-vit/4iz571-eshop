@@ -1,0 +1,10 @@
+{varType App\Model\Entities\OrderDetail[] $orders}
+{block content}
+
+<h1 n:block="title">Správa objednávek</h1>
+
+{foreach $orders as $order}
+    <div>
+        <p>{$order->status}</p>
+    </div>
+{/foreach}
