@@ -20,6 +20,7 @@ use LeanMapper\Entity;
  * @property-read User|null $user m:hasOne
  * @property-read Payment|null $payment m:hasOne
  * @property-read Delivery|null $delivery m:hasOne
+ * @property-read OrderItem[] $orderItems m:belongsToMany
  */
 class OrderDetail extends Entity{
 
