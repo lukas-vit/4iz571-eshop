@@ -77,47 +77,13 @@ class ProductPresenter extends BasePresenter{
     $this->template->reviews = $reviews;
     $this->template->photos = $this->productPhotoFacade->getProductPhotosByProductId($product->productId);
   }
-
-  protected function createComponentProductCartForm():Multiplier {
-    return new Multiplier(function($productId){
-      $form = $this->productCartFormFactory->create();
-      $form->setDefaults(['productId'=>$productId]);
-      $form->onSubmit[]=function(ProductCartForm $form){
-        //check jestli je produkt skladem
-        $product = $this->productsFacade->getProduct($form->values->productId);
-        if ($product->stock < $form->values->count) {
-          $this->flashMessage('Produkt není skladem','error');
-          $this->redirect('this');
-        }
-        try{
-          $product = $this->productsFacade->getProduct($form->values->productId);
-          //kontrola zakoupitelnosti
-        }catch (\Exception $e){
-          $this->flashMessage('Produkt nejde přidat do košíku','error');
-          $this->redirect('this');
-        }
-        //přidání do košíku
-        /** @var CartControl $cart */
-        $cart = $this->getComponent('cart');
-        $cart->addToCart($product, (int)$form->values->count);
-        $this->redirect('this');
-      };
-
-      return $form;
-    });
-  }
   
   protected function createComponentProductCartFormBig():Multiplier {
     return new Multiplier(function($productId){
       $form = $this->productCartFormBigFactory->create();
       $form->setDefaults(['productId'=>$productId]);
       $form->onSubmit[]=function(ProductCartFormBig $form){
-        //check jestli je produkt skladem
-        $product = $this->productsFacade->getProduct($form->values->productId);
-        if ($product->stock < $form->values->count) {
-          $this->flashMessage('Produkt není skladem','error');
-          $this->redirect('this');
-        }
+          $product = $this->productsFacade->getProduct($form->values->productId);
         try{
           $product = $this->productsFacade->getProduct($form->values->productId);
         }catch (\Exception $e){
