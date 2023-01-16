@@ -66,6 +66,14 @@ class CartControl extends Control
     try{
       $cartItem = $this->cartFacade->getCartItem($cartItemId);
       $cartItem->count++;
+
+      //check skladu
+      if ($cartItem->product->stock < $cartItem->count) {
+        $cartItem->count = $cartItem->product->stock;
+        $this->presenter->flashMessage('Není dostatek zboží na skladě. Bylo přidáno maximální možné množství.', 'warning');
+        $this->presenter->redirect('this');
+        return;
+      }
       $this->cartFacade->saveCartItem($cartItem);
     }catch (\Exception $e){
       //chybu odstranění ignorujeme (položka už tam pravděpodobně není)
@@ -113,6 +121,19 @@ class CartControl extends Control
     }
 
     $cartItem->count += $count;
+    
+    //check skladu
+    if ($product->stock == 0){
+      $this->presenter->flashMessage('Tento produkt není na skladě.', 'warning');
+      $this->presenter->redirect('this');
+      return;
+    }
+    if ($cartItem->count > $product->stock){
+      $cartItem->count = $product->stock;
+      $this->presenter->flashMessage('Není dostatek zboží na skladě. Bylo přidáno maximální možné množství.', 'warning');
+      $this->presenter->redirect('this');
+      return;
+    }
 
     $this->cartFacade->saveCartItem($cartItem);
     $this->cartFacade->saveCart($this->cart);

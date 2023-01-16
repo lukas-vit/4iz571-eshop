@@ -323,9 +323,9 @@ class CheckoutPresenter extends BasePresenter{
             $mailer = new Nette\Mail\SendmailMailer;
             $mailer->send($mail);
 
-
-            $this->redirect("OrderPlaced:default");
-            $this->flashMessage("Objednávka byla úspěšně odeslána.", "success");
+            //$this->presenter->flashMessage("Objednávka byla úspěšně odeslána.", "success");
+            $this->presenter->redirect("OrderPlaced:default");
+            
 
         };
         return $form;

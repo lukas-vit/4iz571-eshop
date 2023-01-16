@@ -80,7 +80,6 @@ class HomepagePresenter extends BasePresenter{
       $form->onSubmit[]=function(ProductCartForm $form){
         try{
           $product = $this->productsFacade->getProduct($form->values->productId);
-          //kontrola zakoupitelnosti
         }catch (\Exception $e){
           $this->flashMessage('Produkt nejde přidat do košíku','error');
           $this->redirect('this');
