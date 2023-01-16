@@ -10,9 +10,7 @@
             <th scope="col" class="col-xl-1 col-md-2">ID objednávky</th>
             <th scope="col" class="col-xl-1 col-md-2">Jméno uživatele</th>
             <th scope="col" class="col-xl-1 col-md-2">Platební metoda</th>
-            <th scope="col" class="col-xl-1 col-md-2">Stav platby</th>
             <th scope="col" class="col-xl-1 col-md-2">Doprava</th>
-            <th scope="col" class="col-xl-1 col-md-2">Stav objednávky</th>
             <th scope="col" class="col-xl-1 col-md-2">Celková cena</th>
             <th scope="col" class="col-xl-1 col-md-2">Detail objednávky</th>
             <th scope="col" class="col-xl-1 col-md-2">Zaplatit objednávku</th>
@@ -25,9 +23,7 @@
                 <td>{$order->orderDetailId}</td>
                 <td>{$order->user->email}</td>
                 <td>{$order->payment->name}</td>
-                <td>{$order->paymentStatus}</td>
                 <td>{$order->delivery->name}</td>
-                <td>{$order->status}</td>
                 <td>{$order->total} Kč</td>
                 <td class="text-nowrap">
                     <a href="{link show id=>$order->orderDetailId}" class="btn btn-sm btn-outline-primary">Zobrazit</a>
