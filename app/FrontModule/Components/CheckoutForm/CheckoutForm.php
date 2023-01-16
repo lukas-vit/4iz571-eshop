@@ -68,8 +68,8 @@ class CheckoutForm extends Form{
       
     //email form
     $this->addEmail('email','E-mail')
-      ->setDefaultValue($user->email ?? '');
-     /*  ->setRequired('Zadejte platný email'); */
+      ->setDefaultValue($user->email ?? '')
+      ->setRequired('Zadejte platný email');
 
     $this->addButton('emailSubmitButton','Pokračovat ke způsobu dopravy');
 
@@ -80,27 +80,27 @@ class CheckoutForm extends Form{
       return $delivery->name;
     }, $deliveryMethods);
 
-    $this->addRadioList('delivery', 'Způsob dopravy:', $deliveryMethods);
-     /*  ->setRequired('Vyberte způsob dopravy'); */
+    $this->addRadioList('delivery', 'Způsob dopravy:', $deliveryMethods)
+      ->setRequired('Vyberte způsob dopravy');
     
     $this->addButton('deliverySubmitButton','Pokračovat na doručovací adresu');
 
     //delivery address form
     $this->addText('delivery_name','Jméno a přijmení')
-      ->setDefaultValue($deliveryAddress->name ?? '');
-   /*  ->setRequired('Zadejte jméno a přijmení'); */
+      ->setDefaultValue($deliveryAddress->name ?? '')
+      ->setRequired('Zadejte jméno a přijmení');
 
     $this->addText('delivery_street','Ulice a číslo popisné')
-      ->setDefaultValue($deliveryAddress->street ?? '');
- /*      ->setRequired('Zadejte ulici a číslo popisné'); */
+      ->setDefaultValue($deliveryAddress->street ?? '')
+      ->setRequired('Zadejte ulici a číslo popisné');
 
     $this->addText('delivery_city','Město')
-      ->setDefaultValue($deliveryAddress->city ?? '');
-/*       ->setRequired('Zadejte město'); */
+      ->setDefaultValue($deliveryAddress->city ?? '')
+      ->setRequired('Zadejte město');
 
     $this->addText('delivery_zip','PSČ')
       ->setDefaultValue($deliveryAddress->zip ?? '')
-/*       ->setRequired('Zadejte PSČ') */
+      ->setRequired('Zadejte PSČ')
       ->addFilter(function ($value) {
         return str_replace(' ', '', $value); // remove spaces from the postcode
       });
@@ -108,7 +108,7 @@ class CheckoutForm extends Form{
     $this->addText('delivery_phone','Telefon')
       ->setDefaultValue($deliveryAddress->phone ?? '')
       ->addFilter(function ($value) {
-        return str_replace(' ', '', $value); // remove spaces from the phone
+        return str_replace(' ', '', $value);
       })
       ->setRequired('Zadejte telefonní číslo');
 
@@ -118,30 +118,30 @@ class CheckoutForm extends Form{
 
     //billing address form
     $this->addText('billing_name','Jméno a přijmení')
-      ->setDefaultValue($billingAddress->name ?? '');
-    /* ->setRequired('Zadejte jméno a přijmení'); */
+      ->setDefaultValue($billingAddress->name ?? '')
+      ->setRequired('Zadejte jméno a přijmení');
 
     $this->addText('billing_street','Ulice a číslo popisné')
-      ->setDefaultValue($billingAddress->street ?? '');
-/*       ->setRequired('Zadejte ulici a číslo popisné'); */
+      ->setDefaultValue($billingAddress->street ?? '')
+      ->setRequired('Zadejte ulici a číslo popisné');
 
     $this->addText('billing_city','Město')
-      ->setDefaultValue($billingAddress->city ?? '');
-/*       ->setRequired('Zadejte město'); */
+      ->setDefaultValue($billingAddress->city ?? '')
+      ->setRequired('Zadejte město');
 
     $this->addText('billing_zip','PSČ')
       ->setDefaultValue($billingAddress->zip ?? '')
-/*       ->setRequired('Zadejte PSČ') */
+      ->setRequired('Zadejte PSČ')
       ->addFilter(function ($value) {
         return str_replace(' ', '', $value); // remove spaces from the postcode
       });
 
     $this->addText('billing_phone','Telefon')
       ->setDefaultValue($billingAddress->phone ?? '')
+      ->setRequired('Zadejte telefonní číslo')
       ->addFilter(function ($value) {
         return str_replace(' ', '', $value); // remove spaces from the phone
       });
-/*       ->setRequired('Zadejte telefonní číslo'); */
     
     $this->addButton('billingAddressSubmitButton','Pokračovat k platební metodě');
 
@@ -153,8 +153,8 @@ class CheckoutForm extends Form{
       return $payment->name;
     }, $paymentMethods);
 
-    $this->addRadioList('payment', 'Platební metoda:', $paymentMethods);
-/*       ->setRequired('Vyberte prosím platební metodu.'); */
+    $this->addRadioList('payment', 'Platební metoda:', $paymentMethods)
+        ->setRequired('Vyberte prosím platební metodu.');
     
     $this->addSubmit('paymentSubmitButton','Závazně odeslat objednávku');
   }
