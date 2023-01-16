@@ -13,6 +13,7 @@
     </tr>
     </thead>
     <tbody>
+    {var int $thumbnails = 0}
     {foreach $order->orderItems as $orderItem}
         <tr>
             <td>{$orderItem->product->title} {$orderItem->product->ram} {$orderItem->product->color}</td>
@@ -23,15 +24,17 @@
             {else}
             {foreach $orderItem->product->photos as $photo}
                 {if $photo->isThumbnail}
+                    {$thumbnails++}
                     <td>
                         <img src="{$basePath.'/img/products/'.$photo->productPhotoId.'.'.$photo->photoExtension}" alt="{$orderItem->product->title}" class="d-block w-50">
                     </td>
-                {elseif count($orderItem->product->photos) == 0}
-                    <td>
-                        <img src="{$basePath.'/img/products/placeholder.png'}" alt="placeholder" class="d-block w-50">
-                    </td>
                 {/if}
             {/foreach}
+            {/if}
+            {if $thumbnails == 0}
+                <td>
+                    <img src="{$basePath.'/img/products/placeholder.png'}" alt="placeholder" class="d-block w-50">
+                </td>
             {/if}
             <td>{$orderItem->price} Kč</td>
             <td>{$orderItem->quantity}</td>
