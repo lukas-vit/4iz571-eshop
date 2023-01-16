@@ -25,11 +25,11 @@
                         {var $countProducts = count($products)}
                         {foreach $products as $product}
                         {if $iterator->counter == $countProducts}
-                            <div class="col-12 col-md-6 col-xl-4 border-1 border-left-0 rounded-0 card py-4">
+                            <div class="col-12 col-md-6 col-xl-4 border-1 border-left-0 rounded-0 card py-2">
                         {elseif ((($iterator->counter)-1) % 3) == 1}
-                            <div class="col-12 col-md-6 col-xl-4 border-right-0 border-left-0 rounded-0 card py-4">
+                            <div class="col-12 col-md-6 col-xl-4 border-right-0 border-left-0 rounded-0 card py-2">
                         {else}
-                            <div class="col-12 col-md-6 col-xl-4 border-1 rounded-0 card py-4">
+                            <div class="col-12 col-md-6 col-xl-4 border-1 rounded-0 card py-2">
                         {/if}
                                {* <h6 class="text-center">Kategorie {$product->category->title}</h6> *}
 
@@ -43,40 +43,42 @@
                                     {/foreach}
                                 </div>
 
-                                <div class="product-rating text-warning mb-2">
-                                    <div>
-                                        {var $productRating = $rating}
-                                        {for $i = 0; $i < 5; $i++}
-                                            {if $productRating - $i >= 1}
-                                                <i class="fa-solid fa-star"></i>
-                                            {elseif $productRating - $i < 1 && $productRating - $i > 0}
-                                                <i class="fa-solid fa-star-half-stroke"></i>
-                                            {else}
-                                                <i class="fa-regular fa-star"></i>
-                                            {/if}
-                                        {/for}
+                                <div class="px-2">
+                                    <div class="product-rating text-warning mb-2">
+                                        <div>
+                                            {var $productRating = $rating}
+                                            {for $i = 0; $i < 5; $i++}
+                                                {if $productRating - $i >= 1}
+                                                    <i class="fa-solid fa-star"></i>
+                                                {elseif $productRating - $i < 1 && $productRating - $i > 0}
+                                                    <i class="fa-solid fa-star-half-stroke"></i>
+                                                {else}
+                                                    <i class="fa-regular fa-star"></i>
+                                                {/if}
+                                            {/for}
+                                        </div>
                                     </div>
-                                </div>
 
-                                <h5 class="h6">{$product->title} {if $product->ram}<span>{$product->ram} GB</span>{/if} {if $product->color}<span>{$product->color}</span>{/if}</h5>
+                                    <h5 class="h6 product-title">{$product->title} {if $product->ram}<span>{$product->ram} GB</span>{/if} {if $product->color}<span>{$product->color}</span>{/if}</h5>
 
-                                <div class="text-small mt-2">
-                                    {if $product->stock == 0 || $product->stock == null}
-                                        <div class="text-danger">
-                                            Není skladem
-                                        </div>
-                                    {elseif $product->stock <= 5}
-                                        <div class="text-warning">
-                                            Poslední kusy
-                                        </div>
-                                    {elseif $product->stock > 5}
-                                        <div class="text-success">
-                                            Skladem > 5 kusů
-                                        </div>
-                                    {/if}
-                                </div>
+                                    <div class="text-small mt-2">
+                                        {if $product->stock == 0 || $product->stock == null}
+                                            <div class="text-danger">
+                                                Není skladem
+                                            </div>
+                                        {elseif $product->stock <= 5}
+                                            <div class="text-warning">
+                                                Poslední kusy
+                                            </div>
+                                        {elseif $product->stock > 5}
+                                            <div class="text-success">
+                                                Skladem > 5 kusů
+                                            </div>
+                                        {/if}
+                                    </div>
 
-                                <div class="my-3 font-weight-bold h6">{$product->price|number:0,',',' '} Kč</div>
+                                    <div class="my-3 font-weight-bold h6">{$product->price|number:0,',',' '} Kč</div>
+                             
 
                                 <div class="row">
                                     <div class="col pr-0"><a href="{link Product:show url=>$product->url}"><button type="button" class="btn btn-block btn-outline-primary">Detaily</button></a></div>
@@ -84,6 +86,7 @@
                                         {control productCartForm-$product->productId}
                                     </div>
                                 </div>
+                                   </div>
                             </div>
                         {/foreach}
                     {else}
@@ -105,4 +108,8 @@
 
 .product-rating {
     font-size: 1rem;
+}
+
+.product-title {
+    height: 2.5rem;
 }
