@@ -7,7 +7,7 @@
     <div class="container">
         <div class="row">
             {foreach $categories as $category}
-            <a href="{link category id=>$category->categoryId}"><button type="button" class="btn btn-outline-primary mr-2">{$category->title}</button></a>
+            <a href="{link category id=>$category->categoryId}"><button type="button" class="btn btn-outline-primary mr-2 mt-1">{$category->title}</button></a>
             {/foreach}
         </div>
     </div>
@@ -16,12 +16,12 @@
 <div>
     <h2>Seznam produktů</h2>
     <div class="container">
-        <div class="row">
+        <div class="row ml-md-auto">
             {if !empty($products)}
                 {foreach $products as $product}
-                    <div class="col-12 sm:col-6 col-xl-4 bg-light py-4 mt-2 mx-1">
-                        <h5>{$product->title} {if $product->ram}<span>{$product->ram} GB</span>{/if} {if $product->color}<span>{$product->color}</span>{/if}</h5>
-                        <h6>Kategorie {$product->category->title}</h6>
+                    <div class="col-12 col-md-5 col-xl-3 card border-0 shadow bg-light py-4 mt-2 mt-xl-3 mx-md-2 mx-xl-3">
+                        <h5 class="text-center">{$product->title} <br> {if $product->ram}<span>{$product->ram} GB</span>{/if} {if $product->color}<span>{$product->color}</span>{/if}</h5>
+                        <h6 class="text-center">Kategorie {$product->category->title}</h6>
 
                         {foreach $photos as $photo}
                             {if $photo->productId == $product->productId}
@@ -31,11 +31,27 @@
                             {/if}
                         {/foreach}
 
-                        <div class="mb-2">{$product->description}</div>
+                        <div class="my-3 font-weight-bold h5">{$product->price|number:0,',',' '} Kč</div>
+
+                        <div class="h6">
+                            {if $product->stock == 0 || $product->stock == null}
+                                <div class="text-danger">
+                                    Není skladem
+                                </div>
+                            {elseif $product->stock <= 5}
+                                <div class="text-warning">
+                                    Poslední kusy
+                                </div>
+                            {elseif $product->stock > 5}
+                                <div class="text-success">
+                                    Skladem > 5 kusů
+                                </div>
+                            {/if}
+                        </div>
 
                         <div class="row">
-                            <div class="col-9"><a href="{link Product:show url=>$product->url}"><button type="button" class="btn btn-block btn-outline-primary">Detaily</button></a></div>
-                            <div class="col-3">
+                            <div class="col-8"><a href="{link Product:show url=>$product->url}"><button type="button" class="btn btn-block btn-outline-primary">Detaily</button></a></div>
+                            <div class="col-4">
                                 {control productCartForm-$product->productId}
                             </div>
                         </div>
