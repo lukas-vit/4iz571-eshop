@@ -123,15 +123,13 @@
                     {/if}
                 </div>
                 <div class="mt-4 row">
-                    <div class="col-5">
+                    <div class="col-12 col-md-5">
                         {var $priceDiscount = round($product->price * 0.95)}
-                        <div class="price h3 text-danger">{$product->price|number:0,',',' '} Kč
-                        {*  <span class="text-secondary price-sale"><del><small>{$priceDiscount} Kč</small></del></span> *}
-                        </div>
+                        <div class="price h3 text-danger">{$product->price|number:0,',',' '} Kč</div>
                         {var $priceWithoutDPH = round($product->price * 0.85)}
                         <div class="price text-muted h6">{$priceWithoutDPH|number:0,',',' '} Kč bez DPH</div>
                     </div>
-                    <div class="col col-md-5">
+                    <div class="col-12 mt-2 mt-md-0 col-md-5">
                         {control productCartFormBig-$product->productId}
                     </div>
                 </div>

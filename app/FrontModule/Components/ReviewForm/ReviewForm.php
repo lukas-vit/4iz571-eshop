@@ -54,9 +54,16 @@ class ReviewForm extends Form{
   
   private function createSubcomponents(){
     $this->addHidden('productId');
-    $this->addInteger('rating','Hodnocení (1-5)')
-      ->setRequired('Zadejte prosím hodnocení')
-      ->addRule(Form::RANGE, 'Hodnocení musí být v rozmezí 1 až 5', [1,5]);
+    $this->addSelect('rating','Hodnocení')
+      ->setPrompt('--vyberte hodnocení--')
+      ->setItems([
+        1 => '⭐',
+        2 => '⭐⭐',
+        3 => '⭐⭐⭐',
+        4 => '⭐⭐⭐⭐',
+        5 =>'⭐⭐⭐⭐⭐'
+      ])
+      ->setRequired('Zadejte prosím hodnocení');
     $this->addTextArea('description','Popis');
     $this->addSubmit('submit','Odeslat hodnocení');
   }
