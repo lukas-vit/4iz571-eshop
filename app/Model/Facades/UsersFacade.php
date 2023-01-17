@@ -101,8 +101,6 @@ class UsersFacade{
     return (bool)$this->userRepository->persist($user);
   }
 
-  //TODO metoda pro smazání uživatele
-
     /**
      * Metoda pro vyhledání uživatelů
      * @param array|null $params
@@ -113,6 +111,18 @@ class UsersFacade{
   public function findUsers(array $params=null,int $offset=null,int $limit=null):array{
       return $this->userRepository->findAllBy($params,$offset,$limit);
   }
+
+    /**
+     * Metoda pro vyhledání a seřazení uživatelů
+     * @param array|null $params
+     * @param string $order
+     * @param int|null $offset
+     * @param int|null $limit
+     * @return array
+     */
+    public function findAndOrderUsers(array $params=null,string $order = 'desc',int $offset=null,int $limit=null):array{
+        return$this->userRepository->findAllByAndOrder($params,$order,$offset,$limit);
+    }
 
   public function getAddressesByUser(User $user):array{
     return $this->userAddressRepository->findAllBy(['user_id'=>$user->userId]);
