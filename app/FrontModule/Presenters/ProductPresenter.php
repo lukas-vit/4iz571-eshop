@@ -59,10 +59,7 @@ class ProductPresenter extends BasePresenter{
           $averageRating /= count($reviews);
           $numberOfRatings = count($reviews);
           $productRating =  round($averageRating, 1);
-        } /* else {
-          $productRating = 4.5;
-          $numberOfRatings = 0;
-        } */
+        }
       } catch (\Exception $e) {
         $productRating = 0;
         $numberOfRatings = 0;
@@ -71,6 +68,7 @@ class ProductPresenter extends BasePresenter{
       throw new BadRequestException('Produkt nebyl nalezen.');
     }
 
+    $this->template->productLowestPrice = $this->ordersFacade->getLowestPriceOfProductFromOrdersByProduct($product);
     $this->template->product = $product;
     $this->template->modelProductsColors = $modelProductsColors;
     $this->template->modelProductsRams = $modelProductsRams;

@@ -6,6 +6,7 @@ use App\Model\Entities\Delivery;
 use App\Model\Entities\OrderDetail;
 use App\Model\Entities\OrderItem;
 use App\Model\Entities\Payment;
+use App\Model\Entities\Product;
 use App\Model\Repositories\DeliveryRepository;
 use App\Model\Repositories\OrderDetailRepository;
 use App\Model\Repositories\OrderItemRepository;
@@ -71,6 +72,21 @@ class OrdersFacade{
 
   public function getOrderItemsByOrderDetail(OrderDetail $orderDetail):array {
     return $this->orderItemRepository->findAllBy(['order_detail_id'=>$orderDetail->orderDetailId]);
+  }
+
+  public function getLowestPriceOfProductFromOrdersByProduct(Product $product):float {
+    $orderItems = $this->orderItemRepository->findAllBy(['product_id'=>$product->productId]);
+    $lowestPrice = 0;
+    foreach ($orderItems as $orderItem){
+      if($lowestPrice == 0){
+        $lowestPrice = $orderItem->price;
+      }else{
+        if($lowestPrice > $orderItem->price){
+          $lowestPrice = $orderItem->price;
+        }
+      }
+    }
+    return $lowestPrice;
   }
 
   /**

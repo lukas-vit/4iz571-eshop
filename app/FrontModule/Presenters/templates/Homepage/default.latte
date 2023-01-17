@@ -1,6 +1,7 @@
 {varType App\Model\Entities\Product[] $products}
 {varType App\Model\Entities\Category[] $categories}
 {varType App\Model\Entities\ProductPhoto[] $photos}
+{varType App\Model\Entities\Review[] $reviews}
 {block content}
 <div>
     <h2>Kategorie</h2>
@@ -44,16 +45,30 @@
                                 <div class="px-2">
                                     <div class="product-rating text-warning mb-2">
                                         <div>
-                                            {var $productRating = $rating}
+                                            {var $countReviews = 0}
+                                            {var $rating = 0.0}
+                                            {var $productReview = 0.0}
+                                            {foreach $reviews as $review}
+                                                {if $review->productId == $product->productId}
+                                                    {var $rating = $rating + $review->rating}
+                                                    {var $countReviews = $countReviews + 1}
+                                                {/if}
+                                            {/foreach}
+                                            {if $countReviews != 0}
+                                                {var $productReview = (float)($rating / $countReviews)}
+                                            {else}
+                                                {var $productReview = 0.0}
+                                            {/if}
                                             {for $i = 0; $i < 5; $i++}
-                                                {if $productRating - $i >= 1}
+                                                {if $productReview - $i >= 1}
                                                     <i class="fa-solid fa-star"></i>
-                                                {elseif $productRating - $i < 1 && $productRating - $i > 0}
+                                                {elseif $productReview - $i < 1 && $productReview - $i > 0}
                                                     <i class="fa-solid fa-star-half-stroke"></i>
                                                 {else}
                                                     <i class="fa-regular fa-star"></i>
                                                 {/if}
                                             {/for}
+                                            <span class="text-small text-secondary">{$countReviews}x</span>
                                         </div>
                                     </div>
 
@@ -75,16 +90,23 @@
                                         {/if}
                                     </div>
 
-                                    <div class="my-3 font-weight-bold h6">{$product->price|number:0,',',' '} Kč</div>
-                             
-
-                                <div class="row">
-                                    <div class="col pr-0"><a href="{link Product:show url=>$product->url}"><button type="button" class="btn btn-block btn-outline-primary">Detaily</button></a></div>
-                                    <div class="col-4">
-                                        {control productCartForm-$product->productId}
+                                    <div class="my-3">
+                                        {if $product->discount != null || $product->discount != 0}
+                                            <div class="row">
+                                                <div class="col-6 font-weight-bold h6 text-danger">{($product->price * (1-$product->discount))|number:0,',',' ' } Kč</div>
+                                                <div class="col-6 font-weight-bold h6 text-right"><del>{$product->price|number:0,',',' '} Kč<del></div>
+                                            </div>
+                                        {else}
+                                            <div class="font-weight-bold h6">{$product->price|number:0,',',' '} Kč</div>
+                                        {/if}
+                                    </div>
+                                    <div class="row">
+                                        <div class="col pr-0"><a href="{link Product:show url=>$product->url}"><button type="button" class="btn btn-block btn-outline-primary">Detaily</button></a></div>
+                                        <div class="col-4">
+                                            {control productCartForm-$product->productId}
+                                        </div>
                                     </div>
                                 </div>
-                                   </div>
                             </div>
                         {/foreach}
                     {else}
@@ -102,6 +124,10 @@
 <style scoped>
 .text-small {
     font-size: 0.8rem;
+}
+
+.price-small {
+    font-size: 10px;
 }
 
 .product-rating {

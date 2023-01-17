@@ -7,6 +7,7 @@ use App\FrontModule\Components\ProductCartForm\ProductCartFormFactory;
 use App\Model\Facades\CategoriesFacade;
 use App\Model\Facades\ProductPhotoFacade;
 use App\Model\Facades\ProductsFacade;
+use App\Model\Facades\ReviewsFacade;
 use Nette\Application\UI\Multiplier;
 
 class HomepagePresenter extends BasePresenter{
@@ -15,13 +16,17 @@ class HomepagePresenter extends BasePresenter{
   /** @var ProductCartFormFactory $productCartFormFactory */
   private $productCartFormFactory;
   /** @var ProductPhotoFacade $productPhotoFacade */
-    private $productPhotoFacade;
+  private $productPhotoFacade;
+  /** @var ReviewsFacade $reviewsFacade */
+  private $reviewsFacade;
 
-  public function __construct(ProductsFacade $productsFacade, CategoriesFacade $categoriesFacade, ProductPhotoFacade $productPhotoFacade)
+  public function __construct(ProductsFacade $productsFacade, CategoriesFacade $categoriesFacade, ProductPhotoFacade $productPhotoFacade, ReviewsFacade $reviewsFacade)
   {
+      parent::__construct();
       $this->productsFacade = $productsFacade;
       $this->categoriesFacade = $categoriesFacade;
       $this->productPhotoFacade = $productPhotoFacade;
+      $this->reviewsFacade = $reviewsFacade;
   }
 
   /**
@@ -29,9 +34,12 @@ class HomepagePresenter extends BasePresenter{
    */
   public function renderDefault()
   {
-      $this->template->products = $this->productsFacade->findProducts(['order' => 'title']);
-      $this->template->categories = $this->categoriesFacade->findCategories(['order' => 'title']);
-      $this->template->photos = $this->productPhotoFacade->findAllPhotos();
+    $this->template->products = $this->productsFacade->findProducts(['order' => 'title']);
+    $this->template->categories = $this->categoriesFacade->findCategories(['order' => 'title']);
+    $this->template->photos = $this->productPhotoFacade->findAllPhotos();
+    $this->template->reviews = $this->reviewsFacade->findReviews();
+
+
   }
 
     /**
