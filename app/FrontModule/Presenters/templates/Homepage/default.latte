@@ -23,10 +23,13 @@
                         Řazení
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="{link default sort=>null}">Zrušit řazení</a>
-                        <a class="dropdown-item" href="{link default sort=>'title'}">Název (A až Z)</a>
-                        <a class="dropdown-item " href="{link default sort=>'ram'}">Úložiště (od nejmenšího)</a>
-                        <a class="dropdown-item" href="{link default sort=>'price'}">Cena (od nejlevnějšího)</a>
+                        <a class="dropdown-item" href="{link default sort=>null, order=>null}">Zrušit řazení</a>
+                        <a class="dropdown-item" href="{link default sort=>'title', order=>'asc'}">Název (A až Z)</a>
+                        <a class="dropdown-item" href="{link default sort=>'title', order=>'desc'}">Název (Z až A)</a>
+                        <a class="dropdown-item " href="{link default sort=>'ram', order=>'asc'}">Úložiště (od nejmenšího)</a>
+                        <a class="dropdown-item " href="{link default sort=>'ram', order=>'desc'}">Úložiště (od největšího)</a>
+                        <a class="dropdown-item" href="{link default sort=>'price', order=>'asc'}">Cena (od nejlevnějšího)</a>
+                        <a class="dropdown-item" href="{link default sort=>'price', order=>'desc'}">Cena (od nejdražšího)</a>
                     </div>
                 </div>
 

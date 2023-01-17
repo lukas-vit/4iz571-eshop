@@ -66,6 +66,32 @@ abstract class BaseRepository extends \LeanMapper\Repository {
     return $this->createEntities($query->fetchAll($offset, $limit));
   }
 
+    /**
+     * @param $whereArr
+     * @param string $order
+     * @param $offset
+     * @param $limit
+     * @return array
+     */
+    public function findAllByAndOrder($whereArr = null, string $order ='desc', $offset = null, $limit = null) {
+        $query = $this->connection->select('*')->from($this->getTable());
+        if (isset($whereArr['order'])) {
+            if (isset($order)){
+                if($order == 'desc'){
+                    $query->orderBy($whereArr['order'])->desc();
+                    unset($whereArr['order']);
+                }else{
+                    $query->orderBy($whereArr['order'])->asc();
+                    unset($whereArr['order']);
+                }
+            }
+        }
+        if ($whereArr != null && count($whereArr) > 0) {
+            $query = $query->where($whereArr);
+        }
+        return $this->createEntities($query->fetchAll($offset, $limit));
+    }
+
   /**
    * @param array|null $whereArr
    * @return mixed

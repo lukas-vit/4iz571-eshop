@@ -27,10 +27,10 @@ class HomepagePresenter extends BasePresenter{
   /**
    * Akce pro zobrazení seznamu produktů
    */
-  public function renderDefault(string $sort = null)
+  public function renderDefault(string $sort = null, string $order = null)
   {
-      if($sort != null){
-          $this->template->products = $this->productsFacade->findProducts(['order' => $sort]);
+      if($sort != null && $order!=null){
+          $this->template->products = $this->productsFacade->findAndOrderProducts(['order' => $sort], $order);
           $this->template->categories = $this->categoriesFacade->findCategories(['order' => 'title']);
           $this->template->photos = $this->productPhotoFacade->findAllPhotos();
       }else{
