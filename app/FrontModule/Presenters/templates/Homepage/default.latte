@@ -2,7 +2,9 @@
 {varType App\Model\Entities\Category[] $categories}
 {varType App\Model\Entities\ProductPhoto[] $photos}
 {varType App\Model\Entities\Review[] $reviews}
+{varType int $dropDown}
 {block content}
+
 <div>
     <h2>Kategorie</h2>
     <div class="container">
@@ -18,7 +20,21 @@
     <div class="container">
         <div class="row my-3">
             <div class="col-md-3">
-                řazení
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Řazení
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item {if $dropDown == null}active{/if}" href="{link default sort=>null, order=>null}">Neseřazeno</a>
+                        <a class="dropdown-item {if $dropDown == 'title asc'}active{/if}" href="{link default sort=>'title', order=>'asc'}">Název (A až Z)</a>
+                        <a class="dropdown-item {if $dropDown == 'title desc'}active{/if}" href="{link default sort=>'title', order=>'desc'}">Název (Z až A)</a>
+                        <a class="dropdown-item {if $dropDown == 'ram asc'}active{/if}" href="{link default sort=>'ram', order=>'asc'}">Úložiště (od nejmenšího)</a>
+                        <a class="dropdown-item {if $dropDown == 'ram desc'}active{/if}" href="{link default sort=>'ram', order=>'desc'}">Úložiště (od největšího)</a>
+                        <a class="dropdown-item {if $dropDown == 'price asc'}active{/if}" href="{link default sort=>'price', order=>'asc'}">Cena (od nejlevnějšího)</a>
+                        <a class="dropdown-item {if $dropDown == 'price desc'}active{/if}" href="{link default sort=>'price', order=>'desc'}">Cena (od nejdražšího)</a>
+                    </div>
+                </div>
+
             </div>
             <div class="col-md-9">
                 <div class="row">
@@ -142,3 +158,4 @@
    outline: none !important;
    box-shadow: none;
 }
+</style>

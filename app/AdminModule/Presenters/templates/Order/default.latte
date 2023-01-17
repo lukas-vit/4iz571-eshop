@@ -1,7 +1,41 @@
 {varType App\Model\Entities\OrderDetail[] $orders}
+{varType int $dropDown}
+{varType string $filter}
 {block content}
 
 <h1 n:block="title">Správa objednávek</h1>
+
+<div class="container">
+    <div class="d-flex flex-row-reverse">
+        <div>
+            {var array $parameters = explode(' ', $dropDown)}
+            {if $dropDown != null && $filter != null}
+                <a href="{link default sort=>$parameters[0], order=>$parameters[1], filter => null}"><button type="button" class="btn btn-primary ml-2">Zrušit filtraci</button></a>
+            {elseif $dropDown != null && $filter == null}
+                <a href="{link default sort=>$parameters[0], order=>$parameters[1], filter => App\Model\Entities\OrderDetail::TYPE_ORDER_PENDING}"><button type="button" class="btn btn-outline-primary ml-2">Filtrovat Vyřízené</button></a>
+            {elseif $dropDown == null && $filter != null}
+                <a href="{link default sort=>null, order=>null, filter => null}"><button type="button" class="btn btn-primary ml-2">Zrušit filtraci</button></a>
+            {else}
+                <a href="{link default sort=>null, order=>null, filter => App\Model\Entities\OrderDetail::TYPE_ORDER_PENDING}"><button type="button" class="btn btn-outline-primary ml-2">Filtrovat Vyřízené</button></a>
+            {/if}
+        </div>
+
+        <div class="dropdown">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Řazení
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item {if $dropDown == null}active{/if}" href="{link default sort=>null, order=>null, filter=>$filter}">Neseřazeno</a>
+                <a class="dropdown-item {if $dropDown == 'payment_status desc'}active{/if}" href="{link default sort=>'payment_status', order=>'desc', filter=>$filter}">Zaplaceno</a>
+                <a class="dropdown-item {if $dropDown == 'payment_status asc'}active{/if}" href="{link default sort=>'payment_status', order=>'asc', filter=>$filter}">Nezaplaceno</a>
+                <a class="dropdown-item {if $dropDown == 'status desc'}active{/if}" href="{link default sort=>'status', order=>'desc', filter=>$filter}">Vyřízeno</a>
+                <a class="dropdown-item {if $dropDown == 'status asc'}active{/if}" href="{link default sort=>'status', order=>'asc', filter=>$filter}">Nevyřízeno</a>
+                <a class="dropdown-item {if $dropDown == 'created desc'}active{/if}" href="{link default sort=>'created', order=>'desc', filter=>$filter}">Nejnovější</a>
+                <a class="dropdown-item {if $dropDown == 'created asc'}active{/if}" href="{link default sort=>'created', order=>'asc', filter=>$filter}">Nejstarší</a>
+            </div>
+        </div>
+    </div>
+</div>
 
 {if !empty($orders)}
     <table class="table table-hover mt-4">

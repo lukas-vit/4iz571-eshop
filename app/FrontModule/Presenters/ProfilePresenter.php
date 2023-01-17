@@ -54,8 +54,23 @@ class ProfilePresenter extends BasePresenter{
         $form->setDefaults($user);
     }
 
-    public function renderOrders(){
-        $this->template->orderDetails = $this->ordersFacade->findOrdersByUser($this->user->id);
+    public function renderOrders(string $sort = null, string $order = null, string $filter = null){
+
+        if($sort != null && $order!=null){
+            if($filter != null){
+                $this->template->orderDetails = $this->ordersFacade->findAndOrderOrderDetails(['user_id'=>$this->user->id, 'status' => $filter,'order' => $sort], $order);
+                $this->template->dropDown = $sort.' '.$order;
+                $this->template->filter = $filter;
+            }else{
+                $this->template->orderDetails = $this->ordersFacade->findAndOrderOrderDetails(['user_id'=>$this->user->id, 'order' => $sort], $order);
+                $this->template->dropDown = $sort.' '.$order;
+            }
+        }elseif($filter != null){
+            $this->template->orderDetails = $this->ordersFacade->findOrderDetails(['user_id'=>$this->user->id, 'status' => $filter]);
+            $this->template->filter = $filter;
+        }else{
+            $this->template->orderDetails = $this->ordersFacade->findOrdersByUser($this->user->id);
+        }
     }
 
     public function renderShow(int $id){

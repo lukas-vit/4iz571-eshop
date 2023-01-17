@@ -45,6 +45,18 @@ class ProductsFacade{
     return $this->productRepository->findAllBy($params,$offset,$limit);
   }
 
+    /**
+     * Metoda pro vyhledávání a řazení produktů
+     * @param array|null $params
+     * @param string $order
+     * @param int|null $offset
+     * @param int|null $limit
+     * @return array
+     */
+  public function findAndOrderProducts(array $params=null,string $order = 'desc',int $offset=null,int $limit=null):array{
+      return$this->productRepository->findAllByAndOrder($params,$order,$offset,$limit);
+  }
+
   /**
    * Metoda pro zjištění počtu produktů
    * @param array|null $params

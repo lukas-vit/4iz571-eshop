@@ -105,6 +105,9 @@ class ProductEditForm extends Form{
           ->setRequired('Zadejte počet kusů produktu na skladě.')
           ->addRule(Form::MIN, 'Počet kusů nemůže být záporný', '0');
 
+      $this->addInteger('discount', 'Sleva na produkt')
+          ->addRule(Form::RANGE, 'Sleva musí být v rozmezí ', [0,100]);
+
     $this->addCheckbox('available', 'Nabízeno ke koupi')
       ->setDefaultValue(true);
 
@@ -136,6 +139,7 @@ class ProductEditForm extends Form{
         }else{
             $product->category=null;
         }
+        $product->discount=floatval($values['discount']/100);
         $product->price=floatval($values['price']);
         $this->productsFacade->saveProduct($product);
         $this->setValues(['productId'=>$product->productId]);
@@ -198,6 +202,7 @@ class ProductEditForm extends Form{
         'price'=>$values->price,
         'ram'=>$values->ram,
         'color'=>$values->color,
+        'discount'=>($values->discount*100),
         'stock'=>$values->stock
       ];
     }
