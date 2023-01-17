@@ -4,6 +4,8 @@ namespace App\FrontModule\Presenters;
 
 use App\FrontModule\Components\ProductCartForm\ProductCartForm;
 use App\FrontModule\Components\ProductCartForm\ProductCartFormFactory;
+use App\FrontModule\Components\SearchForm\SearchForm;
+use App\FrontModule\Components\SearchForm\SearchFormFactory;
 use App\Model\Facades\CategoriesFacade;
 use App\Model\Facades\ProductPhotoFacade;
 use App\Model\Facades\ProductsFacade;
@@ -15,6 +17,8 @@ class HomepagePresenter extends BasePresenter{
   private CategoriesFacade $categoriesFacade;
   /** @var ProductCartFormFactory $productCartFormFactory */
   private $productCartFormFactory;
+  /** @var SearchFormFactory $searchFormFactory */
+  private $searchFormFactory;
   /** @var ProductPhotoFacade $productPhotoFacade */
   private $productPhotoFacade;
   /** @var ReviewsFacade $reviewsFacade */
@@ -93,6 +97,26 @@ class HomepagePresenter extends BasePresenter{
   }
 
   /**
+   * Formulář na hledání  produktů
+   * @return SearchForm
+   */
+  protected function createComponentSearchForm():SearchForm {
+
+    $form = $this->searchFormFactory->create();
+    $form->onSubmit[]=function(SearchForm $form){
+    $values=$form->getValues('array');
+   
+    //find products by title
+    $products=$this->productsFacade->findProducts(['title' => $values['title']]);
+    $this->template->products=$products;
+
+    //redirect
+    $this->redirect('Homepage:default');
+    };
+    return $form;
+  }
+
+  /**
    * Formulář na editaci produktů
    * @return ProductCartForm
    */
@@ -124,6 +148,10 @@ class HomepagePresenter extends BasePresenter{
   }
   public function injectProductCartFormFactory(ProductCartFormFactory $productCartFormFactory){
     $this->productCartFormFactory=$productCartFormFactory;
+  }
+
+  public function injectSearchFormFactory(SearchFormFactory $searchFormFactory){
+    $this->searchFormFactory=$searchFormFactory;
   }
   #endregion injections
 
