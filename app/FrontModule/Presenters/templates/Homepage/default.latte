@@ -1,7 +1,9 @@
 {varType App\Model\Entities\Product[] $products}
 {varType App\Model\Entities\Category[] $categories}
 {varType App\Model\Entities\ProductPhoto[] $photos}
+{varType int $dropDown}
 {block content}
+
 <div>
     <h2>Kategorie</h2>
     <div class="container">
@@ -23,13 +25,13 @@
                         Řazení
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="{link default sort=>null, order=>null}">Zrušit řazení</a>
-                        <a class="dropdown-item" href="{link default sort=>'title', order=>'asc'}">Název (A až Z)</a>
-                        <a class="dropdown-item" href="{link default sort=>'title', order=>'desc'}">Název (Z až A)</a>
-                        <a class="dropdown-item " href="{link default sort=>'ram', order=>'asc'}">Úložiště (od nejmenšího)</a>
-                        <a class="dropdown-item " href="{link default sort=>'ram', order=>'desc'}">Úložiště (od největšího)</a>
-                        <a class="dropdown-item" href="{link default sort=>'price', order=>'asc'}">Cena (od nejlevnějšího)</a>
-                        <a class="dropdown-item" href="{link default sort=>'price', order=>'desc'}">Cena (od nejdražšího)</a>
+                        <a class="dropdown-item {if $dropDown == null}active{/if}" href="{link default sort=>null, order=>null}">Neseřazeno</a>
+                        <a class="dropdown-item {if $dropDown == 'title asc'}active{/if}" href="{link default sort=>'title', order=>'asc'}">Název (A až Z)</a>
+                        <a class="dropdown-item {if $dropDown == 'title desc'}active{/if}" href="{link default sort=>'title', order=>'desc'}">Název (Z až A)</a>
+                        <a class="dropdown-item {if $dropDown == 'ram asc'}active{/if}" href="{link default sort=>'ram', order=>'asc'}">Úložiště (od nejmenšího)</a>
+                        <a class="dropdown-item {if $dropDown == 'ram desc'}active{/if}" href="{link default sort=>'ram', order=>'desc'}">Úložiště (od největšího)</a>
+                        <a class="dropdown-item {if $dropDown == 'price asc'}active{/if}" href="{link default sort=>'price', order=>'asc'}">Cena (od nejlevnějšího)</a>
+                        <a class="dropdown-item {if $dropDown == 'price desc'}active{/if}" href="{link default sort=>'price', order=>'desc'}">Cena (od nejdražšího)</a>
                     </div>
                 </div>
 

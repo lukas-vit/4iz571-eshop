@@ -33,6 +33,7 @@ class HomepagePresenter extends BasePresenter{
           $this->template->products = $this->productsFacade->findAndOrderProducts(['order' => $sort], $order);
           $this->template->categories = $this->categoriesFacade->findCategories(['order' => 'title']);
           $this->template->photos = $this->productPhotoFacade->findAllPhotos();
+          $this->template->dropDown = $sort.' '.$order;
       }else{
           $this->template->products = $this->productsFacade->findProducts();
           $this->template->categories = $this->categoriesFacade->findCategories(['order' => 'title']);
