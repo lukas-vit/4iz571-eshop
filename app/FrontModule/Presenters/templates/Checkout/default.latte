@@ -253,7 +253,7 @@
                                             </div>
                                     </label>
                                 {/foreach}
-                                <div>
+                                <div class="mt-2">
                                     <input type="submit" id="paymentSubmitButton" n:name=paymentSubmitButton class="btn btn-primary w-100">
                                 </div>
                             </div>
@@ -299,6 +299,7 @@
                 <hr />
             {/foreach}
             <table class="h6 table table-borderless">
+                <tbody class="body-font-size">
                     <tr>
                         <td class="col-8">Doprava</td>
                         <td class="col-4 text-right"><span id="deliveryPrice">0</span> Kč</td>
@@ -318,10 +319,10 @@
                 </tbody>
             </table>
             <table class="table pt-2 mb-0 h5">
-                <tbody>
+                <tbody class="body-font-size">
                     <tr>
-                        <td class="py-4 col-8 h6"><strong>Cena objednávky s DPH<strong></td>
-                        <td class="py-4 col-4 h6 text-right"><strong><span id="total">{$cart->getTotalPrice()|number:0,',',' '}</span> Kč<strong></td>
+                        <td class="py-4 col-8"><strong>Cena objednávky s DPH<strong></td>
+                        <td class="py-4 col-4 text-right"><strong><span id="total">{$cart->getTotalPrice()|number:0,',',' '}</span> Kč<strong></td>
                     </tr>
                 </tbody>
             </table>
@@ -406,6 +407,16 @@ label.error {
     margin-top: 0.25rem;
     font-size: 80%;
     color: #28a745;
+}
+
+.body-font-size {
+    font-size: 1rem;
+}
+
+@media only screen and (max-width: 600px) {
+    .body-font-size {
+        font-size: 0.85rem;
+    }
 }
 
 </style>

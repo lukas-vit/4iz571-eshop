@@ -5,6 +5,7 @@
 {varType float $rating}
 {varType int $numberOfRatings}
 {varType App\Model\Entities\ProductPhoto[] $photos}
+{varType float $productLowestPrice}
 
 {block content}
 
@@ -79,7 +80,7 @@
                     <p class="col-10 mt-4 text-muted description">{$product->description}</p>
                 </div>
 
-                <div class="mt-4 row">
+                <div class="mt-2 mt-md-4 row">
                     <div class="col col-md-5">
                         <label class="my-1 mr-2 h5" for="ram">Paměť</label>
                         <div class="dropdown">
@@ -123,15 +124,26 @@
                     {/if}
                 </div>
                 <div class="mt-4 row">
-                    <div class="col-5">
-                        {var $priceDiscount = round($product->price * 0.95)}
-                        <div class="price h3 text-danger">{$product->price|number:0,',',' '} Kč
-                        {*  <span class="text-secondary price-sale"><del><small>{$priceDiscount} Kč</small></del></span> *}
-                        </div>
+                    {if $product->discount != null || $product->discount != 0}
+                        <div class="col-6 col-md-5 font-weight-bold h3 text-danger">{($product->price * (1-$product->discount))|number:0,',',' ' } Kč</div>
+                        <div class="col-6 col-md-5 font-weight-bold h6 text-right"><del>{$product->price|number:0,',',' '} Kč<del></div>
+                    {else}
+                         <div class="col-12 font-weight-bold h3 text-danger">{$product->price|number:0,',',' ' } Kč</div>
+                    {/if}
+                </div>
+                <div class="row">
+                    <div class="col-12">
                         {var $priceWithoutDPH = round($product->price * 0.85)}
                         <div class="price text-muted h6">{$priceWithoutDPH|number:0,',',' '} Kč bez DPH</div>
                     </div>
-                    <div class="col col-md-5">
+                </div>
+                {if $product->discount != null || $product->discount != 0}
+                    {if $productLowestPrice != 0.0 || $productLowestPrice != null}
+                        <div class="price-small text-muted">Nejnižší cena za posledních 30 dní: {$productLowestPrice|number:0,',',' '} Kč</div>
+                    {/if}
+                {/if}
+                <div class="row mt-2">
+                    <div class="col-12 col-md-10">
                         {control productCartFormBig-$product->productId}
                     </div>
                 </div>
@@ -221,6 +233,10 @@
 <style scoped>
 .price-sale {
     font-size: 12px;
+}
+
+.price-small {
+    font-size: 10px;
 }
 
 .description {

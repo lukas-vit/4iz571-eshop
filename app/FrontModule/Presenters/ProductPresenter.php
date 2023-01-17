@@ -10,6 +10,7 @@ use App\Model\Facades\ProductPhotoFacade;
 use App\FrontModule\Components\ReviewForm\ReviewForm;
 use App\FrontModule\Components\ReviewForm\ReviewFormFactory;
 use App\Model\Entities\Review;
+use App\Model\Facades\OrdersFacade;
 use App\Model\Facades\ProductsFacade;
 use App\Model\Facades\ReviewsFacade;
 use App\Model\Facades\UsersFacade;
@@ -25,6 +26,7 @@ use Nette\Security\User;
 class ProductPresenter extends BasePresenter{
   private ProductsFacade $productsFacade;
   private ReviewsFacade $reviewsFacade;
+  private OrdersFacade $ordersFacade;
   private ProductCartFormFactory $productCartFormFactory;
   private ProductCartFormBigFactory $productCartFormBigFactory;
   private ProductPhotoFacade $productPhotoFacade;
@@ -57,10 +59,7 @@ class ProductPresenter extends BasePresenter{
           $averageRating /= count($reviews);
           $numberOfRatings = count($reviews);
           $productRating =  round($averageRating, 1);
-        } /* else {
-          $productRating = 4.5;
-          $numberOfRatings = 0;
-        } */
+        }
       } catch (\Exception $e) {
         $productRating = 0;
         $numberOfRatings = 0;
@@ -69,6 +68,7 @@ class ProductPresenter extends BasePresenter{
       throw new BadRequestException('Produkt nebyl nalezen.');
     }
 
+    $this->template->productLowestPrice = $this->ordersFacade->getLowestPriceOfProductFromOrdersByProduct($product);
     $this->template->product = $product;
     $this->template->modelProductsColors = $modelProductsColors;
     $this->template->modelProductsRams = $modelProductsRams;
@@ -114,20 +114,38 @@ class ProductPresenter extends BasePresenter{
         }
 
         //check, že si opravdu produkt zakoupil - jinak by neměl psát recenzi
-        $userOrders = $this->ordersFacade->findOrders(['user_id'=>$userId]);
-        $userBoughtProduct = false;
-        foreach ($userOrders as $order) {
-          $orderItems = $this->orderItemsFacade->findOrderItems(['order_id'=>$order->orderId]);
-          foreach ($orderItems as $orderItem) {
-            if ($orderItem->productId == $form->values->productId) {
-              $userBoughtProduct = true;
-              break;
+        try {
+          $userOrders = $this->ordersFacade->findOrdersByUser($userId);
+          $userBoughtProduct = false;
+          foreach ($userOrders as $order) {
+            $orderItems = $this->ordersFacade->getOrderItemsByOrderDetail($order);
+            foreach ($orderItems as $orderItem) {
+              if ($orderItem->productId == $form->values->productId) {
+                $userBoughtProduct = true;
+                break;
+              }
             }
           }
+        } catch (\Exception $e) {
+            $this->flashMessage('Pro přidání recenze musíte produkt zakoupit','error');
+            $this->redirect('this');
         }
 
         if (!$userBoughtProduct) {
           $this->flashMessage('Pro přidání recenze musíte produkt zakoupit','error');
+          $this->redirect('this');
+        }
+
+        //check jestli už u produktu napsal recenzi
+        try {
+          $reviews = $this->reviewsFacade->findReviews(['order'=>'date DESC', 'product_id'=>$form->values->productId]);
+          foreach ($reviews as $review) {
+            if ($review->userId == $userId) {
+              $this->redirect('this');
+            }
+          }
+        } catch (\Exception $e) {
+          $this->flashMessage('Už jste napsal recenzi k tomuto produktu','error');
           $this->redirect('this');
         }
 
@@ -183,6 +201,10 @@ class ProductPresenter extends BasePresenter{
 
   public function injectReviewsFacade(ReviewsFacade $reviewsFacade):void {
     $this->reviewsFacade=$reviewsFacade;
+  }
+
+  public function injectOrdersFacade(OrdersFacade $ordersFacade):void {
+    $this->ordersFacade=$ordersFacade;
   }
 
   public function injectProductCartFormFactory(ProductCartFormFactory $productCartFormFactory):void {
