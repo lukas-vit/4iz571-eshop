@@ -44,6 +44,18 @@ class OrdersFacade{
     return $this->orderDetailRepository->findAllBy($params,$offset,$limit);
   }
 
+    /**
+     * Metoda pro vyhledání a seřazení order detailů
+     * @param array|null $params
+     * @param string $order
+     * @param int|null $offset
+     * @param int|null $limit
+     * @return array
+     */
+    public function findAndOrderOrderDetails(array $params=null,string $order = 'desc',int $offset=null,int $limit=null):array{
+        return$this->orderDetailRepository->findAllByAndOrder($params,$order,$offset,$limit);
+    }
+
   /**
    * Metoda pro uložení order detailu
    * @param OrderDetail &$orderDetail

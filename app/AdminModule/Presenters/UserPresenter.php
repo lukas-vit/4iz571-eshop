@@ -37,7 +37,7 @@ class UserPresenter extends BasePresenter {
      * Akce pro vykreslení seznamu uživatelů
      */
     public function renderDefault():void{
-        $this->template->allUsers=$this->usersFacade->findUsers(['order'=>'role_id']);
+        $this->template->allUsers=$this->usersFacade->findAndOrderUsers(['order'=>'role_id'], 'desc');
     }
 
     /**

@@ -10,8 +10,13 @@ class OrderPresenter extends BasePresenter{
     private $ordersFacade;
 
 
-    public function renderDefault(){
-        $this->template->orders = $this->ordersFacade->findOrderDetails();
+    public function renderDefault(string $sort = null, string $order = null){
+        if($sort != null && $order!=null){
+            $this->template->orders = $this->ordersFacade->findAndOrderOrderDetails(['order' => $sort], $order);
+            $this->template->dropDown = $sort.' '.$order;
+        }else{
+            $this->template->orders = $this->ordersFacade->findOrderDetails();
+        }
     }
 
     public function renderShow(int $id){

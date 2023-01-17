@@ -1,7 +1,27 @@
 {varType App\Model\Entities\OrderDetail[] $orderDetails}
+{varType int $dropDown}
 {block content}
 
 <h1 n:block="title">Vaše objednávky</h1>
+
+{if !empty($orderDetails)}
+    <div class="container">
+        <div class="d-flex flex-row-reverse">
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Řazení
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item {if $dropDown == null}active{/if}" href="{link orders sort=>null, order=>null}">Neseřazeno</a>
+                    <a class="dropdown-item {if $dropDown == 'payment_status desc'}active{/if}" href="{link orders sort=>'payment_status', order=>'desc'}">Zaplaceno</a>
+                    <a class="dropdown-item {if $dropDown == 'payment_status asc'}active{/if}" href="{link orders sort=>'payment_status', order=>'asc'}">Nezaplaceno</a>
+                    <a class="dropdown-item {if $dropDown == 'status desc'}active{/if}" href="{link orders sort=>'status', order=>'desc'}">Vyřízeno</a>
+                    <a class="dropdown-item {if $dropDown == 'status asc'}active{/if}" href="{link orders sort=>'status', order=>'asc'}">Nevyřízeno</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{/if}
 
     {if !empty($orderDetails)}
         <table class="table table-hover table-responsive mt-4">

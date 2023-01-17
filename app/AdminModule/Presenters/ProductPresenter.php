@@ -131,7 +131,6 @@ class ProductPresenter extends BasePresenter{
         $this->flashMessage('Fotografii se nepodařilo smazat', 'error');
     }
     $this->redirect('this');
-    //TODO odebrat fotografii ze složky na serveru
   }
 
   /**
