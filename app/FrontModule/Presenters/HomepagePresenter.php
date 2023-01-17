@@ -27,11 +27,17 @@ class HomepagePresenter extends BasePresenter{
   /**
    * Akce pro zobrazení seznamu produktů
    */
-  public function renderDefault()
+  public function renderDefault(string $sort = null)
   {
-      $this->template->products = $this->productsFacade->findProducts(['order' => 'title']);
-      $this->template->categories = $this->categoriesFacade->findCategories(['order' => 'title']);
-      $this->template->photos = $this->productPhotoFacade->findAllPhotos();
+      if($sort != null){
+          $this->template->products = $this->productsFacade->findProducts(['order' => $sort]);
+          $this->template->categories = $this->categoriesFacade->findCategories(['order' => 'title']);
+          $this->template->photos = $this->productPhotoFacade->findAllPhotos();
+      }else{
+          $this->template->products = $this->productsFacade->findProducts();
+          $this->template->categories = $this->categoriesFacade->findCategories(['order' => 'title']);
+          $this->template->photos = $this->productPhotoFacade->findAllPhotos();
+      }
   }
 
     /**
