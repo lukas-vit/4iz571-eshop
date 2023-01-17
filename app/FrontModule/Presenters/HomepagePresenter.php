@@ -44,11 +44,20 @@ class HomepagePresenter extends BasePresenter{
     /**
      * Akce pro zobrazení seznamu produktů dle kategorie
      */
-  public function renderCategory(int $id){
-      $this->template->products = $this->productsFacade->findProductsByCategory($id);
-      $this->template->categories = $this->categoriesFacade->findCategories(['order' => 'title']);
-      $this->template->photos = $this->productPhotoFacade->findAllPhotos();
-      $this->template->currentCategory = $this->categoriesFacade->getCategory($id);
+  public function renderCategory(int $id, string $sort = null, string $order = null){
+
+      if($sort != null && $order!=null) {
+          $this->template->products = $this->productsFacade->findAndOrderProducts(['category_id' => $id, 'order' => $sort], $order);
+          $this->template->categories = $this->categoriesFacade->findCategories(['order' => 'title']);
+          $this->template->photos = $this->productPhotoFacade->findAllPhotos();
+          $this->template->currentCategory = $this->categoriesFacade->getCategory($id);
+          $this->template->dropDown = $sort.' '.$order;
+      }else{
+          $this->template->products = $this->productsFacade->findProductsByCategory($id);
+          $this->template->categories = $this->categoriesFacade->findCategories(['order' => 'title']);
+          $this->template->photos = $this->productPhotoFacade->findAllPhotos();
+          $this->template->currentCategory = $this->categoriesFacade->getCategory($id);
+      }
   }
 
   /**
