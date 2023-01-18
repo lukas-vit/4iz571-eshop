@@ -11,6 +11,7 @@ use App\Model\Facades\ProductPhotoFacade;
 use App\Model\Facades\ProductsFacade;
 use App\Model\Facades\ReviewsFacade;
 use Nette\Application\UI\Multiplier;
+use Nette\Utils\Paginator;
 
 class HomepagePresenter extends BasePresenter{
   private ProductsFacade $productsFacade;
@@ -36,19 +37,41 @@ class HomepagePresenter extends BasePresenter{
   /**
    * Akce pro zobrazení seznamu produktů
    */
-  public function renderDefault(string $sort = null, string $order = null)
+  public function renderDefault(string $sort = null, string $order = null, int $page = 1)
   {
       if($sort != null && $order!=null){
-          $this->template->products = $this->productsFacade->findAndOrderProducts(['order' => $sort], $order);
+          $products = $this->productsFacade->findAndOrderProducts(['order' => $sort], $order);
+          $this->template->products = $products;
           $this->template->categories = $this->categoriesFacade->findCategories(['order' => 'title']);
           $this->template->photos = $this->productPhotoFacade->findAllPhotos();
           $this->template->reviews = $this->reviewsFacade->findReviews();
           $this->template->dropDown = $sort.' '.$order;
+
+          //pagination
+          $paginator = new Paginator;
+          $paginator->setItemCount(count($products));
+          $paginator->setItemsPerPage(6);
+          $paginator->setPage($this->getParameter('page', 1));
+          $this->template->paginator = $paginator;
+
+          $productsOnCurrentPage = array_slice($products, $paginator->getOffset(), $paginator->getLength());
+          $this->template->productsOnCurrentPage = $productsOnCurrentPage;
       }else{
-          $this->template->products = $this->productsFacade->findProducts();
+          $products = $this->productsFacade->findProducts();
+          $this->template->products = $products;
           $this->template->categories = $this->categoriesFacade->findCategories(['order' => 'title']);
           $this->template->photos = $this->productPhotoFacade->findAllPhotos();
           $this->template->reviews = $this->reviewsFacade->findReviews();
+
+          //pagination
+          $paginator = new Paginator;
+          $paginator->setItemCount(count($products));
+          $paginator->setItemsPerPage(6);
+          $paginator->setPage($this->getParameter('page', 1));
+          $this->template->paginator = $paginator;
+
+          $productsOnCurrentPage = array_slice($products, $paginator->getOffset(), $paginator->getLength());
+          $this->template->productsOnCurrentPage = $productsOnCurrentPage;
       }
   }
 

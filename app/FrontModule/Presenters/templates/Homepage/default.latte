@@ -2,6 +2,8 @@
 {varType App\Model\Entities\Category[] $categories}
 {varType App\Model\Entities\ProductPhoto[] $photos}
 {varType App\Model\Entities\Review[] $reviews}
+{varType Nette\Utils\Paginator $paginator}
+{varType App\Model\Entities\Product[] $productsOnCurrentPage}
 {varType int $dropDown}
 {block content}
 
@@ -82,8 +84,7 @@
             <div class="col-md-9">
                 <div class="row">
                     {if !empty($products)}
-                        {var $countProducts = count($products)}
-                        {foreach $products as $product}
+                        {foreach $productsOnCurrentPage as $product}
                             <div class="col-12 col-md-6 col-xl-4 border-1 rounded-0 card py-2">
                                 <div class="p-4">
                                     <a class="btn" href="{plink Product:show url=>$product->url}">
@@ -168,9 +169,17 @@
                         <p class="text-muted">Nebyly nalezeny žádné produkty</p>
                     {/if}
                 </div>
-                {* <div class="col-12">
-                    {control pagination}
-                </div> *}
+            </div>
+        </div>
+        <div class="row">
+            <div class="ml-auto mr-0 mt-3">
+                <nav aria-label="pagination">
+                    <ul class="pagination">
+                        {for $page = 1; $page <= $paginator->getPageCount(); $page++}
+                            <li class="page-item"><a class="page-link" href="{link default sort=>null, order=>null, page=>$page}">{$page}</a></li>
+                        {/for}
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>
