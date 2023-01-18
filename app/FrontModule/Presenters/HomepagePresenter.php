@@ -4,40 +4,90 @@ namespace App\FrontModule\Presenters;
 
 use App\FrontModule\Components\ProductCartForm\ProductCartForm;
 use App\FrontModule\Components\ProductCartForm\ProductCartFormFactory;
+use App\FrontModule\Components\SearchForm\SearchForm;
+use App\FrontModule\Components\SearchForm\SearchFormFactory;
 use App\Model\Facades\CategoriesFacade;
 use App\Model\Facades\ProductPhotoFacade;
 use App\Model\Facades\ProductsFacade;
+use App\Model\Facades\ReviewsFacade;
 use Nette\Application\UI\Multiplier;
+use Nette\Utils\Paginator;
 
 class HomepagePresenter extends BasePresenter{
   private ProductsFacade $productsFacade;
   private CategoriesFacade $categoriesFacade;
   /** @var ProductCartFormFactory $productCartFormFactory */
   private $productCartFormFactory;
+  /** @var SearchFormFactory $searchFormFactory */
+  private $searchFormFactory;
   /** @var ProductPhotoFacade $productPhotoFacade */
-    private $productPhotoFacade;
+  private $productPhotoFacade;
+  /** @var ReviewsFacade $reviewsFacade */
+  private $reviewsFacade;
 
-  public function __construct(ProductsFacade $productsFacade, CategoriesFacade $categoriesFacade, ProductPhotoFacade $productPhotoFacade)
+  public function __construct(ProductsFacade $productsFacade, CategoriesFacade $categoriesFacade, ProductPhotoFacade $productPhotoFacade, ReviewsFacade $reviewsFacade)
   {
+      parent::__construct();
       $this->productsFacade = $productsFacade;
       $this->categoriesFacade = $categoriesFacade;
       $this->productPhotoFacade = $productPhotoFacade;
+      $this->reviewsFacade = $reviewsFacade;
   }
 
   /**
    * Akce pro zobrazení seznamu produktů
    */
-  public function renderDefault(string $sort = null, string $order = null)
+  public function renderDefault(string $sort = null, string $order = null, string $search = null, int $page = 1)
+  
   {
+      if ($search != null) {
+          $products = $this->productsFacade->findProducts(['title' => $search]);
+          $this->template->products = $products;
+          $this->template->search = $search;
+
+          //pagination
+          $paginator = new Paginator;
+          $paginator->setItemCount(count($products));
+          $paginator->setItemsPerPage(6);
+          $paginator->setPage($this->getParameter('page', 1));
+          $this->template->paginator = $paginator;
+
+          $productsOnCurrentPage = array_slice($products, $paginator->getOffset(), $paginator->getLength());
+          $this->template->productsOnCurrentPage = $productsOnCurrentPage;
+      }
       if($sort != null && $order!=null){
-          $this->template->products = $this->productsFacade->findAndOrderProducts(['order' => $sort], $order);
+          $products = $this->productsFacade->findAndOrderProducts(['order' => $sort], $order);
+          $this->template->products = $products;
           $this->template->categories = $this->categoriesFacade->findCategories(['order' => 'title']);
           $this->template->photos = $this->productPhotoFacade->findAllPhotos();
+          $this->template->reviews = $this->reviewsFacade->findReviews();
           $this->template->dropDown = $sort.' '.$order;
+
+          //pagination
+          $paginator = new Paginator;
+          $paginator->setItemCount(count($products));
+          $paginator->setItemsPerPage(6);
+          $paginator->setPage($this->getParameter('page', 1));
+          $this->template->paginator = $paginator;
+
+          $productsOnCurrentPage = array_slice($products, $paginator->getOffset(), $paginator->getLength());
+          $this->template->productsOnCurrentPage = $productsOnCurrentPage;
       }else{
-          $this->template->products = $this->productsFacade->findProducts();
+          $products = $this->productsFacade->findProducts();
+          $this->template->products = $products;
           $this->template->categories = $this->categoriesFacade->findCategories(['order' => 'title']);
           $this->template->photos = $this->productPhotoFacade->findAllPhotos();
+          $this->template->reviews = $this->reviewsFacade->findReviews();
+
+          //pagination
+          $paginator = new Paginator;
+          $paginator->setItemCount(count($products));
+          $paginator->setItemsPerPage(6);
+          $paginator->setPage($this->getParameter('page', 1));
+          $this->template->paginator = $paginator;
+
+          $productsOnCurrentPage = array_slice($products, $paginator->getOffset(), $paginator->getLength());
+          $this->template->productsOnCurrentPage = $productsOnCurrentPage;
       }
   }
 
@@ -86,6 +136,26 @@ class HomepagePresenter extends BasePresenter{
   }
 
   /**
+   * Formulář na hledání  produktů
+   * @return SearchForm
+   */
+  protected function createComponentSearchForm():SearchForm {
+
+    $form = $this->searchFormFactory->create();
+    $form->onSubmit[]=function(SearchForm $form){
+    $values=$form->getValues('array');
+   
+    //find products by title
+    $products=$this->productsFacade->findProducts(['title' => $values['title']]);
+    $this->template->products=$products;
+
+    //redirect
+    $this->redirect('Homepage:default');
+    };
+    return $form;
+  }
+
+  /**
    * Formulář na editaci produktů
    * @return ProductCartForm
    */
@@ -117,6 +187,10 @@ class HomepagePresenter extends BasePresenter{
   }
   public function injectProductCartFormFactory(ProductCartFormFactory $productCartFormFactory){
     $this->productCartFormFactory=$productCartFormFactory;
+  }
+
+  public function injectSearchFormFactory(SearchFormFactory $searchFormFactory){
+    $this->searchFormFactory=$searchFormFactory;
   }
   #endregion injections
 

@@ -7,5 +7,4 @@ namespace App\Model\Repositories;
  * @package App\Model\Repositories
  */
 class ProductRepository extends BaseRepository{
-
 }

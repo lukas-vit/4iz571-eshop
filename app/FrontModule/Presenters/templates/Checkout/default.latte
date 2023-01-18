@@ -10,7 +10,7 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-12 col-md-8 pl-0">
+        <div class="col-12 col-md-8 pl-0 pr-0 pr-md-2">
             <form id="checkout-form" n:name=checkoutForm class="validation">
                 <div id="accordion">
                     {if !$user->isLoggedIn()}
@@ -253,7 +253,7 @@
                                             </div>
                                     </label>
                                 {/foreach}
-                                <div>
+                                <div class="mt-2">
                                     <input type="submit" id="paymentSubmitButton" n:name=paymentSubmitButton class="btn btn-primary w-100">
                                 </div>
                             </div>
@@ -292,13 +292,18 @@
                             {if $item->count > 1}
                                 {$item->count} * 
                             {/if}
-                            {$item->product->price|number:0,',',' '} Kč
+                            {if $item->product->discount != null || $item->product->discount != 0}
+                                {($item->product->price * (1-$item->product->discount))|number:0,',',' ' } Kč
+                            {else}
+                                {$item->product->price|number:0,',',' '} Kč
+                            {/if}
                         </div>
                     </div>
                 </div>
                 <hr />
             {/foreach}
             <table class="h6 table table-borderless">
+                <tbody class="body-font-size">
                     <tr>
                         <td class="col-8">Doprava</td>
                         <td class="col-4 text-right"><span id="deliveryPrice">0</span> Kč</td>
@@ -318,10 +323,10 @@
                 </tbody>
             </table>
             <table class="table pt-2 mb-0 h5">
-                <tbody>
+                <tbody class="body-font-size">
                     <tr>
-                        <td class="py-4 col-8 h6"><strong>Cena objednávky s DPH<strong></td>
-                        <td class="py-4 col-4 h6 text-right"><strong><span id="total">{$cart->getTotalPrice()|number:0,',',' '}</span> Kč<strong></td>
+                        <td class="py-4 col-8"><strong>Cena objednávky s DPH<strong></td>
+                        <td class="py-4 col-4 text-right"><strong><span id="total">{$cart->getTotalPrice()|number:0,',',' '}</span> Kč<strong></td>
                     </tr>
                 </tbody>
             </table>
@@ -406,6 +411,16 @@ label.error {
     margin-top: 0.25rem;
     font-size: 80%;
     color: #28a745;
+}
+
+.body-font-size {
+    font-size: 1rem;
+}
+
+@media only screen and (max-width: 600px) {
+    .body-font-size {
+        font-size: 0.85rem;
+    }
 }
 
 </style>

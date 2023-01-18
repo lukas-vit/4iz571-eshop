@@ -44,6 +44,7 @@ class UserPresenter extends BasePresenter{
     if ($this->user->isLoggedIn()){
       $this->user->logout();
     }
+    $this->presenter->flashMessage('Byly jste úspešně odhlášeni','success');
     $this->redirect('Homepage:default');
   }
 
@@ -145,6 +146,7 @@ class UserPresenter extends BasePresenter{
         $this->user->login($values['email'],$values['password']);
         //po přihlášení uživatele smažeme jeho kódy na obnovu hesla
         $this->usersFacade->deleteForgottenPasswordsByUser($this->user->id);
+        $this->presenter->flashMessage('Byly jste úspešně přihlášeni','success');
       }catch (\Exception $e){
         $this->flashMessage('Neplatná kombinace e-mailu a hesla!','error');
         $this->redirect('login');

@@ -11,7 +11,7 @@
 <a href="{plink Homepage:default}" class="mt-4 mx-auto btn btn-primary btn-block col-6 col-md-3">Přejít na katalog</a>
 
 {else}
-    <div class="my-5 container text-center w-100">
+    <div class="my-3 my-md-5 container text-center w-100">
         <div class="h1 font-weight-bold">
             Hodnota košíku je {$cart->getTotalPrice()|number:0,',',' '} Kč
         </div>
@@ -20,15 +20,15 @@
         {if $cart->getTotalPrice() > 10000}
             <p class="mt-4 h6 font-weight-bold"><i class="fa-solid fa-circle-check mr-2" style="color:green"></i>Máte dopravu zdarma!</p>
         {/if}
-        <a href="{plink Checkout:default}" class="mt-4 mx-auto btn btn-success btn-lg btn-block col-6 col-md-3">K pokladně</a>
+        <a href="{plink Checkout:default}" class="mt-4 mx-auto btn btn-success btn-md-lg btn-block col-12 col-md-3">K pokladně</a>
     </div>
-    <div class="container my-5">
+    <div class="my-3 my-md-5">
         <div class="row">
             <div class="col-12 col-md-8 px-md-5">
                 <hr />
                 {foreach $cart->items as $item}
-                    <div class="d-flex flex-row">
-                        <a class="d-flex col-6 btn" href="{plink Product:show url=>$item->product->url}">
+                    <div class="d-md-flex flex-md-row">
+                        <a class="d-flex col-12 col-md-5 btn" href="{plink Product:show url=>$item->product->url}">
                             <div class="d-flex col-4">
                                 {if count($item->product->photos) == 0}
                                     <div class="p-2 d-flex cart-image align-items-center justify-content-center">
@@ -47,42 +47,48 @@
                                 <div class="h6 mb-0">{$item->product->title} {$item->product->ram} GB {$item->product->color}</div>
                             </div>
                         </a>
-                        <div class="d-flex col-3 align-items-center justify-content-center">
-                            <div class="d-flex h6 mb-0">
-                                {if $item->count == 1}
-                                    <!-- pokud je v košíku pouze 1 kus, tak se zeptáme, jestli jsou si jistí odebráním celého produktu -->
-                                    <div><button type="button" class="btn btn-primary rounded-left control" data-toggle="modal" data-target="#confirmationModal">-</button></div>
-                                    <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="confirmationModalLabel">Opravdu si přejete odstranit produkt z košíku?</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div class="text-left">
-                                                        {var cartItemId = $item->cartItemId}
-                                                        {control confirmationForm-$cartItemId}
+                  
+                        <div class="col-12 col-md-7 row align-items-center" >
+                            <div class="col-6">
+                                <div class="d-flex h6 mb-0">
+                                    {if $item->count == 1}
+                                        <!-- pokud je v košíku pouze 1 kus, tak se zeptáme, jestli jsou si jistí odebráním celého produktu -->
+                                        <div><button type="button" class="btn btn-primary rounded-left control" data-toggle="modal" data-target="#confirmationModal">-</button></div>
+                                        <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="confirmationModalLabel">Opravdu si přejete odstranit produkt z košíku?</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="text-left">
+                                                            {var cartItemId = $item->cartItemId}
+                                                            {control confirmationForm-$cartItemId}
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                {else}
-                                    <a href="{link removeCount! $item->cartItemId}" class="btn btn-primary rounded-left control">-</a>
-                                {/if}
-                                <input readonly id="input-count-{$item->product->productId}" type="number" min="1" value="{$item->count}" class="input-count btn border-top border-bottom rounded-0" />
-                                <a href="{link addCount! $item->cartItemId}" class="btn btn-primary rounded-right control">+</a>
+                                    {else}
+                                        <a href="{link removeCount! $item->cartItemId}" class="btn btn-primary rounded-left control">-</a>
+                                    {/if}
+                                    <input readonly id="input-count-{$item->product->productId}" type="number" min="1" value="{$item->count}" class="input-count btn border-top border-bottom rounded-0" />
+                                    <a href="{link addCount! $item->cartItemId}" class="btn btn-primary rounded-right control">+</a>
+                                </div>
                             </div>
-                        </div>
-                        <div class="d-flex col-2 align-items-center">
-                            <div class="h6 mb-0 font-weight-bold">{$item->product->price|number:0,',',' '} Kč</div>
-                        </div>
-                        <div class="d-flex col-1 align-items-center justify-content-center">
-                            <div class="d-flex align-items-center justify-content-center"><button type="button" class="btn" data-toggle="modal" data-target="#confirmationModal"><i class="fa-regular fa-circle-xmark" style="color:red; font-size:24px"></i></button></div>
-                                <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+                            <div class="col-4 pr-0">
+                                {if $item->product->discount != null || $item->product->discount != 0}
+                                    <div class="h6 mb-0 font-weight-bold">{($item->product->price * (1-$item->product->discount))|number:0,',',' ' } Kč</div>
+                                {else}
+                                    <div class="h6 mb-0 font-weight-bold">{$item->product->price|number:0,',',' '} Kč</div>
+                                {/if}
+                            </div>
+                            <div class="col-2">
+                                <div class="d-flex align-items-center justify-content-center"><button type="button" class="btn" data-toggle="modal" data-target="#confirmationModal"><i class="fa-regular fa-circle-xmark" style="color:red; font-size:24px"></i></button></div>
+                                    <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -102,6 +108,7 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
                     <hr />
                 {/foreach}
             </div>
@@ -111,26 +118,26 @@
                         <thead class="h5 font-weight-bold">
                             <tr><td>Přehled košíku<td></tr>
                         </thead>
-                        <tbody class="h6">
+                        <tbody class="body-font-size">
                             <tr>
-                                <td class="col-8">Mezisoučet</td>
-                                <td class="col-4 text-right">{$cart->getTotalPrice()|number:0,',',' '} Kč</td>
+                                <td class="col-6 col-md-8">Mezisoučet</td>
+                                <td class="col-6 col-md-4 text-right">{$cart->getTotalPrice()|number:0,',',' '} Kč</td>
                             </tr>
                             <tr>
-                                <td class="col-8">DPH</td>
-                                <td class="col-4 text-right">{$totalDph|number:0,',',' '} Kč</td>
+                                <td class="col-6 col-md-8">DPH</td>
+                                <td class="col-6 col-md-4 text-right">{$totalDph|number:0,',',' '} Kč</td>
                             </tr>
                             <tr>
-                                <td class="col-8">Celkem (bez DPH)</td>
-                                <td class="col-4 text-right">{$totalWithoutDph|number:0,',',' '} Kč</td>
+                                <td class="col-6 col-md-8">Celkem (bez DPH)</td>
+                                <td class="col-6 col-md-4 text-right">{$totalWithoutDph|number:0,',',' '} Kč</td>
                             </tr>
                         </tbody>
                     </table>
                     <table class="table pt-2 mb-0">
-                        <tbody>
+                        <tbody class="body-font-size">
                             <tr>
-                                <td class="py-4 col-8 h6"><strong>Cena objednávky s DPH<strong></td>
-                                <td class="py-4 col-4 h6 text-right"><strong>{$cart->getTotalPrice()|number:0,',',' '} Kč<strong></td>
+                                <td class="py-2 py-md-4 col-6 col-md-8"><strong>Cena objednávky s DPH<strong></td>
+                                <td class="py-2 py-md-4 col-6 col-md-4 text-right"><strong>{$cart->getTotalPrice()|number:0,',',' '} Kč<strong></td>
                             </tr>
                             <tr>
                                 <td colspan="2" class="border-0">
@@ -163,6 +170,17 @@
 .control {
     border-radius: 0;
 }
+
+.body-font-size {
+    font-size: 1rem;
+}
+
+@media only screen and (max-width: 600px) {
+    .body-font-size {
+        font-size: 0.85rem;
+    }
+}
+
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {

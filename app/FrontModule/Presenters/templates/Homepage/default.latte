@@ -1,6 +1,9 @@
 {varType App\Model\Entities\Product[] $products}
 {varType App\Model\Entities\Category[] $categories}
 {varType App\Model\Entities\ProductPhoto[] $photos}
+{varType App\Model\Entities\Review[] $reviews}
+{varType Nette\Utils\Paginator $paginator}
+{varType App\Model\Entities\Product[] $productsOnCurrentPage}
 {varType int $dropDown}
 {block content}
 
@@ -8,22 +11,21 @@
     <h2>Kategorie</h2>
     <div class="container">
         <div class="row">
-            {foreach $categories as $category}
-            <a href="{link category id=>$category->categoryId}"><button type="button" class="btn btn-outline-primary mr-2 mt-1">{$category->title}</button></a>
-            {/foreach}
-        </div>
-    </div>
-</div>
-
-<div>
-    <div class="container">
-        <div class="row my-3">
-            <div class="col-md-3">
-                <div class="dropdown">
-                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <div class="col-10 pl-0">
+                {foreach $categories as $category}
+                <a href="{link category id=>$category->categoryId}"><button type="button" class="btn btn-outline-primary mr-2 mt-1">{$category->title}</button></a>
+                {/foreach}
+            </div>
+            <div class="col-2 text-right pr-0 ml-auto mr-0">
+                <div class="dropdown ml-auto mr-0">
+                    <a class="btn btn-outline-secondary dropdown-toggle icon-sort" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa-solid fa-sort"></i>
+                    </a>
+                    <a class="btn btn-outline-secondary dropdown-toggle text-sort mr-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Řazení
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    </a>
+                    
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
                         <a class="dropdown-item {if $dropDown == null}active{/if}" href="{link default sort=>null, order=>null}">Neseřazeno</a>
                         <a class="dropdown-item {if $dropDown == 'title asc'}active{/if}" href="{link default sort=>'title', order=>'asc'}">Název (A až Z)</a>
                         <a class="dropdown-item {if $dropDown == 'title desc'}active{/if}" href="{link default sort=>'title', order=>'desc'}">Název (Z až A)</a>
@@ -33,71 +35,137 @@
                         <a class="dropdown-item {if $dropDown == 'discounted_price desc'}active{/if}" href="{link default sort=>'discounted_price', order=>'desc'}">Cena (od nejdražšího)</a>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
 
+<div>
+    <div class="container">
+        <div class="row my-3">
+            <div class="col-md-3 pl-0 pr-0 pr-md-4">
+                <form>
+                    <div class="input-group">
+                        <input type="text" class="form-control mb-2" placeholder="Hledat...">
+                        <div class="input-group-append">
+                            <!-- add input value to link -->
+                            <a class="btn btn-primary mb-2" href="{link default search=>'Apple iPhone 14 Pro'}"><i class="fas fa-search"></i></a>
+                        </div>
+                    </div>
+                </form>
+                <!-- filters -->
+                <div class="card rounded-0 mb-3 mobile-hidden">
+                    <div class="card-group-item">
+                        <header class="card-header">
+                            <h6 class="title">Brands </h6>
+                        </header>
+                        <div class="filter-content">
+                            <div class="card-body">
+                                <form>
+                                    <label class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="">
+                                    <span class="form-check-label">
+                                        Mersedes Benz
+                                    </span>
+                                    </label>
+                                    <label class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="">
+                                    <span class="form-check-label">
+                                        Nissan Altima
+                                    </span>
+                                    </label>
+                                    <label class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="">
+                                    <span class="form-check-label">
+                                        Another Brand
+                                    </span>
+                                    </label>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
             </div>
             <div class="col-md-9">
                 <div class="row">
                     {if !empty($products)}
-                        {var $countProducts = count($products)}
-                        {foreach $products as $product}
-                        {if $iterator->counter == $countProducts}
-                            <div class="col-12 col-md-6 col-xl-4 border-1 border-left-0 rounded-0 card py-4">
-                        {elseif ((($iterator->counter)-1) % 3) == 1}
-                            <div class="col-12 col-md-6 col-xl-4 border-right-0 border-left-0 rounded-0 card py-4">
-                        {else}
-                            <div class="col-12 col-md-6 col-xl-4 border-1 rounded-0 card py-4">
-                        {/if}
-                               {* <h6 class="text-center">Kategorie {$product->category->title}</h6> *}
-
+                        {foreach $productsOnCurrentPage as $product}
+                            <div class="col-12 col-md-6 col-xl-4 border-1 rounded-0 card py-2">
                                 <div class="p-4">
-                                    {foreach $photos as $photo}
-                                        {if $photo->productId == $product->productId}
-                                            {if $photo->isThumbnail == true}
-                                                <img src="{$basePath.'/img/products/'.$photo->productPhotoId.'.'.$photo->photoExtension}" alt="{$product->title}" class="d-block w-100">
+                                    <a class="btn" href="{plink Product:show url=>$product->url}">
+                                        {foreach $photos as $photo}
+                                            {if $photo->productId == $product->productId}
+                                                {if $photo->isThumbnail == true}
+                                                    <img src="{$basePath.'/img/products/'.$photo->productPhotoId.'.'.$photo->photoExtension}" alt="{$product->title}" class="d-block w-100">
+                                                {/if}
                                             {/if}
-                                        {/if}
-                                    {/foreach}
+                                        {/foreach}
+                                    </a>
                                 </div>
 
-                                <div class="product-rating text-warning mb-2">
-                                    <div>
-                                        {var $productRating = $rating}
-                                        {for $i = 0; $i < 5; $i++}
-                                            {if $productRating - $i >= 1}
-                                                <i class="fa-solid fa-star"></i>
-                                            {elseif $productRating - $i < 1 && $productRating - $i > 0}
-                                                <i class="fa-solid fa-star-half-stroke"></i>
+                                <div class="px-2">
+                                    <div class="product-rating text-warning mb-2">
+                                        <div>
+                                            {var $countReviews = 0}
+                                            {var $rating = 0.0}
+                                            {var $productReview = 0.0}
+                                            {foreach $reviews as $review}
+                                                {if $review->productId == $product->productId}
+                                                    {var $rating = $rating + $review->rating}
+                                                    {var $countReviews = $countReviews + 1}
+                                                {/if}
+                                            {/foreach}
+                                            {if $countReviews != 0}
+                                                {var $productReview = (float)($rating / $countReviews)}
                                             {else}
-                                                <i class="fa-regular fa-star"></i>
+                                                {var $productReview = 0.0}
                                             {/if}
-                                        {/for}
+                                            {for $i = 0; $i < 5; $i++}
+                                                {if $productReview - $i >= 1}
+                                                    <i class="fa-solid fa-star"></i>
+                                                {elseif $productReview - $i < 1 && $productReview - $i > 0}
+                                                    <i class="fa-solid fa-star-half-stroke"></i>
+                                                {else}
+                                                    <i class="fa-regular fa-star"></i>
+                                                {/if}
+                                            {/for}
+                                            <span class="text-small text-secondary">{$countReviews}x</span>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <h5 class="h6">{$product->title} {if $product->ram}<span>{$product->ram} GB</span>{/if} {if $product->color}<span>{$product->color}</span>{/if}</h5>
+                                    <h5 class="h6 product-title">{$product->title} {if $product->ram}<span>{$product->ram} GB</span>{/if} {if $product->color}<span>{$product->color}</span>{/if}</h5>
 
-                                <div class="text-small mt-2">
-                                    {if $product->stock == 0 || $product->stock == null}
-                                        <div class="text-danger">
-                                            Není skladem
+                                    <div class="text-small mt-2">
+                                        {if $product->stock == 0 || $product->stock == null}
+                                            <div class="text-danger">
+                                                Není skladem
+                                            </div>
+                                        {elseif $product->stock <= 5}
+                                            <div class="text-warning">
+                                                Poslední kusy
+                                            </div>
+                                        {elseif $product->stock > 5}
+                                            <div class="text-success">
+                                                Skladem > 5 kusů
+                                            </div>
+                                        {/if}
+                                    </div>
+
+                                    <div class="my-3">
+                                        {if $product->discount != null || $product->discount != 0}
+                                            <div class="row">
+                                                <div class="col-6 font-weight-bold h6 text-danger">{($product->price * (1-$product->discount))|number:0,',',' ' } Kč</div>
+                                                <div class="col-6 font-weight-bold h6 text-right"><del>{$product->price|number:0,',',' '} Kč<del></div>
+                                            </div>
+                                        {else}
+                                            <div class="font-weight-bold h6">{$product->price|number:0,',',' '} Kč</div>
+                                        {/if}
+                                    </div>
+                                    <div class="row">
+                                        <div class="col pr-0"><a href="{link Product:show url=>$product->url}"><button type="button" class="btn btn-block btn-outline-primary">Detaily</button></a></div>
+                                        <div class="col-4">
+                                            {control productCartForm-$product->productId}
                                         </div>
-                                    {elseif $product->stock <= 5}
-                                        <div class="text-warning">
-                                            Poslední kusy
-                                        </div>
-                                    {elseif $product->stock > 5}
-                                        <div class="text-success">
-                                            Skladem > 5 kusů
-                                        </div>
-                                    {/if}
-                                </div>
-
-                                <div class="my-3 font-weight-bold h6">{$product->price|number:0,',',' '} Kč</div>
-
-                                <div class="row">
-                                    <div class="col pr-0"><a href="{link Product:show url=>$product->url}"><button type="button" class="btn btn-block btn-outline-primary">Detaily</button></a></div>
-                                    <div class="col-4">
-                                        {control productCartForm-$product->productId}
                                     </div>
                                 </div>
                             </div>
@@ -106,9 +174,17 @@
                         <p class="text-muted">Nebyly nalezeny žádné produkty</p>
                     {/if}
                 </div>
-                {* <div class="col-12">
-                    {control pagination}
-                </div> *}
+            </div>
+        </div>
+        <div class="row">
+            <div class="ml-auto mr-0 mt-3">
+                <nav aria-label="pagination">
+                    <ul class="pagination">
+                        {for $page = 1; $page <= $paginator->getPageCount(); $page++}
+                            <li class="page-item"><a class="page-link" href="{link default sort=>null, order=>null, page=>$page}">{$page}</a></li>
+                        {/for}
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>
@@ -119,8 +195,47 @@
     font-size: 0.8rem;
 }
 
+.price-small {
+    font-size: 10px;
+}
+
 .product-rating {
     font-size: 1rem;
 }
 
+.product-title {
+    height: 2.5rem;
+}
+
+.btn:focus,.btn:active {
+   outline: none !important;
+   box-shadow: none;
+}
+
+.icon-sort {
+    display: none;
+    visibility: hidden;
+}
+
+.text-sort {
+    display: block;
+    visibility: visible;
+}
+
+@media only screen and (max-width: 600px) {
+    .icon-sort {
+        display: block;
+        visibility: visible;
+    }
+
+    .text-sort {
+        display: none;
+        visibility: hidden;
+    }
+
+    .mobile-hidden {
+        display: none;
+        visibility: hidden;
+    }
+}
 </style>

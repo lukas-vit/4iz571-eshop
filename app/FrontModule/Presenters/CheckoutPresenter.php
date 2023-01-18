@@ -108,7 +108,11 @@ class CheckoutPresenter extends BasePresenter{
                 $orderItem->orderDetailId = $order->orderDetailId;
                 $orderItem->productId = $item->product->productId;
                 $orderItem->quantity = (int)$item->count;
-                $orderItem->price = $item->product->price;
+                if ($item->product->discount != null || $item->product->discount != 0) {
+                    $orderItem->price = ($item->product->price* (1-$item->product->discount));
+                } else {
+                    $orderItem->price = $item->product->price;
+                }
                 $this->ordersFacade->saveOrderItem($orderItem);
                 //remove 1 stock from DB
                 $product = $item->product;
@@ -119,10 +123,26 @@ class CheckoutPresenter extends BasePresenter{
             //delivery method
             $orderDelivery = $this->deliveriesFacade->getDelivery((int)$values['delivery']);
             $order->deliveryId = $orderDelivery->deliveryId;
+
+            //calculate total
+            $orderTotal = $this->cart->getTotalPrice();
+
+            if ($orderTotal > 20000) {
+               $orderDelivery->price = 0.0;
+            }
+
+            $orderTotal = $orderTotal + $orderDelivery->price;
+
             //payment method
             $orderPayment = $this->paymentsFacade->getPayment((int)$values['payment']);
             $order->paymentId = $orderPayment->paymentId;
             $order->paymentStatus = OrderDetail::TYPE_PAYMENT_PENDING;
+
+            $orderTotal = $orderTotal + $orderPayment->price;
+
+            $order->total = $orderTotal;
+            $orderTotalWithoutDph = round(($orderTotal / 1.21), 0);
+            $orderDph = round(($orderTotal - $orderTotalWithoutDph), 0);
 
             //if user does not have an address - create addresses
             $userAddresses = $this->usersFacade->getAddressesByUser($user);
@@ -182,20 +202,7 @@ class CheckoutPresenter extends BasePresenter{
                     }
                 }
             }
-            
-            //calculate total
-            $orderTotal = $this->cart->getTotalPrice();
-
-            //doprava zdarma nad 20000
-            if ($orderTotal < 20000) {
-                $orderTotal = $orderTotal + $orderDelivery->price;
-            }
-
-            $orderTotal = $orderTotal + $orderPayment->price;
-
-            $order->total = $orderTotal;
-            $orderTotalWithoutDph = round(($orderTotal / 1.21), 0);
-            $orderDph = round(($orderTotal - $orderTotalWithoutDph), 0);
+          
             $orderCreated = new DateTime();
 
             if($orderPayment->type == "cash"){

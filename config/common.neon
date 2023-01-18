@@ -48,6 +48,7 @@ services:
 	- App\FrontModule\Components\PersonalInfoForm\PersonalInfoFormFactory
 	- App\FrontModule\Components\BillingAddressForm\BillingAddressFormFactory
 	- App\FrontModule\Components\DeliveryAddressForm\DeliveryAddressFormFactory
+	- App\FrontModule\Components\SearchForm\SearchFormFactory
 
 	- App\Model\Facades\CartFacade
 	- App\Model\Facades\CategoriesFacade

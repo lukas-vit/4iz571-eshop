@@ -84,12 +84,7 @@
                 Doprava
             </td>
             <td width="25%" align="left" style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 400; line-height: 24px; padding: 5px 10px;">
-                {if $order->total > 20000} 
-                    {$delivery->price = 0.0} Kč 
-                {else}
-                    {$delivery->price|number:0,',',' '} Kč
-                {/if}
-               
+                {$delivery->price|number:0,',',' '} Kč
             </td>
         </tr>
         <tr>
