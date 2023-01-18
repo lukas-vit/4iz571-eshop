@@ -45,6 +45,10 @@ class ProductsFacade{
     return $this->productRepository->findAllBy($params,$offset,$limit);
   }
 
+  public function findAllByPartOfTitle(string $partOfTitle):array {
+    return $this->productRepository->findAllByPartOfTitle($partOfTitle);
+  }
+
     /**
      * Metoda pro vyhledávání a řazení produktů
      * @param array|null $params

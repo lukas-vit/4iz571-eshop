@@ -44,15 +44,12 @@
     <div class="container">
         <div class="row my-3">
             <div class="col-md-3 pl-0 pr-0 pr-md-4">
-                <form>
-                    <div class="input-group">
-                        <input type="text" class="form-control mb-2" placeholder="Hledat...">
-                        <div class="input-group-append">
-                            <!-- add input value to link -->
-                            <a class="btn btn-primary mb-2" href="{link default search=>'Apple iPhone 14 Pro'}"><i class="fas fa-search"></i></a>
-                        </div>
+                <div class="input-group">
+                    <input id="searchInput" type="text" class="form-control mb-2" placeholder="Hledat...">
+                    <div class="input-group-append">
+                        <a id="searchButton" class="btn btn-primary mb-2"><i class="fa-solid fa-search"></i></a>
                     </div>
-                </form>
+                </div>
                 <!-- filters -->
                 <div class="card rounded-0 mb-3 mobile-hidden">
                     <div class="card-group-item">
@@ -239,3 +236,19 @@
     }
 }
 </style>
+
+<script>
+$( document ).ready(function() {
+    var searchInput = $("#searchInput");
+    searchInput.on("keyup", function() {
+        setLinkSearch();
+    });
+});
+
+function setLinkSearch() {
+    var searchInput = $("#searchInput").val();
+    var link = "/~vitl03/eshop/homepage/?search=" + searchInput;
+    var linkButton = $("#searchButton");
+    linkButton.attr("href", link);
+}
+</script>
