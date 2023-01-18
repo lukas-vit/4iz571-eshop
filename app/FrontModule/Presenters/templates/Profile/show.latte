@@ -45,8 +45,8 @@
 <div>
     <a href="{link orders}"><button class="btn btn-secondary">Zpět na přehled objednávek</button></a>
     {if $order->status == App\Model\Entities\OrderDetail::TYPE_ORDER_DONE}
-        <div class="btn btn-success">Vyřešeno</div>
+        <div class="btn btn-success">Vyřízeno</div>
     {else}
-        <div class="btn btn-warning">Čeká na vyřešení</div>
+        <div class="btn btn-warning mt-2">Čeká na vyřízení</div>
     {/if}
 </div>

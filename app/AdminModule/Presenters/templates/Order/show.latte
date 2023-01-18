@@ -43,8 +43,8 @@
             <a href="{link payment! id=>$order->orderDetailId}" class="btn btn-warning">Zaplatit</a>
     {/if}
     {if $order->status == App\Model\Entities\OrderDetail::TYPE_ORDER_DONE}
-            <div class="btn btn-success">Vyřešeno</div>
+            <div class="btn btn-success">Vyřízeno</div>
     {else}
-            <a href="{link done! id=>$order->orderDetailId}" class="btn btn-warning">Vyřešit</a>
+            <a href="{link done! id=>$order->orderDetailId}" class="btn btn-warning">Vyřídit</a>
     {/if}
 </div>
