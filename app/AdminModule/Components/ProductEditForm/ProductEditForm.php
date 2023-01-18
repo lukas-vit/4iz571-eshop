@@ -86,8 +86,7 @@ class ProductEditForm extends Form{
       ->setRequired(false);
     #endregion kategorie
 
-    $this->addTextArea('description', 'Popis produktu')
-      ->setRequired('Zadejte popis produktu.');
+    $this->addTextArea('description', 'Popis produktu');
 
     $this->addText('price', 'Cena')
       ->setHtmlType('number')
