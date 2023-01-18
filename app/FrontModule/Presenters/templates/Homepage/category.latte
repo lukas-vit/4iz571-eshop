@@ -34,8 +34,8 @@
                         <a class="dropdown-item {if $dropDown == 'title desc'}active{/if}" href="{link category id=>$currentCategory->categoryId, sort=>'title', order=>'desc'}">Název (Z až A)</a>
                         <a class="dropdown-item {if $dropDown == 'ram asc'}active{/if}" href="{link category id=>$currentCategory->categoryId, sort=>'ram', order=>'asc'}">Úložiště (od nejmenšího)</a>
                         <a class="dropdown-item {if $dropDown == 'ram desc'}active{/if}" href="{link category id=>$currentCategory->categoryId, sort=>'ram', order=>'desc'}">Úložiště (od největšího)</a>
-                        <a class="dropdown-item {if $dropDown == 'price asc'}active{/if}" href="{link category id=>$currentCategory->categoryId, sort=>'price', order=>'asc'}">Cena (od nejlevnějšího)</a>
-                        <a class="dropdown-item {if $dropDown == 'price desc'}active{/if}" href="{link category id=>$currentCategory->categoryId, sort=>'price', order=>'desc'}">Cena (od nejdražšího)</a>
+                        <a class="dropdown-item {if $dropDown == 'discounted_price asc'}active{/if}" href="{link category id=>$currentCategory->categoryId, sort=>'discounted_price', order=>'asc'}">Cena (od nejlevnějšího)</a>
+                        <a class="dropdown-item {if $dropDown == 'discounted_price desc'}active{/if}" href="{link category id=>$currentCategory->categoryId, sort=>'discounted_price', order=>'desc'}">Cena (od nejdražšího)</a>
                     </div>
                 </div>
 
