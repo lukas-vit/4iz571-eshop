@@ -37,15 +37,15 @@ class HomepagePresenter extends BasePresenter{
   /**
    * Akce pro zobrazení seznamu produktů
    */
-  public function renderDefault(string $sort = null, string $order = null, int $page = 1)
+  public function renderDefault(string $sort = null, string $order = null, string $search = null, int $page = 1)
   {
-      if($sort != null && $order!=null){
-          $products = $this->productsFacade->findAndOrderProducts(['order' => $sort], $order);
+      if($search != null){
+          $products = $this->productsFacade->findAllByPartOfTitle($search);
           $this->template->products = $products;
           $this->template->categories = $this->categoriesFacade->findCategories(['order' => 'title']);
           $this->template->photos = $this->productPhotoFacade->findAllPhotos();
           $this->template->reviews = $this->reviewsFacade->findReviews();
-          $this->template->dropDown = $sort.' '.$order;
+          $this->template->search = $search;
 
           //pagination
           $paginator = new Paginator;
@@ -56,41 +56,95 @@ class HomepagePresenter extends BasePresenter{
 
           $productsOnCurrentPage = array_slice($products, $paginator->getOffset(), $paginator->getLength());
           $this->template->productsOnCurrentPage = $productsOnCurrentPage;
-      }else{
-          $products = $this->productsFacade->findProducts();
-          $this->template->products = $products;
-          $this->template->categories = $this->categoriesFacade->findCategories(['order' => 'title']);
-          $this->template->photos = $this->productPhotoFacade->findAllPhotos();
-          $this->template->reviews = $this->reviewsFacade->findReviews();
+    } elseif($sort != null && $order!=null){
+        $products = $this->productsFacade->findAndOrderProducts(['order' => $sort], $order);
+        $this->template->products = $products;
+        $this->template->categories = $this->categoriesFacade->findCategories(['order' => 'title']);
+        $this->template->photos = $this->productPhotoFacade->findAllPhotos();
+        $this->template->reviews = $this->reviewsFacade->findReviews();
+        $this->template->dropDown = $sort.' '.$order;
 
-          //pagination
-          $paginator = new Paginator;
-          $paginator->setItemCount(count($products));
-          $paginator->setItemsPerPage(6);
-          $paginator->setPage($this->getParameter('page', 1));
-          $this->template->paginator = $paginator;
+        //pagination
+        $paginator = new Paginator;
+        $paginator->setItemCount(count($products));
+        $paginator->setItemsPerPage(6);
+        $paginator->setPage($this->getParameter('page', 1));
+        $this->template->paginator = $paginator;
 
-          $productsOnCurrentPage = array_slice($products, $paginator->getOffset(), $paginator->getLength());
-          $this->template->productsOnCurrentPage = $productsOnCurrentPage;
-      }
+        $productsOnCurrentPage = array_slice($products, $paginator->getOffset(), $paginator->getLength());
+        $this->template->productsOnCurrentPage = $productsOnCurrentPage;
+    }else{
+        $products = $this->productsFacade->findProducts();
+        $this->template->products = $products;
+        $this->template->categories = $this->categoriesFacade->findCategories(['order' => 'title']);
+        $this->template->photos = $this->productPhotoFacade->findAllPhotos();
+        $this->template->reviews = $this->reviewsFacade->findReviews();
+
+        //pagination
+        $paginator = new Paginator;
+        $paginator->setItemCount(count($products));
+        $paginator->setItemsPerPage(6);
+        $paginator->setPage($this->getParameter('page', 1));
+        $this->template->paginator = $paginator;
+
+        $productsOnCurrentPage = array_slice($products, $paginator->getOffset(), $paginator->getLength());
+        $this->template->productsOnCurrentPage = $productsOnCurrentPage;
+    }
   }
 
     /**
      * Akce pro zobrazení seznamu produktů dle kategorie
      */
-  public function renderCategory(int $id, string $sort = null, string $order = null){
+  public function renderCategory(int $id, string $sort = null,string $search = null, string $order = null){
 
-      if($sort != null && $order!=null) {
-          $this->template->products = $this->productsFacade->findAndOrderProducts(['category_id' => $id, 'order' => $sort], $order);
-          $this->template->categories = $this->categoriesFacade->findCategories(['order' => 'title']);
-          $this->template->photos = $this->productPhotoFacade->findAllPhotos();
-          $this->template->currentCategory = $this->categoriesFacade->getCategory($id);
-          $this->template->dropDown = $sort.' '.$order;
+    if($search != null){
+      $products = $this->productsFacade->findAllByPartOfTitle($search);
+      $this->template->products = $products;
+      $this->template->categories = $this->categoriesFacade->findCategories(['order' => 'title']);
+      $this->template->photos = $this->productPhotoFacade->findAllPhotos();
+      $this->template->reviews = $this->reviewsFacade->findReviews();
+      $this->template->search = $search;
+
+      //pagination
+      $paginator = new Paginator;
+      $paginator->setItemCount(count($products));
+      $paginator->setItemsPerPage(6);
+      $paginator->setPage($this->getParameter('page', 1));
+      $this->template->paginator = $paginator;
+
+      $productsOnCurrentPage = array_slice($products, $paginator->getOffset(), $paginator->getLength());
+      $this->template->productsOnCurrentPage = $productsOnCurrentPage;
+    } elseif($sort != null && $order!=null) {
+        $products = $this->productsFacade->findAndOrderProducts(['category_id' => $id, 'order' => $sort], $order);
+        $this->template->products = $products;
+        $this->template->categories = $this->categoriesFacade->findCategories(['order' => 'title']);
+        $this->template->photos = $this->productPhotoFacade->findAllPhotos();
+        $this->template->currentCategory = $this->categoriesFacade->getCategory($id);
+        $this->template->dropDown = $sort.' '.$order;
+        //pagination
+        $paginator = new Paginator;
+        $paginator->setItemCount(count($products));
+        $paginator->setItemsPerPage(6);
+        $paginator->setPage($this->getParameter('page', 1));
+        $this->template->paginator = $paginator;
+
+        $productsOnCurrentPage = array_slice($products, $paginator->getOffset(), $paginator->getLength());
+        $this->template->productsOnCurrentPage = $productsOnCurrentPage;
       }else{
-          $this->template->products = $this->productsFacade->findProductsByCategory($id);
+          $products = $this->productsFacade->findProductsByCategory($id);
+          $this->template->products = $products;
           $this->template->categories = $this->categoriesFacade->findCategories(['order' => 'title']);
           $this->template->photos = $this->productPhotoFacade->findAllPhotos();
           $this->template->currentCategory = $this->categoriesFacade->getCategory($id);
+
+          $paginator = new Paginator;
+          $paginator->setItemCount(count($products));
+          $paginator->setItemsPerPage(6);
+          $paginator->setPage($this->getParameter('page', 1));
+          $this->template->paginator = $paginator;
+  
+          $productsOnCurrentPage = array_slice($products, $paginator->getOffset(), $paginator->getLength());
+          $this->template->productsOnCurrentPage = $productsOnCurrentPage;
       }
   }
 

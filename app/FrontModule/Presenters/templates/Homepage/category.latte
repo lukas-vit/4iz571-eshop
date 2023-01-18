@@ -2,6 +2,8 @@
 {varType App\Model\Entities\Category[] $categories}
 {varType App\Model\Entities\ProductPhoto[] $photos}
 {varType App\Model\Entities\Category $currentCategory}
+{varType Nette\Utils\Paginator $paginator}
+{varType App\Model\Entities\Product[] $productsOnCurrentPage}
 {varType int $dropDown}
 {block content}
     <div>
@@ -19,10 +21,13 @@
                     {/foreach}
                 </div>
                 <div class="col-2 text-right pr-0">
-                    <div class="dropdown">
-                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <div class="dropdown ml-auto mr-0">
+                        <a class="btn btn-outline-secondary dropdown-toggle icon-sort" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa-solid fa-sort"></i>
+                        </a>
+                        <a class="btn btn-outline-secondary dropdown-toggle text-sort mr-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Řazení
-                        </button>
+                        </a>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <a class="dropdown-item {if $dropDown == null}active{/if}" href="{link category id=>$currentCategory->categoryId, sort=>null, order=>null}">Neseřazeno</a>
                             <a class="dropdown-item {if $dropDown == 'title asc'}active{/if}" href="{link category id=>$currentCategory->categoryId, sort=>'title', order=>'asc'}">Název (A až Z)</a>
@@ -41,9 +46,13 @@
     <div>
         <div class="container">
             <div class="row my-3">
-                <div class="col-md-3 pl-0">
-                    
-                    TODO filtry
+                <div class="col-md-3 pl-0 pr-0 pr-md-4">
+                    <div class="input-group">
+                        <input id="searchInput" type="text" class="form-control mb-2" placeholder="Hledat...">
+                        <div class="input-group-append">
+                            <a id="searchButton" class="btn btn-primary mb-2"><i class="fa-solid fa-search"></i></a>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-9">
                     <div class="row">
@@ -134,9 +143,17 @@
                     <p class="text-muted">Nebyly nalezeny žádné produkty</p>
                     {/if}
                 </div>
-        {* <div class="col-12">
-            {control pagination}
-        </div> *}
+            </div>
+        </div>
+        <div class="row">
+            <div class="ml-auto mr-0 mt-3">
+                <nav aria-label="pagination">
+                    <ul class="pagination">
+                        {for $page = 1; $page <= $paginator->getPageCount(); $page++}
+                            <li class="page-item"><a class="page-link" href="{link default sort=>null, order=>null, page=>$page}">{$page}</a></li>
+                        {/for}
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>
@@ -151,4 +168,53 @@
     font-size: 1rem;
 }
 
+.btn:focus,.btn:active {
+   outline: none !important;
+   box-shadow: none;
+}
+
+.icon-sort {
+    display: none;
+    visibility: hidden;
+}
+
+.text-sort {
+    display: block;
+    visibility: visible;
+}
+
+@media only screen and (max-width: 600px) {
+    .icon-sort {
+        display: block;
+        visibility: visible;
+    }
+
+    .text-sort {
+        display: none;
+        visibility: hidden;
+    }
+
+    .mobile-hidden {
+        display: none;
+        visibility: hidden;
+    }
+}
+
 </style>
+
+<script>
+$( document ).ready(function() {
+    var searchInput = $("#searchInput");
+    searchInput.on("keyup", function() {
+        setLinkSearch();
+    });
+});
+
+function setLinkSearch() {
+    var categoryId = {if $category}{$category->categoryId}{else}null{/if};
+    var searchInput = $("#searchInput").val();
+    var link = "/~vitl03/eshop/homepage/category/" + categoryId + "?search=" + searchInput;
+    var linkButton = $("#searchButton");
+    linkButton.attr("href", link);
+}
+</script>

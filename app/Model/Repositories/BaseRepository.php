@@ -66,6 +66,12 @@ abstract class BaseRepository extends \LeanMapper\Repository {
     return $this->createEntities($query->fetchAll($offset, $limit));
   }
 
+  public function findAllByPartOfTitle($partOfTitle, $offset = null, $limit = null) {
+    $query = $this->connection->select('*')->from($this->getTable());
+    $query = $query->where('title LIKE %~like~', $partOfTitle);
+    return $this->createEntities($query->fetchAll($offset, $limit));
+  }
+
     /**
      * @param $whereArr
      * @param string $order
