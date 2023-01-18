@@ -18,9 +18,12 @@
                             <div class="card-header" id="headingOne">
                                 <div class="d-flex">
                                     <h5 class="mb-0">
-                                        <button type="button"id="emailButton" class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        <button type="button"id="emailButton" class="btn btn-link d-none" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                                             Emailová adresa
                                         </button>
+                                        <div class="checkout-title">
+                                            Emailová adresa
+                                        </div>
                                     </h5>
                                     <button type="button" id="editButtonEmail" class="btn back-to-cart ml-auto d-none">upravit</button>
                                 </div>
@@ -48,9 +51,12 @@
                         <div class="card-header" id="headingTwo">
                             <div class="d-flex">
                                 <h5 class="mb-0">
-                                    <button type="button" id="deliveryButton" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    <button type="button" id="deliveryButton" class="btn btn-link collapsed d-none" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                                         Způsob dopravy
                                     </button>
+                                    <div class="checkout-title">
+                                        Způsob dopravy
+                                    </div>
                                 </h5>
                                 <button type="button" id="editButtonDelivery" class="btn back-to-cart ml-auto d-none">upravit</button>
                             </div>
@@ -96,9 +102,12 @@
                         <div class="card-header" id="headingThree">
                             <div class="d-flex">
                                 <h5 class="mb-0">
-                                    <button type="button" id="deliveryAddressButton" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                    <button type="button" id="deliveryAddressButton" class="btn btn-link collapsed d-none" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
                                         Doručovací adresa
                                     </button>
+                                    <div class="checkout-title">
+                                        Doručovací adresa
+                                    </div>
                                 </h5>
                                 <button type="button" id="editButtonDeliveryAddress" class="btn back-to-cart ml-auto d-none">upravit</button>
                             </div>
@@ -164,9 +173,12 @@
                         <div class="card-header" id="headingThree">
                             <div class="d-flex">
                                 <h5 class="mb-0">
-                                    <button type="button" id="billingAddressButton" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                    <button type="button" id="billingAddressButton" class="btn btn-link collapsed d-none" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
                                         Fakturační adresa
                                     </button>
+                                    <div class="checkout-title">
+                                        Fakturační adresa
+                                    </div>
                                 </h5>
                                 <button type="button" id="editButtonBillingAddress" class="btn back-to-cart ml-auto d-none">upravit</button>
                             </div>
@@ -225,9 +237,12 @@
                         <div class="card-header" id="headingThree">
                             <div class="d-flex">
                                 <h5 class="mb-0">
-                                    <button type="button" id="paymentButton"class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-                                    Platební metoda
+                                    <button type="button" id="paymentButton"class="btn btn-link collapsed d-none" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                                        Platební metoda
                                     </button>
+                                    <div class="checkout-title">
+                                        Platební metoda
+                                    </div>
                                 </h5>
                                 <button type="button" id="editButtonPayment" class="btn back-to-cart ml-auto d-none">upravit</button>
                             </div>
@@ -335,6 +350,12 @@
 </div>
 
 <style scoped>
+.checkout-title {
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
 .back-to-cart {
     text-decoration:none !important;
     font-size: 13px !important;
@@ -372,6 +393,11 @@
 
 input::placeholder {
     color: #c7c7c7 !important;
+}
+
+.btn:focus,.btn:active {
+   outline: none !important;
+   box-shadow: none;
 }
 
 .error-message {
