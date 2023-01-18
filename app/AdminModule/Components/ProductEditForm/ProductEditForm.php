@@ -139,8 +139,20 @@ class ProductEditForm extends Form{
         }else{
             $product->category=null;
         }
-        $product->discount=floatval($values['discount']/100);
-        $product->price=floatval($values['price']);
+
+        $discount = floatval($values['discount']/100);
+        $price = floatval($values['price']);
+
+        if($discount != 0 || $discount != null){
+            $discountedPrice = $price * (1-$discount);
+        }else{
+            $discountedPrice = $price;
+        }
+
+        $product->discount=$discount;
+        $product->price=$price;
+        $product->discountedPrice = $discountedPrice;
+
         $this->productsFacade->saveProduct($product);
         $this->setValues(['productId'=>$product->productId]);
 
