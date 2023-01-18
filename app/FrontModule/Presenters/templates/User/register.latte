@@ -45,7 +45,7 @@
     </div>
     <div class="form-group">
         <label n:name="phoneDelivery" for="phoneDelivery">Telefonní číslo:</label>
-        <input n:name="phoneDelivery" id="phoneDelivery" class="form-control">
+        <input n:name="phoneDelivery" type="tel" id="phoneDelivery" class="form-control">
     </div>
     <div class="form-check">
         <input n:name="sameAsBilling" type="checkbox" id="sameAsBilling" class="form-check-input">
@@ -72,12 +72,14 @@
         </div>
         <div class="form-group">
             <label n:name="phoneBilling" for="phoneBilling">Telefonní číslo:</label>
-            <input n:name="phoneBilling" id="phoneBilling" class="form-control">
+            <input n:name="phoneBilling" type="tel" id="phoneBilling" class="form-control">
         </div>
     </div>
-    <div class="row">
-        <button n:name="ok" id="ok" class="btn btn-primary mr-3">registrovat se</button>
-        <button n:name="storno" id="storno" class="btn btn-secondary">zpět na hlavní stránku</button>
+    <div class="container">
+        <div class="row">
+            <button n:name="ok" id="ok" class="btn btn-primary mr-3">registrovat se</button>
+            <button n:name="storno" id="storno" class="btn btn-secondary">zpět na hlavní stránku</button>
+        </div>
     </div>
 </form>
 

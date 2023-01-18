@@ -33,7 +33,11 @@ class Cart extends Entity{
     $result=0;
     if (!empty($this->items)){
       foreach ($this->items as $item){
-        $result+=$item->product->price*$item->count;
+        if ($item->product->discount != null || $item->product->discount != 0) {
+          $result+=($item->product->price* (1-$item->product->discount))*$item->count;
+        } else {
+          $result+=$item->product->price*$item->count;
+        }
       }
     }
     return $result;
