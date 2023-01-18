@@ -42,13 +42,19 @@
                         </div>
                     </div>
                     <h3 class="mt-2">Kategorie</h3>
-                    <div class="col-12 pl-0 mb-1">
-                        <a href="{link default}"><button type="button" class="btn btn-info mr-2 mt-1">Zpět na hlavní stránku</button></a>
+                    <div class="row pl-0 mb-1">
+                        <div class="col-12">
+                            <a href="{link default}"><button type="button" class="btn btn-info mr-2 mt-1  w-100">Zpět na hlavní stránku</button></a>
+                        </div>
                         {foreach $categories as $category}
                             {if $currentCategory->categoryId == $category->categoryId}
-                                <a href="{link category id=>$category->categoryId}"><button type="button" class="btn btn-primary mr-2 mt-1">{$category->title}</button></a>
+                                <div class="col-6">
+                                    <a href="{link category id=>$category->categoryId}"><button type="button" class="btn btn-primary mr-2 mt-1 w-100">{$category->title}</button></a>
+                                </div>
                             {else}
-                                <a href="{link category id=>$category->categoryId}"><button type="button" class="btn btn-outline-primary mr-2 mt-1">{$category->title}</button></a>
+                                <div class="col-6">
+                                    <a href="{link category id=>$category->categoryId}"><button type="button" class="btn btn-outline-primary mr-2 mt-1 w-100">{$category->title}</button></a>
+                                </div>
                             {/if}
                         {/foreach}
                     </div>

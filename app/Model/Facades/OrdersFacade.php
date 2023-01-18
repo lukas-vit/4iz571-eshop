@@ -89,12 +89,20 @@ class OrdersFacade{
   public function getLowestPriceOfProductFromOrdersByProduct(Product $product):float {
     $orderItems = $this->orderItemRepository->findAllBy(['product_id'=>$product->productId]);
     $lowestPrice = 0;
+    $orderItemPrices = [];
+    $todaysDate = new \DateTime();
     foreach ($orderItems as $orderItem){
-      if($lowestPrice == 0){
-        $lowestPrice = $orderItem->price;
+      //if date is in 30 days from now
+      if ($orderItem->orderDetail->created->diff($todaysDate)->days <= 30){
+        $orderItemPrices[] = $orderItem->price;
+      }
+    }
+    foreach ($orderItemPrices as $orderItemPrice){
+      if ($lowestPrice == 0){
+        $lowestPrice = $orderItemPrice;
       }else{
-        if($lowestPrice > $orderItem->price){
-          $lowestPrice = $orderItem->price;
+        if ($orderItemPrice < $lowestPrice){
+          $lowestPrice = $orderItemPrice;
         }
       }
     }

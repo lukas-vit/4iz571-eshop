@@ -45,9 +45,11 @@
                     </div>
                 </div>
                 <h3 class="mt-2">Kategorie</h3>
-                <div class="col-12 pl-0 mb-1">
+                <div class="row pl-0 mb-1">
                     {foreach $categories as $category}
-                        <a href="{link category id=>$category->categoryId}"><button type="button" class="btn btn-outline-primary mr-2 mt-1 mb-1">{$category->title}</button></a>
+                    <div class="col-6">
+                        <a href="{link category id=>$category->categoryId}"><button type="button" class="btn btn-outline-primary mt-1 mb-1 w-100">{$category->title}</button></a>
+                    </div>
                     {/foreach}
                 </div>
             </div>
