@@ -7,19 +7,8 @@
 {varType int $dropDown}
 {block content}
     <div>
-        <h2>Kategorie</h2>
         <div class="container">
             <div class="row">
-                <div class="col-10 pl-0">
-                    <a href="{link default}"><button type="button" class="btn btn-info mr-2 mt-1">Zpět na hlavní stránku</button></a>
-                    {foreach $categories as $category}
-                        {if $currentCategory->categoryId == $category->categoryId}
-                            <a href="{link category id=>$category->categoryId}"><button type="button" class="btn btn-primary mr-2 mt-1">{$category->title}</button></a>
-                        {else}
-                            <a href="{link category id=>$category->categoryId}"><button type="button" class="btn btn-outline-primary mr-2 mt-1">{$category->title}</button></a>
-                        {/if}
-                    {/foreach}
-                </div>
                 <div class="col-2 text-right pr-0 ml-auto mr-0">
                     <div class="dropdown ml-auto mr-0">
                         <a class="btn btn-outline-secondary dropdown-toggle icon-sort" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -51,6 +40,17 @@
                         <div class="input-group-append">
                             <a id="searchButton" class="btn btn-primary mb-2"><i class="fa-solid fa-search"></i></a>
                         </div>
+                    </div>
+                    <h3 class="mt-2">Kategorie</h3>
+                    <div class="col-12 pl-0 mb-1">
+                        <a href="{link default}"><button type="button" class="btn btn-info mr-2 mt-1">Zpět na hlavní stránku</button></a>
+                        {foreach $categories as $category}
+                            {if $currentCategory->categoryId == $category->categoryId}
+                                <a href="{link category id=>$category->categoryId}"><button type="button" class="btn btn-primary mr-2 mt-1">{$category->title}</button></a>
+                            {else}
+                                <a href="{link category id=>$category->categoryId}"><button type="button" class="btn btn-outline-primary mr-2 mt-1">{$category->title}</button></a>
+                            {/if}
+                        {/foreach}
                     </div>
                 </div>
                 <div class="col-md-9">
