@@ -292,7 +292,11 @@
                             {if $item->count > 1}
                                 {$item->count} * 
                             {/if}
-                            {$item->product->price|number:0,',',' '} Kč
+                            {if $item->product->discount != null || $item->product->discount != 0}
+                                {($item->product->price * (1-$item->product->discount))|number:0,',',' ' } Kč
+                            {else}
+                                {$item->product->price|number:0,',',' '} Kč
+                            {/if}
                         </div>
                     </div>
                 </div>

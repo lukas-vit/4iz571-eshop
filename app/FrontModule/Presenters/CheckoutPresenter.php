@@ -108,7 +108,11 @@ class CheckoutPresenter extends BasePresenter{
                 $orderItem->orderDetailId = $order->orderDetailId;
                 $orderItem->productId = $item->product->productId;
                 $orderItem->quantity = (int)$item->count;
-                $orderItem->price = $item->product->price;
+                if ($item->product->discount != null || $item->product->discount != 0) {
+                    $orderItem->price = ($item->product->price* (1-$item->product->discount));
+                } else {
+                    $orderItem->price = $item->product->price;
+                }
                 $this->ordersFacade->saveOrderItem($orderItem);
                 //remove 1 stock from DB
                 $product = $item->product;

@@ -80,7 +80,11 @@
                                 </div>
                             </div>
                             <div class="col-4 pr-0">
-                                <div class="h6 mb-0 font-weight-bold">{$item->product->price|number:0,',',' '} Kč</div>
+                                {if $item->product->discount != null || $item->product->discount != 0}
+                                    <div class="h6 mb-0 font-weight-bold">{($item->product->price * (1-$item->product->discount))|number:0,',',' ' } Kč</div>
+                                {else}
+                                    <div class="h6 mb-0 font-weight-bold">{$item->product->price|number:0,',',' '} Kč</div>
+                                {/if}
                             </div>
                             <div class="col-2">
                                 <div class="d-flex align-items-center justify-content-center"><button type="button" class="btn" data-toggle="modal" data-target="#confirmationModal"><i class="fa-regular fa-circle-xmark" style="color:red; font-size:24px"></i></button></div>
