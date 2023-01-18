@@ -17,6 +17,7 @@ use LeanMapper\Entity;
  * @property int $stock = 0
  * @property bool $available = true
  * @property float|null $discount
+ * @property float $discountedPrice
  * @property Category|null $category m:hasOne
  * @property ProductPhoto[] $photos m:belongsToMany
  */
