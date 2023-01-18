@@ -73,11 +73,11 @@
                 {/if}
                 {if $order->status == App\Model\Entities\OrderDetail::TYPE_ORDER_DONE}
                     <td class="text-nowrap">
-                        <p class="btn btn-sm btn-success">Vyřešeno</p>
+                        <p class="btn btn-sm btn-success">Vyřízeno</p>
                     </td>
                 {else}
                     <td class="text-nowrap">
-                        <a href="{link done! id=>$order->orderDetailId}" class="btn btn-sm btn-warning">Vyřešit</a>
+                        <a href="{link done! id=>$order->orderDetailId}" class="btn btn-sm btn-warning">Vyřídit</a>
                     </td>
                 {/if}
             </tr>

@@ -64,9 +64,9 @@
             {/if}
             <td>{$orderDetail->delivery->name}</td>
             {if $orderDetail->status == App\Model\Entities\OrderDetail::TYPE_ORDER_DONE}
-                <td class="btn btn-success btn-sm mt-1">Vyřešeno</td>
+                <td class="btn btn-success btn-sm mt-1">Vyřízeno</td>
             {else}
-                <td class="btn btn-warning btn-sm mt-1">Čeká na vyřešení</td>
+                <td class="btn btn-warning btn-sm mt-1">Čeká na vyřízení</td>
             {/if}
             <td>{$orderDetail->total} Kč</td>
             <td class="text-nowrap">
