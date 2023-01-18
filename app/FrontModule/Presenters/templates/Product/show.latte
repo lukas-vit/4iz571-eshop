@@ -128,7 +128,7 @@
                         <div class="col-6 col-md-5 font-weight-bold h3 text-danger">{($product->price * (1-$product->discount))|number:0,',',' ' } Kč</div>
                         <div class="col-6 col-md-5 font-weight-bold h6 text-right"><del>{$product->price|number:0,',',' '} Kč<del></div>
                     {else}
-                         <div class="col-12 font-weight-bold h3 text-danger">{$product->price|number:0,',',' ' } Kč</div>
+                         <div class="col-12 font-weight-bold h3 text-black">{$product->price|number:0,',',' ' } Kč</div>
                     {/if}
                 </div>
                 <div class="row">

@@ -16,12 +16,16 @@
                 <a href="{link category id=>$category->categoryId}"><button type="button" class="btn btn-outline-primary mr-2 mt-1">{$category->title}</button></a>
                 {/foreach}
             </div>
-            <div class="col-2 text-right pr-0">
-                <div class="dropdown">
-                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <div class="col-2 text-right pr-0 ml-auto mr-0">
+                <div class="dropdown ml-auto mr-0">
+                    <a class="btn btn-outline-secondary dropdown-toggle icon-sort" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa-solid fa-sort"></i>
+                    </a>
+                    <a class="btn btn-outline-secondary dropdown-toggle text-sort mr-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Řazení
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    </a>
+                    
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
                         <a class="dropdown-item {if $dropDown == null}active{/if}" href="{link default sort=>null, order=>null}">Neseřazeno</a>
                         <a class="dropdown-item {if $dropDown == 'title asc'}active{/if}" href="{link default sort=>'title', order=>'asc'}">Název (A až Z)</a>
                         <a class="dropdown-item {if $dropDown == 'title desc'}active{/if}" href="{link default sort=>'title', order=>'desc'}">Název (Z až A)</a>
@@ -39,17 +43,18 @@
 <div>
     <div class="container">
         <div class="row my-3">
-            <div class="col-md-3 pl-0">
-                <form  n:name=searchForm>
+            <div class="col-md-3 pl-0 pr-0 pr-md-4">
+                <form>
                     <div class="input-group">
-                        <input :name=search type="text" class="form-control mb-2" placeholder="Hledat...">
+                        <input type="text" class="form-control mb-2" placeholder="Hledat...">
                         <div class="input-group-append">
-                            <button   button type="submit" n:name=submit class="btn btn-primary mb-2">  <i class="fas fa-search"></i></button>
+                            <!-- add input value to link -->
+                            <a class="btn btn-primary mb-2" href="{link default search=>'Apple iPhone 14 Pro'}"><i class="fas fa-search"></i></a>
                         </div>
                     </div>
                 </form>
                 <!-- filters -->
-                <div class="card">
+                <div class="card rounded-0 mb-3 mobile-hidden">
                     <div class="card-group-item">
                         <header class="card-header">
                             <h6 class="title">Brands </h6>
@@ -205,5 +210,32 @@
 .btn:focus,.btn:active {
    outline: none !important;
    box-shadow: none;
+}
+
+.icon-sort {
+    display: none;
+    visibility: hidden;
+}
+
+.text-sort {
+    display: block;
+    visibility: visible;
+}
+
+@media only screen and (max-width: 600px) {
+    .icon-sort {
+        display: block;
+        visibility: visible;
+    }
+
+    .text-sort {
+        display: none;
+        visibility: hidden;
+    }
+
+    .mobile-hidden {
+        display: none;
+        visibility: hidden;
+    }
 }
 </style>
